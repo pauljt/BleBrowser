@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "WebBluetooth.userContentController(WKUserContentController, didReceiveScriptMessage : WKScriptMessage) -&gt; ():WebBluetooth.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "args[0]">
+            </PersistentString>
+            <PersistentString
+               value = "args[&apos;filters&apos;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
