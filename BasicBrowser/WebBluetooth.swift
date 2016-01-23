@@ -86,7 +86,7 @@ struct BluetoothGATTRemoteServer{
 }
 
 
-class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WKScriptMessageHandler {
+class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WKScriptMessageHandler, PopUpPickerViewDelegate {
     
     override init(){
         super.init()
@@ -96,12 +96,16 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
     //too remove - only connect to bb-8 for now
     static let deviceName = "BB-7687"
     
+    var deviceNames: [String] = [String]()
+    var deviceCache:[CBPeripheral] = [CBPeripheral]()
+    
     // BLE
     var centralManager:CBCentralManager!
     var peripheral:CBPeripheral!
 
     //stores the webView we are linked to
     var webView:WKWebView!
+    var devicePicker:PopUpPickerView!
 
     var BluetoothDeviceOption_filters:[CBUUID]?
     var BluetoothDeviceOption_optionalService:[CBUUID]?
@@ -136,23 +140,17 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
 
             let services = filters[0]["services"] as! [String]
             
-            let servicesCBUUID:[CBUUID]?
+            let servicesCBUUID:[CBUUID]
             
             //todo validate CBUUID (js does this already but security should be here since 
             //messageHandler can be called directly? Or can it?
             // (if the string is invalid, it causes app to crash with NSexception)
-            servicesCBUUID = services.map {CBUUID(string:($0.uppercaseString))}
-            print(servicesCBUUID)
-            // really we should be scanning for servicesCBUUID here, not nil
-            // but BB-8 isn't detected when searching this way, even though
-            // it advertises the following:
-            //   ["kCBAdvDataManufacturerData": <3330>, "kCBAdvDataIsConnectable": 1, "kCBAdvDataServiceUUIDs": (
-            //    "22BB746F-2BA0-7554-2D6F-726568705327"
-            //    ), "kCBAdvDataTxPowerLevel": 6, "kCBAdvDataLocalName": BB-7687]
-            // IE replacing nil with [CBUUID(string:"22BB746F-2BA0-7554-2D6F-726568705327")] doesnt work??
-            // todo figure out why this is...
+            
+            //todo: determine if uppercase is the standard (bb-b uses uppercase UUID)
+            servicesCBUUID = services.map {return CBUUID(string:$0.uppercaseString)}
             centralManager.scanForPeripheralsWithServices(servicesCBUUID, options: nil)
             sendMessage("response", success:true, result:"{}", requestId:request.id)
+            devicePicker.showPicker()
             
         default:
             let error="Unknown method:" + request.method;
@@ -193,12 +191,14 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
         }
     }
     
-    //When we find a peripheral we add device to cache?
     func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
        
         let _nameOfDeviceFound = advertisementData[CBAdvertisementDataLocalNameKey] as? String
         print("found:", _nameOfDeviceFound)
         print(advertisementData)
+        
+        deviceNames.append(_nameOfDeviceFound!);
+        devicePicker.updatePicker()
         
         //Todo Create a UI to choose the device instead of hardcoded.
         
@@ -234,8 +234,7 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
             
         }
         
-        //var bluetoothDevice = BluetoothDevice(peripheral,advertisementData,RSSI:RSSI)
-        //self.sendMessage("found-device",success:true,result:device.toJSONString());
+      
         
     }
     
@@ -259,6 +258,29 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
     }
     
     
-
+    //UIPickerView protocols
+    // The number of columns of data
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    // The number of rows of data
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return deviceNames.count
+    }
+    
+    // The data to return for the row and component (column) that's being passed in
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return deviceNames[row]
+    }
+    
+    
+    func pickerView(pickerView: UIPickerView, didSelect row: Int) {
+        
+        peripheral = deviceCache[row]
+        //self.sendMessage("found-device",success:true,result:device.toJSONString());
+        print("Selected",row)
+        
+    }
     
 }

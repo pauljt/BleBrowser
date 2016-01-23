@@ -5,11 +5,17 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var containerView: UIView!
-
+    
+    var devicePicker: PopUpPickerView!
+    
     var webView: WKWebView!
     var webBluetooth:WebBluetooth!
 
+   
+
+    
     override func viewDidLoad() {
+       
         super.viewDidLoad()
         locationTextField.delegate = self
         
@@ -29,6 +35,14 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         let webCfg:WKWebViewConfiguration = WKWebViewConfiguration()
         let userController:WKUserContentController = WKUserContentController()
         userController.addScriptMessageHandler(webBluetooth, name: "bluetooth")
+        
+        devicePicker = PopUpPickerView()
+        devicePicker.delegate = webBluetooth
+        
+        self.view.addSubview(devicePicker)
+        
+    
+        webBluetooth.devicePicker = devicePicker
         
         //add the bluetooth script prior to loading all frames
         let userScript:WKUserScript =  WKUserScript(source: script!, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: false)
@@ -96,4 +110,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }))
         self.presentViewController(alertController, animated: true, completion: nil)
     }
+    
+    
 }
