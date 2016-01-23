@@ -48,6 +48,11 @@ struct BluetoothAdvertisingData{
 }
 
 struct BluetoothDevice{
+    //native objects
+    var peripheral:CBPeripheral?
+    var advertisementData:[String : AnyObject]
+    
+    //properties for web
     var id:String
     var name:String?
     var adData:BluetoothAdvertisingData
@@ -60,6 +65,9 @@ struct BluetoothDevice{
     var uuids:[String]?
     
     init(peripheral:CBPeripheral? = nil,advertisementData:[String : AnyObject] = [String : AnyObject](),RSSI:NSNumber = 0){
+        self.peripheral = peripheral
+        self.advertisementData = advertisementData
+        
         self.id = peripheral != nil ? peripheral!.identifier.UUIDString :"MOCK-DEVICE-UUID"
         self.name = peripheral != nil ? peripheral!.name :nil
         self.adData = BluetoothAdvertisingData(advertisementData:advertisementData,RSSI: RSSI)
@@ -81,9 +89,13 @@ struct BluetoothDevice{
     }
 }
 
+
+
 struct BluetoothGATTRemoteServer{
     
 }
+
+
 
 
 class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WKScriptMessageHandler, PopUpPickerViewDelegate {
@@ -97,11 +109,11 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
     static let deviceName = "BB-7687"
     
     var deviceNames: [String] = [String]()
-    var deviceCache:[CBPeripheral] = [CBPeripheral]()
+    
     
     // BLE
     var centralManager:CBCentralManager!
-    var peripheral:CBPeripheral!
+    //var peripheral:CBPeripheral!
 
     //stores the webView we are linked to
     var webView:WKWebView!
@@ -109,6 +121,10 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
 
     var BluetoothDeviceOption_filters:[CBUUID]?
     var BluetoothDeviceOption_optionalService:[CBUUID]?
+    
+    //WebBluetooth vars
+    var deviceCache:[BluetoothDevice] = [BluetoothDevice]()
+    var connectedDevice:BluetoothDevice?
     
     // recieve message from javascript
     func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage){
@@ -198,21 +214,10 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
         print(advertisementData)
         
         deviceNames.append(_nameOfDeviceFound!);
+        deviceCache.append(BluetoothDevice(peripheral: peripheral,advertisementData: advertisementData,RSSI: RSSI))
         devicePicker.updatePicker()
         
-        //Todo Create a UI to choose the device instead of hardcoded.
         
-        if _nameOfDeviceFound == WebBluetooth.deviceName{
-            //Stop scanning and connect the peripheral
-            self.centralManager.stopScan()
-            self.peripheral = peripheral
-            self.peripheral.delegate = self
-            centralManager.connectPeripheral(peripheral, options: nil)
-        }
-        else{
-            print("Ignoring:",_nameOfDeviceFound)
-        }
-       
     }
 
     func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
@@ -275,11 +280,16 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
     }
     
     
-    func pickerView(pickerView: UIPickerView, didSelect row: Int) {
+    func pickerView(pickerView: UIPickerView, didSelect numbers: [Int]) {
+        connectedDevice = deviceCache[numbers[0]]
+        centralManager.stopScan()
         
-        peripheral = deviceCache[row]
-        //self.sendMessage("found-device",success:true,result:device.toJSONString());
-        print("Selected",row)
+        //todo get rid of all the unwrapping!
+        self.connectedDevice!.peripheral!.delegate = self
+        centralManager.connectPeripheral(connectedDevice!.peripheral!, options: nil)
+        
+        self.sendMessage("found-device",success:true,result:(connectedDevice?.toJSON())!);
+
         
     }
     
