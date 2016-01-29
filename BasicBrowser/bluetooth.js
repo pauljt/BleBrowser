@@ -1,3 +1,5 @@
+// adapted from chrome app polyfill https://github.com/WebBluetoothCG/chrome-app-polyfill
+
 (function () {
   "use strict";
 
@@ -28,12 +30,12 @@
     this._name = nativeBluetoothDevice.name;
 
     this._adData = {};
-    if (this.nativeBluetoothDevice.adData) {
-      this._adData.appearance = this.nativeBluetoothDevice.adData.appearance || "";
-      this._adData.txPower = this.nativeBluetoothDevice.adData.txPower || 0;
-      this._adData.rssi = this.nativeBluetoothDevice.adData.rssi || 0;
-      this._adData.manufacturerData = this.nativeBluetoothDevice.adData.manufacturerData || [];
-      this._adData.serviceData = this.nativeBluetoothDevice.adData.serviceData || [];
+    if (nativeBluetoothDevice.adData) {
+      this._adData.appearance = nativeBluetoothDevice.adData.appearance || "";
+      this._adData.txPower = nativeBluetoothDevice.adData.txPower || 0;
+      this._adData.rssi = nativeBluetoothDevice.adData.rssi || 0;
+      this._adData.manufacturerData = nativeBluetoothDevice.adData.manufacturerData || [];
+      this._adData.serviceData = nativeBluetoothDevice.adData.serviceData || [];
     }
 
     this._deviceClass = nativeBluetoothDevice.deviceClass || 0;
@@ -96,6 +98,31 @@
       return self._id;
     }
   };
+
+
+  function BluetoothGattRemoteServer(webBluetoothDevice) {
+    this._device = webBluetoothDevice;
+    this._connected = false;
+  };
+  window.BluetoothGattRemoteServer = BluetoothGattRemoteServer;
+
+  BluetoothGattRemoteServer.prototype = {
+    get device() {
+      return this._device;
+    },
+    get connected() {
+      return this._connected;
+    },
+
+    getPrimaryService: function (characteristicUuids) {
+      var self = this;
+    },
+
+    getPrimaryServices: function (characteristicUuids) {
+
+    }
+  };
+
 
   window.recieveMessage = recieveMessage;
 
@@ -388,7 +415,7 @@
 
   navigator.bluetooth.requestDevice = function (requestDeviceOptions) {
     if (!requestDeviceOptions.filters || requestDeviceOptions.filters.length === 0) {
-        throw new TypeError('The first argument to navigator.bluetooth.requestDevice() must have a non-zero length filters parameter');
+      throw new TypeError('The first argument to navigator.bluetooth.requestDevice() must have a non-zero length filters parameter');
     }
     var validatedDeviceOptions = {}
 
@@ -422,6 +449,7 @@
     return new Promise(function (resolve, reject) {
       foundDevice = function (success, result) {
         console.log("Device in promise:", result);
+        var device = new BluetoothDevice(result)
         if (success) {
           resolve(result)
         } else {

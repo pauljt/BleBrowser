@@ -18,23 +18,24 @@ struct JSRequest{
 }
 
 
-struct BluetoothAdvertisingData{
-    var appearance:String?
-    var txPower:String?
-    var rssi:String?
-    var manufacturerData:String?
+class BluetoothAdvertisingData{
+    var appearance:String
+    var txPower:String
+    var rssi:String
+    var manufacturerData:String
     var serviceData:[String]
     
     init(advertisementData: [String : AnyObject] = [String : AnyObject](), RSSI: NSNumber = 0){
-        
-        //self.txPower = advertisementData[CBAdvertisementDataLocalNameKey] as? String
+        self.appearance = "fakeappearance"
+        self.txPower = (advertisementData[CBAdvertisementDataLocalNameKey] as? String)!
         self.rssi=String(RSSI)
         let data = advertisementData[CBAdvertisementDataManufacturerDataKey]
+        self.manufacturerData = ""
         if data != nil{
             if let dataString = NSString(data: data as! NSData, encoding: NSUTF8StringEncoding) as? String {
-                self.manufacturerData = dataString;
+                self.manufacturerData = dataString
             } else {
-                print("not a valid UTF-8 sequence")
+                print("Error parsing advertisement data: not a valid UTF-8 sequence")
             }
         }
         
@@ -45,39 +46,43 @@ struct BluetoothAdvertisingData{
         self.serviceData = uuids
     }
     
+    func toDict()->[String:AnyObject]{
+        let dict:[String:AnyObject] = [
+            "appearance": self.appearance,
+            "txPower": self.txPower,
+            "rssi": self.rssi,
+            "manufacturerData": self.manufacturerData,
+            "serviceData": self.serviceData
+        ]
+        return dict
+    }
+    
 }
 
 struct BluetoothDevice{
     //native objects
-    var peripheral:CBPeripheral?
-    var advertisementData:[String : AnyObject]
-    
-    //properties for web
-    var id:String
-    var name:String?
+    var peripheral:CBPeripheral
     var adData:BluetoothAdvertisingData
-    var deviceClass:String?
-    var vendorIDSource:String?
-    var vendorID:String?
-    var productID:String?
-    var productVersion:String?
-    var gattServer:BluetoothGATTRemoteServer?
-    var uuids:[String]?
     
-    init(peripheral:CBPeripheral? = nil,advertisementData:[String : AnyObject] = [String : AnyObject](),RSSI:NSNumber = 0){
+    init(peripheral:CBPeripheral,advertisementData:[String : AnyObject] = [String : AnyObject](),RSSI:NSNumber = 0){
         self.peripheral = peripheral
-        self.advertisementData = advertisementData
-        
-        self.id = peripheral != nil ? peripheral!.identifier.UUIDString :"MOCK-DEVICE-UUID"
-        self.name = peripheral != nil ? peripheral!.name :nil
         self.adData = BluetoothAdvertisingData(advertisementData:advertisementData,RSSI: RSSI)
+        
     }
     
     func toJSON()->String?{
-        let props = [
-            "id": self.id,
-            "name": self.name != nil ? self.name! : NSNull()
+        let props:[String:AnyObject] = [
+            "id": peripheral.identifier.UUIDString,
+            "name": peripheral.name == nil ? peripheral.name! : NSNull(),
+            "adData":self.adData.toDict(),
+            "deviceClass": 0,
+            "vendorIDSource": 0,
+            "vendorID": 0,
+            "productID": 0,
+            "productVersion": 0,
+            "uuids": []
         ]
+        
         do {
             let jsonData = try NSJSONSerialization.dataWithJSONObject(props,
                 options: NSJSONWritingOptions(rawValue: 0))
@@ -89,24 +94,12 @@ struct BluetoothDevice{
     }
 }
 
-
-
-struct BluetoothGATTRemoteServer{
-    
-}
-
-
-
-
 class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WKScriptMessageHandler, PopUpPickerViewDelegate {
     
     override init(){
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
-    
-    //too remove - only connect to bb-8 for now
-    static let deviceName = "BB-7687"
     
     var deviceNames: [String] = [String]()
     
@@ -203,6 +196,8 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
     
     func scanForPeripherals(options:AnyObject){
         if centralManager.state == CBCentralManagerState.PoweredOn{
+            //todo instead of blanking cache, actually act as a cache?
+            deviceCache.removeAll();
             centralManager.scanForPeripheralsWithServices(nil, options: nil)
         }
     }
@@ -216,6 +211,7 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
         deviceNames.append(_nameOfDeviceFound!);
         deviceCache.append(BluetoothDevice(peripheral: peripheral,advertisementData: advertisementData,RSSI: RSSI))
         devicePicker.updatePicker()
+        
         
         
     }
@@ -285,8 +281,8 @@ class WebBluetooth: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, WK
         centralManager.stopScan()
         
         //todo get rid of all the unwrapping!
-        self.connectedDevice!.peripheral!.delegate = self
-        centralManager.connectPeripheral(connectedDevice!.peripheral!, options: nil)
+        self.connectedDevice!.peripheral.delegate = self
+        centralManager.connectPeripheral(connectedDevice!.peripheral, options: nil)
         
         self.sendMessage("found-device",success:true,result:(connectedDevice?.toJSON())!);
 
