@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BB303DF11C41EF2F00FCAF24 /* bluetooth.js in Resources */ = {isa = PBXBuildFile; fileRef = BB303DF01C41EF2F00FCAF24 /* bluetooth.js */; };
-		BB303DF31C42070C00FCAF24 /* WebBluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB303DF21C42070C00FCAF24 /* WebBluetooth.swift */; };
+		BB303DF11C41EF2F00FCAF24 /* WebBluetooth.js in Resources */ = {isa = PBXBuildFile; fileRef = BB303DF01C41EF2F00FCAF24 /* WebBluetooth.js */; };
+		BB303DF31C42070C00FCAF24 /* WebBluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB303DF21C42070C00FCAF24 /* WebBluetoothManager.swift */; };
+		BB4DBE651C97F577000D2C35 /* JSRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DBE641C97F577000D2C35 /* JSRequest.swift */; };
+		BB4DE1F41C8D0A44003151BF /* WebBluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DE1F31C8D0A44003151BF /* WebBluetooth.swift */; };
 		BBA6730E1C535B8C00076CBA /* PopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA6730D1C535B8C00076CBA /* PopUpPickerView.swift */; };
 		E44C185C1A36203E00734F8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C185B1A36203E00734F8B /* AppDelegate.swift */; };
 		E44C185E1A36203E00734F8B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C185D1A36203E00734F8B /* ViewController.swift */; };
@@ -29,8 +31,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		BB303DF01C41EF2F00FCAF24 /* bluetooth.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = bluetooth.js; sourceTree = "<group>"; tabWidth = 2; };
-		BB303DF21C42070C00FCAF24 /* WebBluetooth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebBluetooth.swift; sourceTree = "<group>"; };
+		BB303DF01C41EF2F00FCAF24 /* WebBluetooth.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = WebBluetooth.js; sourceTree = "<group>"; tabWidth = 2; };
+		BB303DF21C42070C00FCAF24 /* WebBluetoothManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebBluetoothManager.swift; sourceTree = "<group>"; };
+		BB4DBE641C97F577000D2C35 /* JSRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSRequest.swift; sourceTree = "<group>"; };
+		BB4DE1F31C8D0A44003151BF /* WebBluetooth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebBluetooth.swift; sourceTree = "<group>"; };
 		BBA6730D1C535B8C00076CBA /* PopUpPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpPickerView.swift; sourceTree = "<group>"; };
 		E44C18561A36203E00734F8B /* BleBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BleBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44C185A1A36203E00734F8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -90,8 +94,10 @@
 				E44C18621A36203E00734F8B /* Images.xcassets */,
 				E44C18641A36203E00734F8B /* LaunchScreen.xib */,
 				E44C18591A36203E00734F8B /* Supporting Files */,
-				BB303DF01C41EF2F00FCAF24 /* bluetooth.js */,
-				BB303DF21C42070C00FCAF24 /* WebBluetooth.swift */,
+				BB303DF01C41EF2F00FCAF24 /* WebBluetooth.js */,
+				BB303DF21C42070C00FCAF24 /* WebBluetoothManager.swift */,
+				BB4DE1F31C8D0A44003151BF /* WebBluetooth.swift */,
+				BB4DBE641C97F577000D2C35 /* JSRequest.swift */,
 			);
 			name = BleBrowser;
 			path = BasicBrowser;
@@ -207,7 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E44C18611A36203E00734F8B /* Main.storyboard in Resources */,
-				BB303DF11C41EF2F00FCAF24 /* bluetooth.js in Resources */,
+				BB303DF11C41EF2F00FCAF24 /* WebBluetooth.js in Resources */,
 				E44C18661A36203E00734F8B /* LaunchScreen.xib in Resources */,
 				E44C18631A36203E00734F8B /* Images.xcassets in Resources */,
 			);
@@ -227,10 +233,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB4DBE651C97F577000D2C35 /* JSRequest.swift in Sources */,
 				E44C185E1A36203E00734F8B /* ViewController.swift in Sources */,
 				BBA6730E1C535B8C00076CBA /* PopUpPickerView.swift in Sources */,
 				E44C185C1A36203E00734F8B /* AppDelegate.swift in Sources */,
-				BB303DF31C42070C00FCAF24 /* WebBluetooth.swift in Sources */,
+				BB303DF31C42070C00FCAF24 /* WebBluetoothManager.swift in Sources */,
+				BB4DE1F41C8D0A44003151BF /* WebBluetooth.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +369,7 @@
 				INFOPLIST_FILE = BasicBrowser/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				New_Setting = "";
 				PRODUCT_BUNDLE_IDENTIFIER = org.cm.blebrowser;
 				PRODUCT_NAME = BleBrowser;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -376,6 +385,7 @@
 				INFOPLIST_FILE = BasicBrowser/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				New_Setting = "";
 				PRODUCT_BUNDLE_IDENTIFIER = org.cm.blebrowser;
 				PRODUCT_NAME = BleBrowser;
 				TARGETED_DEVICE_FAMILY = "1,2";

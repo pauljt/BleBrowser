@@ -9,10 +9,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     var devicePicker: PopUpPickerView!
     
     var webView: WKWebView!
-    var webBluetooth:WebBluetooth!
-
-   
-
+    var webBluetoothManager:WebBluetoothManager!
     
     override func viewDidLoad() {
        
@@ -21,7 +18,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         
         //load polyfill script
         var script:String?
-        if let filePath:String = NSBundle(forClass: ViewController.self).pathForResource("bluetooth", ofType:"js") {
+        if let filePath:String = NSBundle(forClass: ViewController.self).pathForResource("WebBluetooth", ofType:"js") {
             do {
                 script = try NSString(contentsOfFile: filePath, encoding: NSUTF8StringEncoding) as String
             } catch _ {
@@ -31,18 +28,16 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
         
         //create bluetooth object, and set it to listen to messages
-        webBluetooth = WebBluetooth();
+        webBluetoothManager = WebBluetoothManager();
         let webCfg:WKWebViewConfiguration = WKWebViewConfiguration()
         let userController:WKUserContentController = WKUserContentController()
-        userController.addScriptMessageHandler(webBluetooth, name: "bluetooth")
+        userController.addScriptMessageHandler(webBluetoothManager, name: "bluetooth")
         
+        // connect picker
         devicePicker = PopUpPickerView()
-        devicePicker.delegate = webBluetooth
-        
+        devicePicker.delegate = webBluetoothManager
         self.view.addSubview(devicePicker)
-        
-    
-        webBluetooth.devicePicker = devicePicker
+        webBluetoothManager.devicePicker = devicePicker
         
         //add the bluetooth script prior to loading all frames
         let userScript:WKUserScript =  WKUserScript(source: script!, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: false)
