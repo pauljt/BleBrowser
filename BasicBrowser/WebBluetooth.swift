@@ -26,10 +26,10 @@ open class BluetoothDevice: NSObject, CBPeripheralDelegate {
     }
     
     func toJSON()->String?{
-        let props:[String:AnyObject] = [
-            "id": deviceId as AnyObject,
-            "name": peripheral.name != nil ? peripheral.name! : NSNull(),
-            "adData":self.adData.toDict(),
+        let props:[String:Any] = [
+            "id": deviceId,
+            "name": peripheral.name,
+            "adData": self.adData.toDict(),
             "deviceClass": 0,
             "vendorIDSource": 0,
             "vendorID": 0,
@@ -193,7 +193,7 @@ class BluetoothAdvertisingData{
     
     init(advertisementData: [String : AnyObject] = [String : AnyObject](), RSSI: NSNumber = 0){
         self.appearance = "fakeappearance"
-        self.txPower = (advertisementData[CBAdvertisementDataTxPowerLevelKey] ?? 0) as! NSNumber
+        self.txPower = (advertisementData[CBAdvertisementDataTxPowerLevelKey] as? NSNumber ?? 0)
         self.rssi=String(describing: RSSI)
         let data = advertisementData[CBAdvertisementDataManufacturerDataKey]
         self.manufacturerData = ""

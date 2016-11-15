@@ -56,7 +56,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         webView.navigationDelegate = self
         containerView.addSubview(webView)
         
-        let views = ["webView": webView]
+        let views = ["webView": webView!]
         containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[webView]|",
             options: NSLayoutFormatOptions(), metrics: nil, views: views))
         containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[webView]|",

@@ -109,7 +109,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
     
     // Check status of BLE hardware
     open func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        if central.state == CBCentralManagerState.poweredOn {
+        if central.state == CBManagerState.poweredOn {
             print("Bluetooth is powered on")
         }
         else {
@@ -118,7 +118,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
     }
     
     func scanForPeripherals(_ options:[String:AnyObject]) -> Bool{
-        if centralManager.state != CBCentralManagerState.poweredOn{
+        if centralManager.state != CBManagerState.poweredOn{
             return false
         }
         

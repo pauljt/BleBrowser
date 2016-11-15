@@ -20,17 +20,17 @@ class JSRequest{
     
     var deviceId:String{
         get{
-            return (data["deviceId"] ?? "") as! String
+            return data["deviceId"] as? String ?? ""
         }
     }
     var method:String {
         get{
-            return (data["method"] ?? "") as! String
+            return data["method"] as? String ?? ""
         }
     }
     var args:[String]{
         get{
-            return (data["args"] ?? [String]()) as! [String]
+            return data["args"] as? [String] ?? [String]()
         }
     }
     
