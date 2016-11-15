@@ -11,7 +11,7 @@ import WebKit
 
 
 
-public class BluetoothDevice: NSObject, CBPeripheralDelegate {
+open class BluetoothDevice: NSObject, CBPeripheralDelegate {
     var deviceId:String; //generated ID used instead of internal IOS name
     var peripheral:CBPeripheral
     var adData:BluetoothAdvertisingData
@@ -27,7 +27,7 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
     
     func toJSON()->String?{
         let props:[String:AnyObject] = [
-            "id": deviceId,
+            "id": deviceId as AnyObject,
             "name": peripheral.name != nil ? peripheral.name! : NSNull(),
             "adData":self.adData.toDict(),
             "deviceClass": 0,
@@ -39,9 +39,9 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
         ]
         
         do {
-            let jsonData = try NSJSONSerialization.dataWithJSONObject(props,
-                options: NSJSONWritingOptions(rawValue: 0))
-            return String(data: jsonData, encoding: NSUTF8StringEncoding)
+            let jsonData = try JSONSerialization.data(withJSONObject: props,
+                options: JSONSerialization.WritingOptions(rawValue: 0))
+            return String(data: jsonData, encoding: String.Encoding.utf8)
         } catch let error {
             print("error converting to json: \(error)")
             return nil
@@ -50,20 +50,20 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
     
     
     // connect services
-    public func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?) {
+    open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         for service in peripheral.services! {
-            print("found service:"+service.UUID.UUIDString)
-            if let matchedRequest = gattRequests[service.UUID]{
-                matchedRequest.sendMessage("response", success:true, result:service.UUID.UUIDString, requestId:matchedRequest.id)
+            print("found service:"+service.uuid.uuidString)
+            if let matchedRequest = gattRequests[service.uuid]{
+                matchedRequest.sendMessage("response", success:true, result:service.uuid.uuidString, requestId:matchedRequest.id)
             }
         }
     }
     
     // connect characteristics
-    public func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
+    open func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         for char in (service.characteristics as [CBCharacteristic]!) {
-            print("found char:" + char.UUID.UUIDString)
-            if let matchedRequest = gattRequests[char.UUID]{
+            print("found char:" + char.uuid.uuidString)
+            if let matchedRequest = gattRequests[char.uuid]{
                 matchedRequest.sendMessage("response", success:true, result:"{}", requestId:matchedRequest.id)
             }
         }
@@ -71,12 +71,12 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
     
     
     // characteristic updates
-    public func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-        print("Characteristic Updated:",characteristic.UUID," ->",characteristic.value)
+    open func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        print("Characteristic Updated:",characteristic.uuid," ->",characteristic.value)
 
-        if let matchedRequest = gattRequests[characteristic.UUID]{
+        if let matchedRequest = gattRequests[characteristic.uuid]{
             if let data = characteristic.value{
-                let b64data = data.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0))
+                let b64data = data.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
                 matchedRequest.sendMessage("response", success:true, result:b64data, requestId:matchedRequest.id)
                 return
             }else{
@@ -85,26 +85,26 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
         }
     }
     
-    func getService(uuid:CBUUID)->CBService?{
+    func getService(_ uuid:CBUUID)->CBService?{
         if(self.peripheral.services == nil){
             return nil
         }
         for service in peripheral.services!{
-            if(service.UUID == uuid){
+            if(service.uuid == uuid){
                 return service
             }
         }
         return nil
     }
     
-    func getCharacteristic(serviceUUID:CBUUID,uuid:CBUUID)->CBCharacteristic?{
+    func getCharacteristic(_ serviceUUID:CBUUID,uuid:CBUUID)->CBCharacteristic?{
         print(peripheral)
         if(self.peripheral.services == nil){
             return nil
         }
         var service:CBService? = nil
         for s in self.peripheral.services!{
-            if(s.UUID == serviceUUID){
+            if(s.uuid == serviceUUID){
                 service = s
             }
         }
@@ -114,7 +114,7 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
         }
         
         for char in chars{
-            if(char.UUID == uuid){
+            if(char.uuid == uuid){
                 return char
             }
         }
@@ -122,14 +122,14 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
     }
     
     
-    func recieve(req:JSRequest){
+    func recieve(_ req:JSRequest){
         switch req.method{
         case "BluetoothRemoteGATTServer.getPrimaryService":
             let targetService:CBUUID = CBUUID(string:req.args[0])
             
             // check peripherals.services first to see if we already discovered services
             if (peripheral.services != nil ){
-                if peripheral.services!.contains({$0.UUID == targetService}) {
+                if peripheral.services!.contains(where: {$0.uuid == targetService}) {
                     req.sendMessage("response", success:true, result:"{}", requestId:req.id)
                     return
                 }else{
@@ -138,7 +138,7 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
                 }
             }
             
-            print("Discovering service:"+targetService.UUIDString)
+            print("Discovering service:"+targetService.uuidString)
             gattRequests[targetService] = req
             peripheral.discoverServices([targetService])
     
@@ -153,7 +153,7 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
                 
                 if service.characteristics != nil{
                     for char in service.characteristics!{
-                        if(char.UUID == targetChar){
+                        if(char.uuid == targetChar){
                             req.sendMessage("response", success:true, result:"{}", requestId:req.id)
                             return
                         }else{
@@ -163,9 +163,9 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
                     }
                 }
                 
-                print("Discovering service:"+targetService.UUIDString)
+                print("Discovering service:"+targetService.uuidString)
                 gattRequests[targetChar] = req
-                peripheral.discoverCharacteristics(nil, forService: service)
+                peripheral.discoverCharacteristics(nil, for: service)
             case "BluetoothGATTCharacteristic.readValue":
                 let targetService:CBUUID = CBUUID(string:req.args[0])
                 let targetChar:CBUUID = CBUUID(string:req.args[1])
@@ -175,8 +175,8 @@ public class BluetoothDevice: NSObject, CBPeripheralDelegate {
                     return
                 }
                 
-                gattRequests[char.UUID] = req
-                self.peripheral.readValueForCharacteristic(char)
+                gattRequests[char.uuid] = req
+                self.peripheral.readValue(for: char)
  
         default:
             print("Unrecognized method requested")
@@ -194,11 +194,11 @@ class BluetoothAdvertisingData{
     init(advertisementData: [String : AnyObject] = [String : AnyObject](), RSSI: NSNumber = 0){
         self.appearance = "fakeappearance"
         self.txPower = (advertisementData[CBAdvertisementDataTxPowerLevelKey] ?? 0) as! NSNumber
-        self.rssi=String(RSSI)
+        self.rssi=String(describing: RSSI)
         let data = advertisementData[CBAdvertisementDataManufacturerDataKey]
         self.manufacturerData = ""
         if data != nil{
-            if let dataString = NSString(data: data as! NSData, encoding: NSUTF8StringEncoding) as? String {
+            if let dataString = NSString(data: data as! Data, encoding: String.Encoding.utf8.rawValue) as? String {
                 self.manufacturerData = dataString
             } else {
                 print("Error parsing advertisement data: not a valid UTF-8 sequence")
@@ -207,18 +207,18 @@ class BluetoothAdvertisingData{
         
         var uuids = [String]()
         if advertisementData["kCBAdvDataServiceUUIDs"] != nil {
-            uuids = (advertisementData["kCBAdvDataServiceUUIDs"] as! [CBUUID]).map{$0.UUIDString.lowercaseString}
+            uuids = (advertisementData["kCBAdvDataServiceUUIDs"] as! [CBUUID]).map{$0.uuidString.lowercased()}
         }
         self.serviceData = uuids
     }
     
     func toDict()->[String:AnyObject]{
         let dict:[String:AnyObject] = [
-            "appearance": self.appearance,
+            "appearance": self.appearance as AnyObject,
             "txPower": self.txPower,
-            "rssi": self.rssi,
-            "manufacturerData": self.manufacturerData,
-            "serviceData": self.serviceData
+            "rssi": self.rssi as AnyObject,
+            "manufacturerData": self.manufacturerData as AnyObject,
+            "serviceData": self.serviceData as AnyObject
         ]
         return dict
     }

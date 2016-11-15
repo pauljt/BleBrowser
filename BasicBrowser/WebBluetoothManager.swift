@@ -9,7 +9,7 @@ import Foundation
 import CoreBluetooth
 import WebKit
 
-public class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler, PopUpPickerViewDelegate {
+open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler, PopUpPickerViewDelegate {
     
     override init(){
         super.init()
@@ -38,7 +38,7 @@ public class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMe
     var allowedDevices:[String:[String:BluetoothDevice]] = [String:[String:BluetoothDevice]]()
     
     // recieve message from javascript
-    public func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage){
+    open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage){
 
         let messageBody = message.body as! NSDictionary
         let callbackID:Int =  messageBody["callbackID"] as! Int
@@ -56,7 +56,7 @@ public class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMe
         }*/
     }
     
-    func processRequest(req:JSRequest){
+    func processRequest(_ req:JSRequest){
         switch req.type{
         case "bluetooth:requestDevice":
             if scanForPeripherals(req.data){
@@ -75,7 +75,7 @@ public class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMe
             if let device = allowedDevices[req.origin]?[req.deviceId]{
                 //connecting/disconnecting GATT server has to be handle by the manager
                 if(req.method == "BluetoothRemoteGATTServer.connect"){
-                    centralManager.connectPeripheral(device.peripheral,options: nil)
+                    centralManager.connect(device.peripheral,options: nil)
                     connectionRequest = req //resolved when connected
                 }else if (req.method == "BluetoothRemoteGATTServer.disconnect"){
                     centralManager.cancelPeripheralConnection(device.peripheral)
@@ -96,7 +96,7 @@ public class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMe
     
     
     
-    func transformArguments(args: [AnyObject]) -> [AnyObject!] {
+    func transformArguments(_ args: [AnyObject]) -> [AnyObject?] {
         return args.map { arg in
             if arg is NSNull {
                 return nil
@@ -108,8 +108,8 @@ public class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMe
 
     
     // Check status of BLE hardware
-    public func centralManagerDidUpdateState(central: CBCentralManager) {
-        if central.state == CBCentralManagerState.PoweredOn {
+    open func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        if central.state == CBCentralManagerState.poweredOn {
             print("Bluetooth is powered on")
         }
         else {
@@ -117,8 +117,8 @@ public class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMe
         }
     }
     
-    func scanForPeripherals(options:[String:AnyObject]) -> Bool{
-        if centralManager.state != CBCentralManagerState.PoweredOn{
+    func scanForPeripherals(_ options:[String:AnyObject]) -> Bool{
+        if centralManager.state != CBCentralManagerState.poweredOn{
             return false
         }
         
@@ -139,22 +139,22 @@ public class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMe
         // (if the string is invalid, it causes app to crash with NSexception)
         
         //todo: determine if uppercase is the standard (bb-b uses uppercase UUID)
-        servicesCBUUID = services.map {return CBUUID(string:$0.uppercaseString)}
+        servicesCBUUID = services.map {return CBUUID(string:$0.uppercased())}
         
         foundDevices.removeAll();
-        centralManager.scanForPeripheralsWithServices(servicesCBUUID, options: nil)
+        centralManager.scanForPeripherals(withServices: servicesCBUUID, options: nil)
         return true
     }
     
-    public func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
-        let deviceId = NSUUID().UUIDString;
-        foundDevices[peripheral.identifier.UUIDString] = BluetoothDevice(deviceId:deviceId,peripheral: peripheral,
-            advertisementData: advertisementData,
+    open func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        let deviceId = UUID().uuidString;
+        foundDevices[peripheral.identifier.uuidString] = BluetoothDevice(deviceId:deviceId,peripheral: peripheral,
+            advertisementData: advertisementData as [String : AnyObject],
             RSSI: RSSI)
         updatePickerData()
     }
     
-    public func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
+    open func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("Connected")
         if(connectionRequest != nil){
             connectionRequest!.sendMessage("response", success:true, result:"{}", requestId:connectionRequest!.id)
@@ -164,7 +164,7 @@ public class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMe
         
     }
     
-    public func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral) {
+    open func centralManager(_ central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral) {
         print("Failed to connect")
         connectionRequest!.sendMessage("response", success:false, result:"'Failed to connect'", requestId:connectionRequest!.id)
         connectionRequest = nil
@@ -188,21 +188,21 @@ public class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMe
     }
     
   
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponentsInPickerView(_ pickerView: UIPickerView) -> Int {
         return 1
     }
     
     // The number of rows of data
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return pickerNames.count
     }
     
     // The data to return for the row and component (column) that's being passed in
-    public func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    open func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return pickerNames[row]
     }
     
-    func pickerView(pickerView: UIPickerView, didSelect numbers: [Int]) {
+    func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int]) {
         
         if(pickerIds.count<1){
             return

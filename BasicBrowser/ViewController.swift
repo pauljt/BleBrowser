@@ -18,9 +18,9 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         
         //load polyfill script
         var script:String?
-        if let filePath:String = NSBundle(forClass: ViewController.self).pathForResource("WebBluetooth", ofType:"js") {
+        if let filePath:String = Bundle(for: ViewController.self).path(forResource: "WebBluetooth", ofType:"js") {
             do {
-                script = try NSString(contentsOfFile: filePath, encoding: NSUTF8StringEncoding) as String
+                script = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
             } catch _ {
                 print("Error loading polyfil")
                 return
@@ -31,7 +31,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         webBluetoothManager = WebBluetoothManager();
         let webCfg:WKWebViewConfiguration = WKWebViewConfiguration()
         let userController:WKUserContentController = WKUserContentController()
-        userController.addScriptMessageHandler(webBluetoothManager, name: "bluetooth")
+        userController.add(webBluetoothManager, name: "bluetooth")
         
         // connect picker
         devicePicker = PopUpPickerView()
@@ -40,7 +40,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         webBluetoothManager.devicePicker = devicePicker
         
         //add the bluetooth script prior to loading all frames
-        let userScript:WKUserScript =  WKUserScript(source: script!, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: false)
+        let userScript:WKUserScript =  WKUserScript(source: script!, injectionTime: WKUserScriptInjectionTime.atDocumentEnd, forMainFrameOnly: false)
         userController.addUserScript(userScript)
         webCfg.userContentController = userController;
         
@@ -49,7 +49,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             frame: self.containerView.bounds,
             configuration:webCfg
         )
-        webView.UIDelegate = self
+        webView.uiDelegate = self
         
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.allowsBackForwardNavigationGestures = true
@@ -57,53 +57,54 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         containerView.addSubview(webView)
         
         let views = ["webView": webView]
-        containerView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[webView]|",
+        containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[webView]|",
             options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        containerView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[webView]|",
+        containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[webView]|",
             options: NSLayoutFormatOptions(), metrics: nil, views: views))
         
         loadLocation("https://pauljt.github.io/bletest/") 
     }
     
 
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         loadLocation(textField.text!)
         return true
     }
     
-    func loadLocation(var location: String) {
+    func loadLocation(_ location: String) {
+        var location = location
         if !location.hasPrefix("http://") && !location.hasPrefix("https://") {
             location = "http://" + location
         }
         locationTextField.text = location
-        webView.loadRequest(NSURLRequest(URL: NSURL(string: location)!))
+        webView.load(URLRequest(url: URL(string: location)!))
         
     }
     
-    func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
-        locationTextField.text = webView.URL?.absoluteString
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        locationTextField.text = webView.url?.absoluteString
         
     }
     
-    func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
-        locationTextField.text = webView.URL?.absoluteString
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        locationTextField.text = webView.url?.absoluteString
         webView.loadHTMLString("<p>Fail Navigation: \(error.localizedDescription)</p>", baseURL: nil)
     }
     
-    func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
-        locationTextField.text = webView.URL?.absoluteString
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        locationTextField.text = webView.url?.absoluteString
         webView.loadHTMLString("<p>Fail Provisional Navigation: \(error.localizedDescription)</p>", baseURL: nil)
     }
     
-    func webView(webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (() -> Void)) {
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (@escaping () -> Void)) {
         print("webView:\(webView) runJavaScriptAlertPanelWithMessage:\(message) initiatedByFrame:\(frame) completionHandler:\(completionHandler)")
         
-        let alertController = UIAlertController(title: frame.request.URL?.host, message: message, preferredStyle: .Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: { action in
+        let alertController = UIAlertController(title: frame.request.url?.host, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
             completionHandler()
         }))
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     

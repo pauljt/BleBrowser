@@ -36,8 +36,8 @@ class JSRequest{
     
     var origin:String{
         get{
-            if let URL = webView.URL{
-                return URL.scheme + ":" + URL.host! + ":" + String(URL.port)
+            if let URL = webView.url{
+                return URL.scheme! + ":" + URL.host! + ":" + String(describing: (URL as NSURL).port)
             }else{
                 return ""
             }
@@ -51,7 +51,7 @@ class JSRequest{
         self.webView = webView
     }
     
-    func sendMessage(type:String, success:Bool, result:String, requestId:Int = -1){
+    func sendMessage(_ type:String, success:Bool, result:String, requestId:Int = -1){
         if(self.resolved){
             print("Warning: attempt to send a second  response to the same message")
             return
