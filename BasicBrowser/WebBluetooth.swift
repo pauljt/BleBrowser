@@ -28,14 +28,14 @@ open class BluetoothDevice: NSObject, CBPeripheralDelegate {
     func toJSON()->String?{
         let props:[String:Any] = [
             "id": deviceId,
-            "name": peripheral.name,
+            "name": (peripheral.name ?? NSNull()) as Any,
             "adData": self.adData.toDict(),
             "deviceClass": 0,
             "vendorIDSource": 0,
             "vendorID": 0,
             "productID": 0,
             "productVersion": 0,
-            "uuids": []
+            "uuids": [:]
         ]
         
         do {

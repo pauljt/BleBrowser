@@ -99,6 +99,6 @@ class PopUpPickerView: UIView {
 }
 
 @objc
-protocol PopUpPickerViewDelegate: UIPickerViewDelegate {
+protocol PopUpPickerViewDelegate: UIPickerViewDelegate, UIPickerViewDataSource {
     @objc optional func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int])
 }

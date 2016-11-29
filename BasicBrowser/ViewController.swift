@@ -6,10 +6,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var containerView: UIView!
     
-    var devicePicker: PopUpPickerView!
+    let devicePicker = PopUpPickerView()
     
     var webView: WKWebView!
-    var webBluetoothManager:WebBluetoothManager!
+    var webBluetoothManager = WebBluetoothManager()
     
     override func viewDidLoad() {
        
@@ -28,13 +28,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
         
         //create bluetooth object, and set it to listen to messages
-        webBluetoothManager = WebBluetoothManager();
-        let webCfg:WKWebViewConfiguration = WKWebViewConfiguration()
-        let userController:WKUserContentController = WKUserContentController()
+        let webCfg = WKWebViewConfiguration()
+        let userController = WKUserContentController()
         userController.add(webBluetoothManager, name: "bluetooth")
         
         // connect picker
-        devicePicker = PopUpPickerView()
         devicePicker.delegate = webBluetoothManager
         self.view.addSubview(devicePicker)
         webBluetoothManager.devicePicker = devicePicker
@@ -42,8 +40,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         //add the bluetooth script prior to loading all frames
         let userScript:WKUserScript =  WKUserScript(source: script!, injectionTime: WKUserScriptInjectionTime.atDocumentEnd, forMainFrameOnly: false)
         userController.addUserScript(userScript)
-        webCfg.userContentController = userController;
-        
+        webCfg.userContentController = userController
         
         webView = WKWebView(
             frame: self.containerView.bounds,
@@ -62,7 +59,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[webView]|",
             options: NSLayoutFormatOptions(), metrics: nil, views: views))
         
-        loadLocation("https://pauljt.github.io/bletest/") 
+        loadLocation("http://caliban.local:8000/ble/home")
     }
     
 

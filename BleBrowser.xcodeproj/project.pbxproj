@@ -31,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
 		BB303DF01C41EF2F00FCAF24 /* WebBluetooth.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = WebBluetooth.js; sourceTree = "<group>"; tabWidth = 2; };
 		BB303DF21C42070C00FCAF24 /* WebBluetoothManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebBluetoothManager.swift; sourceTree = "<group>"; };
 		BB4DBE641C97F577000D2C35 /* JSRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSRequest.swift; sourceTree = "<group>"; };
@@ -69,6 +70,7 @@
 		E44C184D1A36203E00734F8B = {
 			isa = PBXGroup;
 			children = (
+				5AF110A51DDC6AA3006CB88F /* notes.md */,
 				E44C18581A36203E00734F8B /* BleBrowser */,
 				E44C186E1A36203E00734F8B /* BleBrowserTests */,
 				E44C18571A36203E00734F8B /* Products */,
@@ -174,7 +176,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0720;
-				LastSwiftUpdateCheck = 0720;
+				LastSwiftUpdateCheck = 0810;
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Stefan Arentz";
 				TargetAttributes = {
