@@ -9,9 +9,19 @@
     return;
   }
 
+  function _arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (let ii = 0; ii < len; ii++) {
+        binary += String.fromCharCode(bytes[ii]);
+    }
+    return window.btoa(binary);
+}
+
   // https://webbluetoothcg.github.io/web-bluetooth/ interface
   function BluetoothDevice(deviceJSON) {
-    console.log("got device:", deviceJSON.id)
+    console.log("got device: ", deviceJSON.id);
     this._id = deviceJSON.id;
     this._name = deviceJSON.name;
 
@@ -67,6 +77,9 @@
     },
     toString: function () {
       return this._id;
+    },
+    addEventListener: function () {
+      console.log("DUMMY device addEventListener");
     }
   };
 
@@ -172,6 +185,7 @@
         self.uuid, canonicalUUID)
         .then(function (CharacteristicJSON) {
           //todo check we got the correct char UUID back.
+          console.log('Got characteristic: ' + uuid);
           return new BluetoothGATTCharacteristic(self, canonicalUUID, CharacteristicJSON.properties);
         });
     },
@@ -203,7 +217,8 @@
 
     this._callRemote = function (method) {
       var self = this;
-      var args = Array.prototype.slice.call(arguments).slice(1, arguments.length)
+      var args = Array.prototype.slice.call(arguments).slice(1, arguments.length);
+      console.log('GATTChar _callRemote args', args);
       return sendMessage("bluetooth:deviceMessage", {
         method: method,
         args: args,
@@ -242,8 +257,13 @@
           return new DataView(self._value,0);
         });
     },
-    writeValue: function () {
+    writeValue: function (value) {
+      // Can't send raw array bytes since we use JSON, so base64 encode.
+      let v64 = _arrayBufferToBase64(value)
       var self = this;
+      return self._callRemote(
+        "BluetoothGATTCharacteristic.writeValue", self._service.uuid,
+        self._uuid, v64);
     },
     startNotifications: function () {
       var self = this;
@@ -252,6 +272,9 @@
     stopNotifications: function () {
       var self = this;
       return self._callRemote("BluetoothGATTCharacteristic.stopNotifications")
+    },
+    addEventListener: () => {
+      console.log("DUMMY characteristic addEventListener")
     }
   };
 
@@ -296,6 +319,7 @@
     this._callRemote = function (method) {
       var self = this;
       var args = Array.prototype.slice.call(arguments).slice(1, arguments.length)
+      console.log("Send device message with args", args);
       return sendMessage("bluetooth:deviceMessage", {
         method: method,
         args: args,
@@ -573,12 +597,15 @@
   var bluetooth = {};
   bluetooth.requestDevice = function (requestDeviceOptions) {
     if (!requestDeviceOptions.filters || requestDeviceOptions.filters.length === 0) {
-      throw new TypeError('The first argument to navigator.bluetooth.requestDevice() must have a non-zero length filters parameter');
+      message = 'The first argument to navigator.bluetooth.requestDevice() must have a non-zero length filters parameter';
+      console.log(message);
+      throw new TypeError(message);
     }
     var validatedDeviceOptions = {}
 
     var filters = requestDeviceOptions.filters;
     filters = filters.map(function (filter) {
+      if (!filter.services) filter.services = [];
       return {
         services: filter.services.map(window.BluetoothUUID.getService),
         name: filter.name,
@@ -625,7 +652,7 @@
       callbackID: callbackID
     };
 
-    console.log("<--", message);
+    console.log("<-- " + type, JSON.stringify(data));
     window.webkit.messageHandlers.bluetooth.postMessage(message);
 
     _messageCount++;
@@ -641,12 +668,12 @@
     });
   }
 
-  function recieveMessage(messageType, success, resultString, callbackID) {
+  function receiveMessage(messageType, success, resultString, callbackID) {
     console.log("-->", messageType, success, resultString, callbackID);
 
     switch (messageType) {
       case "response":
-        console.log("result:", resultString)
+        console.log("result:", resultString);
         _callbacks[callbackID](success, resultString);
         break;
       default:
@@ -678,7 +705,7 @@
   //Exposed interfaces
   window.BluetoothDevice = BluetoothDevice;
   window.BluetoothUUID = BluetoothUUID;
-  window.recieveMessage = recieveMessage;
+  window.receiveMessage = receiveMessage;
   navigator.bluetooth = bluetooth;
   window.BluetoothUUID = BluetoothUUID;
 

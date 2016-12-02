@@ -59,7 +59,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[webView]|",
             options: NSLayoutFormatOptions(), metrics: nil, views: views))
         
-        loadLocation("http://caliban.local:8000/ble/home")
+        loadLocation("http://caliban.local:8000/projects/puck.js/0.1.0/puckdemo")
     }
     
 

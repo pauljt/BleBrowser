@@ -56,8 +56,8 @@ class JSRequest{
             print("Warning: attempt to send a second  response to the same message")
             return
         }
-        let commandString = "recieveMessage('\(type)', \(success), '\(result)',\(requestId))"
-        print("-->:",commandString)
+        let commandString = "receiveMessage('\(type)', \(success), '\(result)',\(requestId))"
+        NSLog("--> execute js: \"\(commandString)\"")
         webView.evaluateJavaScript(commandString, completionHandler: nil)
         self.resolved = true
     }

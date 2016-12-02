@@ -36,26 +36,24 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
     // For example, if a user grants access for https://example.com  would be something like:
     //    allowedDevices["https://example.com"]?[NSUUID().UUIDString] = new BluetoothDevice(peripheral)
     var allowedDevices:[String:[String:BluetoothDevice]] = [String:[String:BluetoothDevice]]()
+    var filters = [[String: AnyObject]]()
+    var pickerNamesIds = [(name: String, id: String)]()
     
     //
     // ========== WKScriptMessageHandler ==========
     //
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage){
 
+        // TODO don't really want to crash if these aren't OK.
         let messageBody = message.body as! NSDictionary
         let callbackID:Int =  messageBody["callbackID"] as! Int
         let type = messageBody["type"] as! String
         let data = messageBody["data"] as! [String:AnyObject]
-        
+
         //todo add safety
         let req = JSRequest(id: callbackID,type:type,data:data,webView:message.webView!);
         print("<-- #\(callbackID) to dispatch \(type) with data:\(data)")
-        processRequest(req)
-
-        /*var args:[AnyObject]=[AnyObject]()
-        if(messageBody["arguments"] != nil){
-            args = transformArguments(messageBody["arguments"] as! [AnyObject])
-        }*/
+        self.processRequest(req)
     }
     
     //
@@ -71,12 +69,18 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
     }
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        print("discovered device: \(peripheral)")
+        NSLog("discovered device: \(peripheral)")
+
+        if !self._peripheralIsIncludedByFilters(peripheral) {
+            NSLog("Device is excluded by filters")
+            return
+        }
+
         let deviceId = UUID().uuidString;
-        foundDevices[peripheral.identifier.uuidString] = BluetoothDevice(deviceId:deviceId,peripheral: peripheral,
+        self.foundDevices[peripheral.identifier.uuidString] = BluetoothDevice(deviceId: deviceId, peripheral: peripheral,
             advertisementData: advertisementData as [String : AnyObject],
             RSSI: RSSI)
-        updatePickerData()
+        self.updatePickerData()
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -85,8 +89,6 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
             connectionRequest!.sendMessage("response", success:true, result:"{}", requestId:connectionRequest!.id)
             connectionRequest = nil
         }
-        
-        
     }
     
     public func centralManager(_ central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral) {
@@ -102,38 +104,36 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
     
     // The data to return for the row and component (column) that's being passed in
     public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return pickerNames[row]
+        return pickerNamesIds[row].name
     }
     
     public func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int]) {
         
-        if(pickerIds.count<1){
+        if(self.pickerNamesIds.count < 1){
+            NSLog("No devices to select!")
             return
         }
-        let deviceId = pickerIds[numbers[0]]
-        centralManager.stopScan()
+        let deviceId = self.pickerNamesIds[numbers[0]].id
+        self.centralManager.stopScan()
+
+        // Should not be nil since the picker view display is in response to
+        // a message.
+        let req = self.deviceRequest!
+        self.deviceRequest = nil
         
-        if deviceRequest == nil{
-            print("Picker UI initiated with a request, this should never happen")
-            return
-        }
-        let req = deviceRequest!
-        deviceRequest = nil
-        
-        if self.foundDevices[deviceId] == nil{
-            print("DEVICE OUT OF RANGE")
+        if self.foundDevices[deviceId] == nil {
+            NSLog("deviceId \(deviceId) not in foundDevices")
             return
         }
         let device = self.foundDevices[deviceId]!
         let deviceJSON = device.toJSON()!
         
-        if allowedDevices[req.origin] == nil{
-            allowedDevices[req.origin] = [String:BluetoothDevice]()
+        if self.allowedDevices[req.origin] == nil {
+            self.allowedDevices[req.origin] = [String:BluetoothDevice]()
         }
-        //add device to allowed list, and resolve requestDevice promise
-        allowedDevices[req.origin]![device.deviceId] = device
+        // add device to allowed list, and resolve requestDevice promise
+        self.allowedDevices[req.origin]![device.deviceId] = device
         req.sendMessage("response", success:true, result:deviceJSON, requestId:req.id)
-        
     }
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -141,7 +141,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
     
     // The number of rows of data
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerNames.count
+        return self.pickerNamesIds.count
     }
     
     //
@@ -150,13 +150,13 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
     func processRequest(_ req:JSRequest){
         switch req.type {
         case "bluetooth:requestDevice":
-            if scanForPeripherals(req.data){
-                deviceRequest = req
-                devicePicker.showPicker()
+            guard let data = req.data["filters"] as? [[String: AnyObject]] else {
+                req.sendMessage("response", success:false, result:"Bad filters passed: \(req.data)", requestId:req.id)
+                break
             }
-            else{
-                req.sendMessage("response", success:false, result:"\"Bluetooth is currently disabled\"", requestId:req.id)
-            }
+            self.scanForPeripherals(data)
+            self.deviceRequest = req
+            self.devicePicker.showPicker()
             
         case "bluetooth:deviceMessage":
             print("DeviceMessage for \(req.deviceId)")
@@ -164,7 +164,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
             print(req.args)
             
             if let device = allowedDevices[req.origin]?[req.deviceId]{
-                //connecting/disconnecting GATT server has to be handle by the manager
+                // connecting/disconnecting GATT server has to be handled by the manager
                 if(req.method == "BluetoothRemoteGATTServer.connect"){
                     centralManager.connect(device.peripheral,options: nil)
                     connectionRequest = req //resolved when connected
@@ -172,7 +172,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
                     centralManager.cancelPeripheralConnection(device.peripheral)
                     disconnectionRequest = req //resolved when connected
                 }else{
-                    device.recieve(req)
+                    device.receive(req)
                 }
             }
             else{
@@ -184,21 +184,18 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
         }
     }
     
-    func scanForPeripherals(_ options:[String:AnyObject]) -> Bool{
-        if centralManager.state != CBManagerState.poweredOn{
-            return false
-        }
+    func scanForPeripherals(_ filters:[[String: AnyObject]]) {
         
-        let filters = options["filters"] as! [AnyObject]
-        let filterOne = filters[0]
-        
-        print("Filters",filters)
-        print("Services",filterOne["services"])
-        print("name:",filters[0]["name"])
-        print("prefix:",filters[0]["namePrefix"])
-        
-        let services = [String]()
-        
+        NSLog("Scanning for peripherals with filters \(filters)")
+
+        let services = filters.reduce([String](), {
+            (currReduction, nextValue) in
+            if let nextServices = nextValue["services"] as? [String] {
+                return currReduction + nextServices
+            }
+            return currReduction
+        })
+
         let servicesCBUUID:[CBUUID]
         
         //todo validate CBUUID (js does this already but security should be here since
@@ -208,23 +205,19 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
         //todo: determine if uppercase is the standard (bb-b uses uppercase UUID)
         servicesCBUUID = services.map { CBUUID(string:$0.uppercased()) }
         
-        foundDevices.removeAll();
+        self.foundDevices.removeAll();
+        self.filters = filters
         centralManager.scanForPeripherals(withServices: servicesCBUUID, options: nil)
-        return true
     }
     
-    //2d array of devices & corresponding names
-    var pickerNames:[String] = [String]()
-    var pickerIds:[String] = [String]()
-    
     func updatePickerData(){
-        pickerNames.removeAll()
-        pickerIds.removeAll()
-        for (id, device) in foundDevices {
-            pickerNames.append(device.peripheral.name ?? "Unknown")
-            pickerIds.append(id)
+        self.pickerNamesIds.removeAll()
+        for (id, device) in self.foundDevices {
+            self.pickerNamesIds.append(
+                (name: device.peripheral.name ?? "Unknown", id: id))
         }
-        devicePicker.updatePicker()
+        self.pickerNamesIds.sort(by: <)
+        self.devicePicker.updatePicker()
     }
     
     func transformArguments(_ args: [AnyObject]) -> [AnyObject?] {
@@ -236,5 +229,16 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
                 return arg
             }
         }
+    }
+
+    func _peripheralIsIncludedByFilters(_ peripheral: CBPeripheral) -> Bool {
+        for filter in self.filters {
+            if let pname = peripheral.name {
+                if let namePrefix = filter["namePrefix"] as? String {
+                    if pname.hasPrefix(namePrefix) { return true }
+                }
+            }
+        }
+        return false
     }
 }
