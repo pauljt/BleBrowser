@@ -627,8 +627,6 @@
       .then(function (deviceJSON) {
         var device = JSON.parse(deviceJSON);
         return new BluetoothDevice(device);
-      }).catch(function (e) {
-        console.log("Error starting to search for device", e);
       });
   }
 

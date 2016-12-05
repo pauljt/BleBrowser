@@ -26,19 +26,30 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
                 return
             }
         }
-        
+
+        // Before configuring the WKWebView, delete caches since
+        // it seems a bit arbitrary when this happens otherwise.
+        // This from http://stackoverflow.com/a/34376943/5920499
+        let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache]) as! Set<String>
+        WKWebsiteDataStore.default().removeData(
+            ofTypes: websiteDataTypes,
+            modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
+            completionHandler:{})
+
         //create bluetooth object, and set it to listen to messages
         let webCfg = WKWebViewConfiguration()
         let userController = WKUserContentController()
         userController.add(webBluetoothManager, name: "bluetooth")
         
         // connect picker
-        devicePicker.delegate = webBluetoothManager
+        self.devicePicker.delegate = webBluetoothManager
         self.view.addSubview(devicePicker)
-        webBluetoothManager.devicePicker = devicePicker
+        self.webBluetoothManager.devicePicker = devicePicker
         
-        //add the bluetooth script prior to loading all frames
-        let userScript:WKUserScript =  WKUserScript(source: script!, injectionTime: WKUserScriptInjectionTime.atDocumentEnd, forMainFrameOnly: false)
+        // add the bluetooth script prior to loading all frames
+        let userScript:WKUserScript =  WKUserScript(
+            source: script!, injectionTime: .atDocumentStart,
+            forMainFrameOnly: false)
         userController.addUserScript(userScript)
         webCfg.userContentController = userController
         

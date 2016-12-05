@@ -66,11 +66,12 @@ class PopUpPickerView: UIView {
     func cancelPicker() {
         hidePicker()
         restoreSelectedRows()
+        delegate?.pickerViewCancelled?(self.pickerView)
         selectedRows = nil
     }
     func endPicker() {
         hidePicker()
-        delegate?.pickerView?(pickerView, didSelect: getSelectedRows())
+        delegate?.pickerView?(self.pickerView, didSelect: getSelectedRows())
         selectedRows = nil
     }
     
@@ -101,4 +102,5 @@ class PopUpPickerView: UIView {
 @objc
 protocol PopUpPickerViewDelegate: UIPickerViewDelegate, UIPickerViewDataSource {
     @objc optional func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int])
+    @objc optional func pickerViewCancelled(_ pickerView: UIPickerView)
 }

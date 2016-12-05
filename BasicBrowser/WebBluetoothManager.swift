@@ -108,7 +108,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
     }
     
     public func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int]) {
-        
+        NSLog("Picker view did select \(numbers)")
         if(self.pickerNamesIds.count < 1){
             NSLog("No devices to select!")
             return
@@ -134,6 +134,11 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
         // add device to allowed list, and resolve requestDevice promise
         self.allowedDevices[req.origin]![device.deviceId] = device
         req.sendMessage("response", success:true, result:deviceJSON, requestId:req.id)
+    }
+    public func pickerViewCancelled(_ pickerView: UIPickerView) {
+        NSLog("User cancelled device selection")
+        let req = self.deviceRequest!
+        req.sendMessage("response", success:false, result:"User cancelled", requestId:req.id)
     }
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
