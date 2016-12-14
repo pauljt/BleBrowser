@@ -8,7 +8,7 @@ import Foundation
 import CoreBluetooth
 import WebKit
 
-open class WebBluetoothManager: NSObject, CBCentralManagerDelegate,WKScriptMessageHandler, PopUpPickerViewDelegate {
+open class WBManager: NSObject, CBCentralManagerDelegate,WKScriptMessageHandler, PopUpPickerViewDelegate {
 
     /*
      * ========== Class constants ==========
@@ -23,18 +23,18 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate,WKScriptMessa
     let centralManager = CBCentralManager(delegate: nil, queue: nil)
     var devicePicker: PopUpPickerView!
     
-    var BluetoothDeviceOption_filters: [CBUUID]?
-    var BluetoothDeviceOption_optionalService: [CBUUID]?
+    var WBDeviceOption_filters: [CBUUID]?
+    var WBDeviceOption_optionalService: [CBUUID]?
 
     /*! @abstract The devices selected by the user for use by this manager. Keyed by the UUID provided by the system. */
-    var devicesByInternalUUID = [UUID: BluetoothDevice]()
+    var devicesByInternalUUID = [UUID: WBDevice]()
 
     /*! @abstract The devices selected by the user for use by this manager. Keyed by the UUID we create and pass to the web page. This seems to be for security purposes, and seems sensible. */
-    var devicesByExternalUUID = [UUID: BluetoothDevice]()
+    var devicesByExternalUUID = [UUID: WBDevice]()
 
     /*! @abstract The outstanding request for a device from the web page, if one is outstanding. Ony one may be outstanding at any one time and should be policed by a modal dialog box. TODO: how modal is the current solution? */
     var requestDeviceTransaction: WBTransaction? = nil
-    var discoveredDevicesByInternalUUID = [UUID: BluetoothDevice]()
+    var discoveredDevicesByInternalUUID = [UUID: WBDevice]()
 
     var filters = [[String: AnyObject]]()
     var pickerNamesIds = [(name: String, id: UUID)]()
@@ -47,7 +47,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate,WKScriptMessa
         self.centralManager.delegate = self
     }
     deinit {
-        NSLog("WebBluetoothManager deinit")
+        NSLog("WBManager deinit")
         self.stopScanForPeripherals()
     }
 
@@ -78,7 +78,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate,WKScriptMessa
             return
         }
         
-        self.discoveredDevicesByInternalUUID[peripheral.identifier] = BluetoothDevice(
+        self.discoveredDevicesByInternalUUID[peripheral.identifier] = WBDevice(
             peripheral: peripheral, advertisementData: advertisementData,
             RSSI: RSSI, manager: self)
 
@@ -190,7 +190,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate,WKScriptMessa
 
         case .device:
 
-            guard let view = BluetoothDevice.DeviceTransactionView(transaction: transaction) else {
+            guard let view = WBDevice.DeviceTransactionView(transaction: transaction) else {
                 transaction.resolveAsFailure(withMessage: "Bad device request")
                 break
             }
@@ -205,7 +205,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate,WKScriptMessa
         }
     }
 
-    private func deviceWasSelected(_ device: BluetoothDevice) {
+    private func deviceWasSelected(_ device: WBDevice) {
         // TODO: think about whether overwriting any existing device is an issue.
         self.devicesByExternalUUID[device.deviceId] = device;
         self.devicesByInternalUUID[device.peripheral.identifier] = device;

@@ -10,7 +10,7 @@ import CoreBluetooth
 import WebKit
 
 
-open class BluetoothDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
+open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     /*
      * ========== Types ==========
      */
@@ -105,7 +105,7 @@ open class BluetoothDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     var adData: BluetoothAdvertisingData
 
 //    let transactionManager = WBTransactionManager()
-    weak var manager: WebBluetoothManager!
+    weak var manager: WBManager!
 
     /*! @abstract The current transactions to connect to this device. There can be multiple outstanding at any one time and they are all resolved together. */
     var connectTransactions = [WBTransaction]()
@@ -117,7 +117,7 @@ open class BluetoothDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     /*
      * ========== Initializers ==========
      */
-    init(peripheral: CBPeripheral, advertisementData: [String: Any] = [String: Any](), RSSI: NSNumber = 0, manager: WebBluetoothManager){
+    init(peripheral: CBPeripheral, advertisementData: [String: Any] = [String: Any](), RSSI: NSNumber = 0, manager: WBManager){
         self.peripheral = peripheral
         self.adData = BluetoothAdvertisingData(advertisementData:advertisementData,RSSI: RSSI)
         self.manager = manager

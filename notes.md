@@ -9,14 +9,14 @@ Main.storyboard
     - containerView
     - locationTextField
     - userController: WKUserContentController 
-    - webBluetoothManager: WebBluetoothManager // javascript webkit interaction message handler
+    - WBManager: WBManager // javascript webkit interaction message handler
     - webView: WKWebView
         - configuration: WKWebViewConfiguration
             - userContentController: WKUserContentController
-                - handlers: like([String: WKScriptMessageHandler]) = ["bluetooth": WebBluetoothManager]
+                - handlers: like([String: WKScriptMessageHandler]) = ["bluetooth": WBManager]
   
     - viewDidLoad()
-        // sets up webBluetoothManager, userController
+        // sets up WBManager, userController
     
 
 - View
@@ -27,7 +27,7 @@ Main.storyboard
 
 ## BLE
 
-WebBluetoothManager: WKScriptMessageHandler, CBCentralManagerDelegate, PopUpPickerViewDelegate
+WBManager: WKScriptMessageHandler, CBCentralManagerDelegate, PopUpPickerViewDelegate
 
     - userContentController(WKUserContentController, WKScriptMessage):
     - 
@@ -69,6 +69,13 @@ Bluetooth Manager option 1 (Current design)
   a) devices globally retained and linked to source URL, and never released.
 
 - 2 
+
+## TODO before shipping 1.0.0
+
+1. Handle spontaneous disconnects
+2. Add forward / back buttons.
+3. Get HTTPS up on website.
+4. Read characteristics
 
 ## Limitations
 

@@ -14,7 +14,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     let devicePicker = PopUpPickerView()
     
     var webView: WKWebView!
-    var webBluetoothManager = WebBluetoothManager()
+    var wbManager = WBManager()
     let wkLogger = WKLogger()
     
     override func viewDidLoad() {
@@ -45,13 +45,13 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         //create bluetooth object, and set it to listen to messages
         let webCfg = WKWebViewConfiguration()
         let userController = WKUserContentController()
-        userController.add(webBluetoothManager, name: "bluetooth")
+        userController.add(self.wbManager, name: "bluetooth")
         userController.add(self.wkLogger, name: "logger")
 
         // connect picker
-        self.devicePicker.delegate = webBluetoothManager
+        self.devicePicker.delegate = self.wbManager
         self.view.addSubview(devicePicker)
-        self.webBluetoothManager.devicePicker = devicePicker
+        self.wbManager.devicePicker = devicePicker
         
         // add the bluetooth script prior to loading all frames
         let userScript = WKUserScript(
@@ -113,14 +113,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
     
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (@escaping () -> Void)) {
-        print("webView:\(webView) runJavaScriptAlertPanelWithMessage:\(message) initiatedByFrame:\(frame) completionHandler:\(completionHandler)")
-        
-        let alertController = UIAlertController(title: frame.request.url?.host, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-            completionHandler()
-        }))
+        let alertController = UIAlertController(
+            title: frame.request.url?.host, message: message,
+            preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(
+            title: "OK", style: .default, handler: {_ in completionHandler()}))
         self.present(alertController, animated: true, completion: nil)
     }
-    
-    
 }
