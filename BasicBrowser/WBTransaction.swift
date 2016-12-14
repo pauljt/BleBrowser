@@ -1,9 +1,8 @@
 //
-//  JSRequest.swift
+//  WBTransaction.swift
 //  BleBrowser
 //
-//  Created by Paul Theriault on 15/03/2016.
-//  Copyright © 2016 Stefan Arentz. All rights reserved.
+//  Copyright © 2016 David Park. All rights reserved.
 //
 
 import Foundation
