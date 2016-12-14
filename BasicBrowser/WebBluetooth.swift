@@ -19,10 +19,10 @@ open class BluetoothDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         getCharacteristic, readCharacteristicValue, startNotifications,
         writeCharacteristicValue
     }
-    class DeviceTransactionView: BLEWKTransaction.View {
+    class DeviceTransactionView: WBTransaction.View {
         let externalDeviceUUID: UUID
 
-        override init?(transaction: BLEWKTransaction) {
+        override init?(transaction: WBTransaction) {
             guard
                 let uuidstr = transaction.messageData["deviceId"] as? String,
                 let uuid = UUID(uuidString: uuidstr)
@@ -37,7 +37,7 @@ open class BluetoothDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
         let serviceUUID: CBUUID
 
-        override init?(transaction: BLEWKTransaction) {
+        override init?(transaction: WBTransaction) {
             guard
                 let pservStr = transaction.messageData["serviceUUID"] as? String,
                 let pservUUID = UUID(uuidString: pservStr)
@@ -56,7 +56,7 @@ open class BluetoothDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
         let characteristicUUID: CBUUID
 
-        override init?(transaction: BLEWKTransaction) {
+        override init?(transaction: WBTransaction) {
             guard
                 let charStr = transaction.messageData["characteristicUUID"] as? String,
                 let charUUID = UUID(uuidString: charStr)
@@ -74,7 +74,7 @@ open class BluetoothDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
         let data: Data
 
-        override init?(transaction: BLEWKTransaction) {
+        override init?(transaction: WBTransaction) {
             guard
                 let dstr = transaction.messageData["value"] as? String,
                 let data = Data(base64Encoded: dstr)
@@ -104,15 +104,15 @@ open class BluetoothDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     var peripheral: CBPeripheral
     var adData: BluetoothAdvertisingData
 
-//    let transactionManager = BLEWKTransactionManager()
+//    let transactionManager = WBTransactionManager()
     weak var manager: WebBluetoothManager!
 
     /*! @abstract The current transactions to connect to this device. There can be multiple outstanding at any one time and they are all resolved together. */
-    var connectTransactions = [BLEWKTransaction]()
-    var disconnectTransactions = [BLEWKTransaction]()
-    var getPrimaryServiceTM = BLEWKTransactionManager<CBUUID>()
-    var getCharacteristicTM = BLEWKTransactionManager<CharacteristicTransactionKey>()
-    var readCharacteristicTM = BLEWKTransactionManager<CharacteristicTransactionKey>()
+    var connectTransactions = [WBTransaction]()
+    var disconnectTransactions = [WBTransaction]()
+    var getPrimaryServiceTM = WBTransactionManager<CBUUID>()
+    var getCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
+    var readCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
 
     /*
      * ========== Initializers ==========
@@ -144,7 +144,7 @@ open class BluetoothDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         self.disconnectTransactions.forEach {$0.resolveAsSuccess()}
     }
 
-    func triage(transaction: BLEWKTransaction) {
+    func triage(transaction: WBTransaction) {
 
         let tc = transaction.key.typeComponents
         guard
@@ -318,7 +318,7 @@ open class BluetoothDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
      * ========== CBPeripheralDelegate ==========
      */
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        var resolve: (BLEWKTransaction) -> Void
+        var resolve: (WBTransaction) -> Void
         if let err = error {
             resolve = {$0.resolveAsFailure(withMessage: "An error occurred discovering services for the device: \(err)")}
         }

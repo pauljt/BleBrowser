@@ -34,7 +34,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate,WKScriptMessa
     var devicesByExternalUUID = [UUID: BluetoothDevice]()
 
     /*! @abstract The outstanding request for a device from the web page, if one is outstanding. Ony one may be outstanding at any one time and should be policed by a modal dialog box. TODO: how modal is the current solution? */
-    var requestDeviceTransaction: BLEWKTransaction? = nil
+    var requestDeviceTransaction: WBTransaction? = nil
     var discoveredDevicesByInternalUUID = [UUID: BluetoothDevice]()
 
     var filters = [[String: AnyObject]]()
@@ -57,7 +57,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate,WKScriptMessa
      */
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
 
-        guard let trans = BLEWKTransaction(withMessage: message) else {
+        guard let trans = WBTransaction(withMessage: message) else {
             /* The transaction will have handled the error */
             return
         }
@@ -152,7 +152,7 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate,WKScriptMessa
     /*
      * ========== Private ==========
      */
-    private func triage(transaction: BLEWKTransaction){
+    private func triage(transaction: WBTransaction){
 
         guard
             transaction.key.typeComponents.count > 0,

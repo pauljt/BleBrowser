@@ -73,10 +73,10 @@ extension Data: Jsonifiable {
 }
 
 
-class BLEWKTransactionManager<K> where K: Hashable {
-    var transactions = [K: [BLEWKTransaction]]()
+class WBTransactionManager<K> where K: Hashable {
+    var transactions = [K: [WBTransaction]]()
 
-    func addTransaction(_ transaction: BLEWKTransaction, atPath path: K) {
+    func addTransaction(_ transaction: WBTransaction, atPath path: K) {
         var ts = self.transactions[path] ?? []
         ts.append(transaction)
         self.transactions[path] = ts
@@ -85,7 +85,7 @@ class BLEWKTransactionManager<K> where K: Hashable {
             self.removeTransaction(transaction, atPath: path)
         }
     }
-    func apply(_ function: (BLEWKTransaction) -> Void, iff: ((BLEWKTransaction) -> Bool)? = nil) {
+    func apply(_ function: (WBTransaction) -> Void, iff: ((WBTransaction) -> Bool)? = nil) {
         for (_, vals) in self.transactions {
             for val in vals {
                 if iff == nil || iff!(val) {
@@ -94,7 +94,7 @@ class BLEWKTransactionManager<K> where K: Hashable {
             }
         }
     }
-    func removeTransaction(_ transaction: BLEWKTransaction, atPath path: K) {
+    func removeTransaction(_ transaction: WBTransaction, atPath path: K) {
         if var ts = self.transactions[path] {
             if let ind = ts.index(of: transaction) {
                 ts.remove(at: ind)
@@ -104,7 +104,7 @@ class BLEWKTransactionManager<K> where K: Hashable {
     }
 }
 
-class BLEWKTransaction: Equatable, CustomStringConvertible {
+class WBTransaction: Equatable, CustomStringConvertible {
 
     /*
      * ========== Embedded types ==========
@@ -145,10 +145,10 @@ class BLEWKTransaction: Equatable, CustomStringConvertible {
         }
     }
     class View {
-        let transaction: BLEWKTransaction
+        let transaction: WBTransaction
 
         /*! @abstract Failable initializer so that subclasses may decide not to accept the transaction. */
-        init? (transaction: BLEWKTransaction) {
+        init? (transaction: WBTransaction) {
             self.transaction = transaction
         }
     }
@@ -163,7 +163,7 @@ class BLEWKTransaction: Equatable, CustomStringConvertible {
     /*! @abstract The web view that initiated this transaction, and where we can send the response.
      */
     weak var webView: WKWebView?
-    var completionHandlers = [(BLEWKTransaction, Bool) -> Void]()
+    var completionHandlers = [(WBTransaction, Bool) -> Void]()
     var resolved: Bool = false
 
     var sourceURL: URL? {
@@ -199,7 +199,7 @@ class BLEWKTransaction: Equatable, CustomStringConvertible {
     /*
      * ========== Public methods ==========
      */
-    func addCompletionHandler(_ handler: @escaping (BLEWKTransaction, Bool) -> Void) {
+    func addCompletionHandler(_ handler: @escaping (WBTransaction, Bool) -> Void) {
         self.completionHandlers.append(handler)
     }
     func resolveAsSuccess(withMessage message: String = "Success") {
@@ -212,7 +212,7 @@ class BLEWKTransaction: Equatable, CustomStringConvertible {
         self.complete(success: false, object: message)
     }
 
-    static func == (lhs: BLEWKTransaction, rhs: BLEWKTransaction) -> Bool {
+    static func == (lhs: WBTransaction, rhs: WBTransaction) -> Bool {
         return lhs.id == rhs.id
     }
 
