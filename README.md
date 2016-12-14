@@ -1,10 +1,56 @@
 # BleBrowser
 
-Experimental implementation of the [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) spec on WKWebView for IOS
-- Working, just enough to read values: 
-  - bluetooth:requestDevice
-  - BluetoothRemoteGATTServer.connect
-  - BluetoothRemoteGATTServer.getPrimaryService
-  - BluetoothGATTService.getCharacteristic
-  - BluetoothGATTCharacteristic.readValue
-- Todo: Everything else
+Initial partial implementation of the [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) 
+spec for iOS, to get some basics working. 
+
+The app is fundamentally a `WKWebView` with a polyfill providing the javascript APIs calling 
+through to the CoreBluetooth iOS API via a thin transaction management layer.
+
+## Supported APIs
+
+### `navigator.bluetooth.requestDevice()`
+
+- `.requestDevice(options)`
+
+### `BluetoothDevice`
+
+- `.id`
+- `.name`
+- `.gatt`
+
+### `BluetoothRemoteGATTServer`
+
+- `.connected`
+- `.connect()`
+- `.disconnect()`
+- `.getPrimaryService(uuid)`
+
+### `BluetoothGATTService`
+
+- `.uuid`
+- `.device`
+- `.getCharacteristic(uuid)`
+
+### `BluetoothGATTCharacteristic`
+
+- `.service`
+- `.uuid`
+- `.value`
+- `.readValue()`
+- `.writeValue(value)`
+
+## Non-supported APIs but planned for development soon
+
+### `BluetoothDevice`
+
+- `.gattserverdisconnected: EventHandler`
+
+### `BluetoothGATTCharacteristic`
+
+- `.oncharacteristicvaluechanged: EventHandler`
+- `.startNotifications()`
+- `.stopNotifications()`
+- `.addEventListener()`
+- `.removeEventListener()`
+
+Everything else is TBD!

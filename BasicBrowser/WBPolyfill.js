@@ -3,15 +3,31 @@
 (function () {
   "use strict";
 
+  function NSLog(message) {
+    window.webkit.messageHandlers.logger.postMessage(message);
+  }
+  NSLog("Initialize web bluetooth runtime");
+
   if (navigator.bluetooth) {
     //already exists, don't polyfill
     console.log('navigator.bluetooth already exists, skipping polyfill')
     return;
   }
 
+  function _arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (let ii = 0; ii < len; ii++) {
+        binary += String.fromCharCode(bytes[ii]);
+    }
+    return window.btoa(binary);
+}
+
   // https://webbluetoothcg.github.io/web-bluetooth/ interface
+  NSLog("Create BluetoothDevice");
   function BluetoothDevice(deviceJSON) {
-    console.log("got device:", deviceJSON.id)
+    console.log("got device: ", deviceJSON.id);
     this._id = deviceJSON.id;
     this._name = deviceJSON.name;
 
@@ -66,20 +82,17 @@
       return this._uuids;
     },
     toString: function () {
-      return this._id;
+      return "BluetoothDevice(" + this._id + ")";
+    },
+    addEventListener: function () {
+      console.log("DUMMY device addEventListener");
     }
   };
 
+  NSLog("Create BluetoothRemoteGATTServer");
   function BluetoothRemoteGATTServer(webBluetoothDevice) {
     this._device = webBluetoothDevice;
     this._connected = false;
-
-    this._callRemote = function (method) {
-      var self = this;
-      var args = Array.prototype.slice.call(arguments).slice(1, arguments.length)
-      return sendMessage("bluetooth:deviceMessage", {method: method, args: args, deviceId: self._device.id})
-    }
-
   };
   BluetoothRemoteGATTServer.prototype = {
     get device() {
@@ -89,69 +102,62 @@
       return this._connected;
     },
     connect: function () {
-      var self = this;
-      return self._callRemote("BluetoothRemoteGATTServer.connect")
-        .then(function () {
-          self._connected = true;
-          return self;
+      return this.sendMessage("connectGATT")
+        .then(() => {
+          this._connected = true;
+          return this;
         });
     },
     disconnect: function () {
-      var self = this;
-      return self._callRemote("BluetoothRemoteGATTServer.disconnect")
-        .then(function () {
-          self._connected = false;
+      return this.sendMessage("disconnectGATT")
+        .then(() => {
+          this._connected = false;
         });
     },
     getPrimaryService: function (UUID) {
-      var self = this;
-      var canonicalUUID = window.BluetoothUUID.getService(UUID)
-      return self._callRemote("BluetoothRemoteGATTServer.getPrimaryService", canonicalUUID)
-        .then(function (service) {
-          console.log("GOT SERVICE:"+service)
-          return new BluetoothGATTService(self._device, canonicalUUID, true);
+      var canonicalUUID = window.BluetoothUUID.getService(UUID);
+      return this.sendMessage("getPrimaryService", {serviceUUID: canonicalUUID})
+        .then((service) => {
+          console.log("GOT SERVICE", service, this._device, typeof this._device, this._device.prototype);
+          return new BluetoothGATTService(this._device, canonicalUUID, true);
         })
     },
 
-    getPrimaryServices: function (UUID) {
-      var self = this;
+ getPrimaryServices: function (UUID) {
+      throw new Error("Not implemented");
       var canonicalUUID = window.BluetoothUUID.getService(UUID)
-      return self._callRemote("BluetoothRemoteGATTServer.getPrimaryService", canonicalUUID)
-        .then(function (servicesJSON) {
+      return this.sendMessage("getPrimaryServices", {serviceUUID: canonicalUUID})
+        .then((servicesJSON) => {
           var servicesData = JSON.parse(servicesJSON);
           var services = [];
 
           // this is a problem - all services will have the same information (UUID) so no way for this side of the code to differentiate.
           // we need to add an identifier GUID to tell them apart
-          servicesData.forEach(function (service) {
-            services.push(new BluetoothGATTService(self._device, canonicalUUID, characteristicUuid, true))
+          servicesData.forEach((service) => {
+            services.push(new BluetoothGATTService(this._device, canonicalUUID, true))
           });
           return services;
         });
+    },
+    sendMessage: function (type, data) {
+      data = data || {};
+      console.log("info", this._device.id, data);
+      data["deviceId"] = this._device.id;
+      return sendMessage("device:" + type, data);
     },
     toString: function () {
       return "BluetoothRemoteGATTServer";
     }
   };
 
+  NSLog("Create BluetoothGATTService");
   function BluetoothGATTService(device, uuid, isPrimary) {
     if (device == null || uuid == null || isPrimary == null) {
-      throw Error("Invalid call to BluetoothGATTService constructor")
+      throw new Error("Invalid call to BluetoothGATTService constructor")
     }
-    this._device = device
+    this._device = device;
     this._uuid = uuid;
     this._isPrimary = isPrimary;
-
-    this._callRemote = function (method) {
-      var self = this;
-      var args = Array.prototype.slice.call(arguments).slice(1, arguments.length)
-      return sendMessage("bluetooth:deviceMessage", {
-        method: method,
-        args: args,
-        deviceId: self._device.id,
-        uuid: self._uuid
-      })
-    }
   }
 
   BluetoothGATTService.prototype = {
@@ -162,55 +168,42 @@
       return this._uuid;
     },
     get isPrimary() {
-      return this._isPrimary
+      return this._isPrimary;
     },
     getCharacteristic: function (uuid) {
-      var self = this;
-      var canonicalUUID = BluetoothUUID.getCharacteristic(uuid)
+      var canonicalUUID = BluetoothUUID.getCharacteristic(uuid);
 
-      return self._callRemote("BluetoothGATTService.getCharacteristic",
-        self.uuid, canonicalUUID)
-        .then(function (CharacteristicJSON) {
+      return this.sendMessage(
+        "getCharacteristic", {characteristicUUID: canonicalUUID})
+        .then((CharacteristicJSON) => {
           //todo check we got the correct char UUID back.
-          return new BluetoothGATTCharacteristic(self, canonicalUUID, CharacteristicJSON.properties);
+          console.log('Got characteristic', uuid);
+          return new BluetoothGATTCharacteristic(
+            this, canonicalUUID, CharacteristicJSON.properties);
         });
     },
     getCharacteristics: function (uuid) {
-      var self = this;
-      var canonicalUUID = BluetoothUUID.getCharacteristic(uuid)
-
-      return callRemote("BluetoothGATTService.getCharacteristic",
-        self.uuid, canonicalUUID)
-        .then(function (CharacteristicJSON) {
-          //todo check we got the correct char UUID back.
-          var characteristic = JSON.parse(CharacteristicJSON);
-          return new BluetoothGATTCharacteristic(self, canonicalUUID, CharacteristicJSON.properties);
-        });
+      throw new Error('Not implemented');
     },
     getIncludedService: function (uuid) {
       throw new Error('Not implemented');
     },
     getIncludedServices: function (uuids) {
       throw new Error('Not implemented');
+    },
+    sendMessage: function (type, data) {
+      data = data || {};
+      data["serviceUUID"] = this._uuid;
+      return this.device.gatt.sendMessage(type, data)
     }
   };
 
+  NSLog("Create BluetoothGATTCharacteristic");
   function BluetoothGATTCharacteristic(service, uuid, properties) {
     this._service = service;
     this._uuid = uuid;
     this._properties = properties;
     this._value = null;
-
-    this._callRemote = function (method) {
-      var self = this;
-      var args = Array.prototype.slice.call(arguments).slice(1, arguments.length)
-      return sendMessage("bluetooth:deviceMessage", {
-        method: method,
-        args: args,
-        deviceId: self._service.device.id,
-        uuid: self._uuid
-      })
-    }
   }
 
   BluetoothGATTCharacteristic.prototype = {
@@ -227,34 +220,41 @@
       return this._value;
     },
     getDescriptor: function (descriptor) {
-      var self = this;
       throw new Error('Not implemented');
     },
     getDescriptors: function (descriptor) {
-      var self = this;
+      throw new Error("Not implemented");
     },
     readValue: function () {
-      var self = this;
-      return self._callRemote("BluetoothGATTCharacteristic.readValue", self._service.uuid, self._uuid)
-        .then(function (valueEncoded) {
-          self._value = str2ab(atob(valueEncoded))
-          console.log(valueEncoded,":",self._value)
-          return new DataView(self._value,0);
+      return this.sendMessage("readCharacteristicValue")
+        .then((valueEncoded) => {
+          this._value = str2ab(atob(valueEncoded))
+          console.log(valueEncoded, this._value)
+          return new DataView(this._value, 0);
         });
     },
-    writeValue: function () {
-      var self = this;
+    writeValue: function (value) {
+      // Can't send raw array bytes since we use JSON, so base64 encode.
+      var v64 = _arrayBufferToBase64(value)
+      return this.sendMessage("writeCharacteristicValue", {value: v64});
     },
     startNotifications: function () {
-      var self = this;
-      return self._callRemote("BluetoothGATTCharacteristic.startNotifications")
+      return this.sendMessage("startNotifications")
     },
-    stopNotifications: function () {
-      var self = this;
-      return self._callRemote("BluetoothGATTCharacteristic.stopNotifications")
+    stopNotifications: function() {
+      return this.sendMessage("stopNotifications")
+    },
+    addEventListener: function() {
+     console.log("DUMMY characteristic addEventListener");
+    },
+    sendMessage: function (type, data) {
+      data = data || {};
+      data.characteristicUUID = this.uuid;
+      return this.service.sendMessage(type, data);
     }
   };
 
+  NSLog("Create BluetoothCharacteristicProperties");
   function BluetoothCharacteristicProperties() {
 
   }
@@ -289,13 +289,16 @@
     }
   }
 
+  NSLog("Create BluetoothGATTDescriptor");
   function BluetoothGATTDescriptor(characteristic, uuid) {
     this._characteristic = characteristic;
     this._uuid = uuid;
 
     this._callRemote = function (method) {
+      throw new Error("Not implemented.");
       var self = this;
       var args = Array.prototype.slice.call(arguments).slice(1, arguments.length)
+      console.log("Send device message with args", args);
       return sendMessage("bluetooth:deviceMessage", {
         method: method,
         args: args,
@@ -332,6 +335,7 @@
 
   var uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
+  NSLog("Create BluetoothUUID");
   var BluetoothUUID = {};
   BluetoothUUID.canonicalUUID = canonicalUUID;
   BluetoothUUID.service = {
@@ -569,16 +573,19 @@
   BluetoothUUID.getCharacteristic = ResolveUUIDName('characteristic');
   BluetoothUUID.getDescriptor = ResolveUUIDName('descriptor');
 
-
+  NSLog("Create bluetooth");
   var bluetooth = {};
   bluetooth.requestDevice = function (requestDeviceOptions) {
     if (!requestDeviceOptions.filters || requestDeviceOptions.filters.length === 0) {
-      throw new TypeError('The first argument to navigator.bluetooth.requestDevice() must have a non-zero length filters parameter');
+      message = 'The first argument to navigator.bluetooth.requestDevice() must have a non-zero length filters parameter';
+      console.log(message);
+      throw new TypeError(message);
     }
     var validatedDeviceOptions = {}
 
     var filters = requestDeviceOptions.filters;
     filters = filters.map(function (filter) {
+      if (!filter.services) filter.services = [];
       return {
         services: filter.services.map(window.BluetoothUUID.getService),
         name: filter.name,
@@ -596,12 +603,9 @@
       validatedDeviceOptions.optionalServices = optionalServices;
     }
 
-    return sendMessage("bluetooth:requestDevice", validatedDeviceOptions)
-      .then(function (deviceJSON) {
-        var device = JSON.parse(deviceJSON);
+    return sendMessage("requestDevice", validatedDeviceOptions)
+      .then(function (device) {
         return new BluetoothDevice(device);
-      }).catch(function (e) {
-        console.log("Error starting to search for device", e);
       });
   }
 
@@ -616,16 +620,17 @@
     callbackID = _messageCount;
 
     if (typeof type == 'undefined') {
-      throw "CallRemote should never be called without a type!"
+      throw new Error("CallRemote should never be called without a type!");
     }
 
+    data = data || {};
     message = {
       type: type,
       data: data,
       callbackID: callbackID
     };
 
-    console.log("<--", message);
+    console.log("--> sending " + type, JSON.stringify(data));
     window.webkit.messageHandlers.bluetooth.postMessage(message);
 
     _messageCount++;
@@ -641,16 +646,14 @@
     });
   }
 
-  function recieveMessage(messageType, success, resultString, callbackID) {
-    console.log("-->", messageType, success, resultString, callbackID);
+  function receiveMessageResponse(success, resultString, callbackID) {
+    console.log("<-- receiving response", success, resultString, callbackID);
 
-    switch (messageType) {
-      case "response":
-        console.log("result:", resultString)
-        _callbacks[callbackID](success, resultString);
-        break;
-      default:
-        console.log("Unrecognised message from native:" + message);
+    if (callbackID != null && _callbacks[callbackID]) {
+      _callbacks[callbackID](success, resultString);
+    }
+    else {
+      console.log("Response for unknown callbackID", callbackID);
     }
   }
 
@@ -674,12 +677,13 @@
     return buf;
   }
 
-
   //Exposed interfaces
+  NSLog("POLYFILL");
   window.BluetoothDevice = BluetoothDevice;
   window.BluetoothUUID = BluetoothUUID;
-  window.recieveMessage = recieveMessage;
+  window.receiveMessageResponse = receiveMessageResponse;
   navigator.bluetooth = bluetooth;
   window.BluetoothUUID = BluetoothUUID;
+  NSLog("navigator.bluetooth: " + navigator.bluetooth);
 
 })();
