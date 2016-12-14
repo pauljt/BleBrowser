@@ -9,189 +9,210 @@ import Foundation
 import CoreBluetooth
 import WebKit
 
-open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler, PopUpPickerViewDelegate {
+open class WebBluetoothManager: NSObject, CBCentralManagerDelegate,WKScriptMessageHandler, PopUpPickerViewDelegate {
+
+    /*
+     * ========== Class constants ==========
+     */
+    enum ManagerRequests: String {
+        case device, requestDevice
+    }
+
+    /*
+     * ========== Properties ==========
+     */
+    let centralManager = CBCentralManager(delegate: nil, queue: nil)
+    var devicePicker: PopUpPickerView!
     
+    var BluetoothDeviceOption_filters: [CBUUID]?
+    var BluetoothDeviceOption_optionalService: [CBUUID]?
+
+    /*! @abstract The devices selected by the user for use by this manager. Keyed by the UUID provided by the system. */
+    var devicesByInternalUUID = [UUID: BluetoothDevice]()
+
+    /*! @abstract The devices selected by the user for use by this manager. Keyed by the UUID we create and pass to the web page. This seems to be for security purposes, and seems sensible. */
+    var devicesByExternalUUID = [UUID: BluetoothDevice]()
+
+    /*! @abstract The outstanding request for a device from the web page, if one is outstanding. Ony one may be outstanding at any one time and should be policed by a modal dialog box. TODO: how modal is the current solution? */
+    var requestDeviceTransaction: BLEWKTransaction? = nil
+    var discoveredDevicesByInternalUUID = [UUID: BluetoothDevice]()
+
+    var filters = [[String: AnyObject]]()
+    var pickerNamesIds = [(name: String, id: UUID)]()
+
+    /*
+     * ========== Initialization ==========
+     */
     override init(){
         super.init()
-        centralManager.delegate = self
+        self.centralManager.delegate = self
+    }
+    deinit {
+        NSLog("WebBluetoothManager deinit")
+        self.stopScanForPeripherals()
     }
 
-    // BLE
-    let centralManager = CBCentralManager(delegate: nil, queue: nil)
-    var devicePicker:PopUpPickerView!
-    
-    var BluetoothDeviceOption_filters:[CBUUID]?
-    var BluetoothDeviceOption_optionalService:[CBUUID]?
-    
-    // Stores references to devices while scanning. Key is the system provided UUID (peripheral.id)
-    var foundDevices:[String:BluetoothDevice] = [String:BluetoothDevice]()
-    var deviceRequest:JSRequest? //stores the last requestID for device requests (i.e. subsequent request replace unfinished requests)
-    var connectionRequest:JSRequest? // stores last conncetion request, to resolve when connected/disconnected
-    var disconnectionRequest:JSRequest? // stores last conncetion request, to resolve when connected/disconnected
+    /*
+     * ========== WKScriptMessageHandler ==========
+     */
+    open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
 
-
-    // Allowed Devices Map
-    // See https://webbluetoothcg.github.io/web-bluetooth/#per-origin-device-properties
-    // Stores a dictionary for each origin which holds a mappping between Device ID and the actual BluetoothDevice
-    // For example, if a user grants access for https://example.com  would be something like:
-    //    allowedDevices["https://example.com"]?[NSUUID().UUIDString] = new BluetoothDevice(peripheral)
-    var allowedDevices:[String:[String:BluetoothDevice]] = [String:[String:BluetoothDevice]]()
-    var filters = [[String: AnyObject]]()
-    var pickerNamesIds = [(name: String, id: String)]()
-    
-    //
-    // ========== WKScriptMessageHandler ==========
-    //
-    open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage){
-
-        // TODO don't really want to crash if these aren't OK.
-        let messageBody = message.body as! NSDictionary
-        let callbackID:Int =  messageBody["callbackID"] as! Int
-        let type = messageBody["type"] as! String
-        let data = messageBody["data"] as! [String:AnyObject]
-
-        //todo add safety
-        let req = JSRequest(id: callbackID,type:type,data:data,webView:message.webView!);
-        print("<-- #\(callbackID) to dispatch \(type) with data:\(data)")
-        self.processRequest(req)
-    }
-    
-    //
-    // ==================== CBCentralManagerDelegate ====================
-    //
-    public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        if central.state == CBManagerState.poweredOn {
-            print("Bluetooth is powered on")
-        }
-        else {
-            print("Error:Bluetooth switched off or not initialized")
-        }
-    }
-    
-    public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        NSLog("discovered device: \(peripheral)")
-
-        if !self._peripheralIsIncludedByFilters(peripheral) {
-            NSLog("Device is excluded by filters")
+        guard let trans = BLEWKTransaction(withMessage: message) else {
+            /* The transaction will have handled the error */
             return
         }
+        NSLog("<-- new transaction #\(trans)")
+        self.triage(transaction: trans)
+    }
 
-        let deviceId = UUID().uuidString;
-        self.foundDevices[peripheral.identifier.uuidString] = BluetoothDevice(deviceId: deviceId, peripheral: peripheral,
-            advertisementData: advertisementData as [String : AnyObject],
-            RSSI: RSSI)
+    /*
+     * ========== CBCentralManagerDelegate ==========
+     */
+    public func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        NSLog("Bluetooth is \(central.state == CBManagerState.poweredOn ? "ON" : "OFF")")
+    }
+    
+    public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
+
+        guard self._peripheralIsIncludedByFilters(peripheral)
+        else {
+            return
+        }
+        
+        self.discoveredDevicesByInternalUUID[peripheral.identifier] = BluetoothDevice(
+            peripheral: peripheral, advertisementData: advertisementData,
+            RSSI: RSSI, manager: self)
+
         self.updatePickerData()
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("Connected")
-        if(connectionRequest != nil){
-            connectionRequest!.sendMessage("response", success:true, result:"{}", requestId:connectionRequest!.id)
-            connectionRequest = nil
+        guard
+            let device = self.devicesByInternalUUID[peripheral.identifier]
+        else {
+            NSLog("Unexpected didConnect notification for \(peripheral.name) \(peripheral.identifier)")
+            return
         }
+        device.didConnect()
+    }
+
+    public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        guard
+            let device = self.devicesByInternalUUID[peripheral.identifier]
+            else {
+                NSLog("Unexpected didConnect notification for \(peripheral.name) \(peripheral.identifier)")
+                return
+        }
+        device.didDisconnect(error: error)
     }
     
     public func centralManager(_ central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral) {
-        print("Failed to connect")
-        connectionRequest!.sendMessage("response", success:false, result:"'Failed to connect'", requestId:connectionRequest!.id)
-        connectionRequest = nil
+        NSLog("FAILED TO CONNECT PERIPHERAL UNHANDLED")
         
     }
     
-    //
-    // ========== PopUpPickerViewDelegate ==========
-    //
-    
-    // The data to return for the row and component (column) that's being passed in
+    /*
+     * ========== PopUpPickerViewDelegate ==========
+     */
     public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return pickerNamesIds[row].name
     }
     
     public func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int]) {
-        NSLog("Picker view did select \(numbers)")
-        if(self.pickerNamesIds.count < 1){
-            NSLog("No devices to select!")
-            return
-        }
-        let deviceId = self.pickerNamesIds[numbers[0]].id
-        self.centralManager.stopScan()
 
-        // Should not be nil since the picker view display is in response to
-        // a message.
-        let req = self.deviceRequest!
-        self.deviceRequest = nil
-        
-        if self.foundDevices[deviceId] == nil {
-            NSLog("deviceId \(deviceId) not in foundDevices")
+        guard
+            numbers.count > 0,
+            let index = Optional(numbers[0]),
+            self.pickerNamesIds.count > index,
+            let deviceId = Optional(self.pickerNamesIds[index].id),
+            let device = self.discoveredDevicesByInternalUUID[deviceId]
+        else {
+            NSLog("Invalid device selection \(numbers), try again")
+            self.devicePicker.showPicker()
             return
         }
-        let device = self.foundDevices[deviceId]!
-        let deviceJSON = device.toJSON()!
-        
-        if self.allowedDevices[req.origin] == nil {
-            self.allowedDevices[req.origin] = [String:BluetoothDevice]()
-        }
-        // add device to allowed list, and resolve requestDevice promise
-        self.allowedDevices[req.origin]![device.deviceId] = device
-        req.sendMessage("response", success:true, result:deviceJSON, requestId:req.id)
+
+        NSLog("Picker view did select \(deviceId)")
+        self.requestDeviceTransaction?.resolveAsSuccess(withObject: device)
+        self.deviceWasSelected(device)
+
     }
     public func pickerViewCancelled(_ pickerView: UIPickerView) {
-        NSLog("User cancelled device selection")
-        let req = self.deviceRequest!
-        req.sendMessage("response", success:false, result:"User cancelled", requestId:req.id)
+        NSLog("User cancelled device selection.")
+        self.requestDeviceTransaction?.resolveAsFailure(withMessage: "User cancelled")
     }
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    
-    // The number of rows of data
+
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return self.pickerNamesIds.count
     }
     
-    //
-    // ========== Private ==========
-    //
-    func processRequest(_ req:JSRequest){
-        switch req.type {
-        case "bluetooth:requestDevice":
-            guard let data = req.data["filters"] as? [[String: AnyObject]] else {
-                req.sendMessage("response", success:false, result:"Bad filters passed: \(req.data)", requestId:req.id)
+    /*
+     * ========== Private ==========
+     */
+    private func triage(transaction: BLEWKTransaction){
+
+        guard
+            transaction.key.typeComponents.count > 0,
+            let managerMessageType = ManagerRequests(
+                rawValue: transaction.key.typeComponents[0])
+        else {
+            transaction.resolveAsFailure(withMessage: "Request type components not recognised \(transaction.key)")
+            return
+        }
+
+        switch managerMessageType
+        {
+        case .requestDevice:
+            guard transaction.key.typeComponents.count == 1
+            else {
+                transaction.resolveAsFailure(withMessage: "Invalid request type \(transaction.key)")
                 break
             }
-            self.scanForPeripherals(data)
-            self.deviceRequest = req
+            guard let filters = transaction.messageData["filters"] as? [[String: AnyObject]]
+            else {
+                transaction.resolveAsFailure(withMessage: "Bad or no filters passed in data: \(transaction.messageData)")
+                break
+            }
+            guard self.requestDeviceTransaction == nil
+            else {
+                transaction.resolveAsFailure(withMessage: "Previous device request is still in progress")
+                break
+            }
+            self.requestDeviceTransaction = transaction
+            self.scanForPeripherals(filters)
+            transaction.addCompletionHandler {_, _ in
+                self.stopScanForPeripherals()
+                self.requestDeviceTransaction = nil
+            }
             self.devicePicker.showPicker()
-            
-        case "bluetooth:deviceMessage":
-            print("DeviceMessage for \(req.deviceId)")
-            print("Calling \(req.method) with \(req.args)")
-            print(req.args)
-            
-            if let device = allowedDevices[req.origin]?[req.deviceId]{
-                // connecting/disconnecting GATT server has to be handled by the manager
-                if(req.method == "BluetoothRemoteGATTServer.connect"){
-                    centralManager.connect(device.peripheral,options: nil)
-                    connectionRequest = req //resolved when connected
-                }else if (req.method == "BluetoothRemoteGATTServer.disconnect"){
-                    centralManager.cancelPeripheralConnection(device.peripheral)
-                    disconnectionRequest = req //resolved when connected
-                }else{
-                    device.receive(req)
-                }
+
+        case .device:
+
+            guard let view = BluetoothDevice.DeviceTransactionView(transaction: transaction) else {
+                transaction.resolveAsFailure(withMessage: "Bad device request")
+                break
             }
-            else{
-                req.sendMessage("response", success:false, result:"\"Device not found\"", requestId:req.id)
+
+            let devUUID = view.externalDeviceUUID
+            guard let device = self.devicesByExternalUUID[devUUID]
+            else {
+                transaction.resolveAsFailure(withMessage: "No known device for device transaction \(transaction)")
+                break
             }
-        default:
-            let error="\"Unknown method: \(req.type)\"";
-            req.sendMessage("response", success:false, result:error, requestId:req.id)
+            device.triage(transaction: transaction)
         }
     }
-    
+
+    private func deviceWasSelected(_ device: BluetoothDevice) {
+        // TODO: think about whether overwriting any existing device is an issue.
+        self.devicesByExternalUUID[device.deviceId] = device;
+        self.devicesByInternalUUID[device.peripheral.identifier] = device;
+    }
+
     func scanForPeripherals(_ filters:[[String: AnyObject]]) {
-        
-        NSLog("Scanning for peripherals with filters \(filters)")
 
         let services = filters.reduce([String](), {
             (currReduction, nextValue) in
@@ -201,27 +222,35 @@ open class WebBluetoothManager: NSObject, CBCentralManagerDelegate, WKScriptMess
             return currReduction
         })
 
-        let servicesCBUUID:[CBUUID]
-        
-        //todo validate CBUUID (js does this already but security should be here since
-        //messageHandler can be called directly.
-        // (if the string is invalid, it causes app to crash with NSexception)
-        
         //todo: determine if uppercase is the standard (bb-b uses uppercase UUID)
-        servicesCBUUID = services.map { CBUUID(string:$0.uppercased()) }
+        let servicesCBUUIDq: [CBUUID?] = services.map {
+            servStr -> CBUUID? in
+            guard let uuid = UUID(uuidString: servStr.uppercased()) else {
+                return nil
+            }
+            return CBUUID(nsuuid: uuid)
+        }
+
+        let servicesCBUUID = servicesCBUUIDq.filter{$0 != nil}.map{$0!}
+
+        NSLog("Scanning for peripherals...")
         
-        self.foundDevices.removeAll();
+        self.discoveredDevicesByInternalUUID.removeAll();
         self.filters = filters
         centralManager.scanForPeripherals(withServices: servicesCBUUID, options: nil)
+    }
+    func stopScanForPeripherals() {
+        self.centralManager.stopScan()
+        self.discoveredDevicesByInternalUUID.removeAll()
     }
     
     func updatePickerData(){
         self.pickerNamesIds.removeAll()
-        for (id, device) in self.foundDevices {
+        for (id, device) in self.discoveredDevicesByInternalUUID {
             self.pickerNamesIds.append(
                 (name: device.peripheral.name ?? "Unknown", id: id))
         }
-        self.pickerNamesIds.sort(by: <)
+        self.pickerNamesIds.sort(by: {$0.name < $1.name})
         self.devicePicker.updatePicker()
     }
     

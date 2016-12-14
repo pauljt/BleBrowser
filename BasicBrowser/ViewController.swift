@@ -3,13 +3,19 @@ import WebKit
 
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate,WKUIDelegate {
 
+    class WKLogger: NSObject, WKScriptMessageHandler {
+        open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            NSLog("WKLog: \(message.body)")
+        }
+    }
+
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var containerView: UIView!
-    
     let devicePicker = PopUpPickerView()
     
     var webView: WKWebView!
     var webBluetoothManager = WebBluetoothManager()
+    let wkLogger = WKLogger()
     
     override func viewDidLoad() {
        
@@ -40,14 +46,15 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         let webCfg = WKWebViewConfiguration()
         let userController = WKUserContentController()
         userController.add(webBluetoothManager, name: "bluetooth")
-        
+        userController.add(self.wkLogger, name: "logger")
+
         // connect picker
         self.devicePicker.delegate = webBluetoothManager
         self.view.addSubview(devicePicker)
         self.webBluetoothManager.devicePicker = devicePicker
         
         // add the bluetooth script prior to loading all frames
-        let userScript:WKUserScript =  WKUserScript(
+        let userScript = WKUserScript(
             source: script!, injectionTime: .atDocumentStart,
             forMainFrameOnly: false)
         userController.addUserScript(userScript)
