@@ -2,8 +2,7 @@
 //  WebBluetooth.swift
 //  BasicBrowser
 //
-//  Created by Paul Theriault on 10/01/2016.
-//
+//  Copyright 2016 Paul Theriault and David Park
 
 import Foundation
 import CoreBluetooth
