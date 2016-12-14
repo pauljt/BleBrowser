@@ -123,7 +123,8 @@
         })
     },
 
-    getPrimaryServices: function (UUID) {
+ getPrimaryServices: function (UUID) {
+      throw new Error("Not implemented");
       var canonicalUUID = window.BluetoothUUID.getService(UUID)
       return this.sendMessage("getPrimaryServices", {serviceUUID: canonicalUUID})
         .then((servicesJSON) => {
@@ -152,7 +153,7 @@
   NSLog("Create BluetoothGATTService");
   function BluetoothGATTService(device, uuid, isPrimary) {
     if (device == null || uuid == null || isPrimary == null) {
-      throw Error("Invalid call to BluetoothGATTService constructor")
+      throw new Error("Invalid call to BluetoothGATTService constructor")
     }
     this._device = device;
     this._uuid = uuid;
@@ -240,11 +241,11 @@
     startNotifications: function () {
       return this.sendMessage("startNotifications")
     },
-    stopNotifications: function () {
+    stopNotifications: function() {
       return this.sendMessage("stopNotifications")
     },
-    addEventListener: () => {
-      console.log("DUMMY characteristic addEventListener")
+    addEventListener: function() {
+     console.log("DUMMY characteristic addEventListener");
     },
     sendMessage: function (type, data) {
       data = data || {};
@@ -294,7 +295,7 @@
     this._uuid = uuid;
 
     this._callRemote = function (method) {
-      throw "Not implemented.";
+      throw new Error("Not implemented.");
       var self = this;
       var args = Array.prototype.slice.call(arguments).slice(1, arguments.length)
       console.log("Send device message with args", args);
@@ -619,7 +620,7 @@
     callbackID = _messageCount;
 
     if (typeof type == 'undefined') {
-      throw "CallRemote should never be called without a type!";
+      throw new Error("CallRemote should never be called without a type!");
     }
 
     data = data || {};
