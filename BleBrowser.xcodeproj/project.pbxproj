@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5A0F91CC1E01546200CB2C64 /* Jsonifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */; };
-		BB303DF11C41EF2F00FCAF24 /* WebBluetooth.js in Resources */ = {isa = PBXBuildFile; fileRef = BB303DF01C41EF2F00FCAF24 /* WebBluetooth.js */; };
+		BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */ = {isa = PBXBuildFile; fileRef = BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */; };
 		BB303DF31C42070C00FCAF24 /* WBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB303DF21C42070C00FCAF24 /* WBManager.swift */; };
 		BB4DBE651C97F577000D2C35 /* WBTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DBE641C97F577000D2C35 /* WBTransaction.swift */; };
 		BB4DE1F41C8D0A44003151BF /* WBDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DE1F31C8D0A44003151BF /* WBDevice.swift */; };
@@ -34,7 +34,7 @@
 /* Begin PBXFileReference section */
 		5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Jsonifiable.swift; sourceTree = "<group>"; };
 		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
-		BB303DF01C41EF2F00FCAF24 /* WebBluetooth.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = WebBluetooth.js; sourceTree = "<group>"; tabWidth = 2; };
+		BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = WBPolyfill.js; sourceTree = "<group>"; tabWidth = 2; };
 		BB303DF21C42070C00FCAF24 /* WBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBManager.swift; sourceTree = "<group>"; };
 		BB4DBE641C97F577000D2C35 /* WBTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBTransaction.swift; sourceTree = "<group>"; };
 		BB4DE1F31C8D0A44003151BF /* WBDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBDevice.swift; sourceTree = "<group>"; };
@@ -99,7 +99,7 @@
 				E44C18621A36203E00734F8B /* Images.xcassets */,
 				E44C18641A36203E00734F8B /* LaunchScreen.xib */,
 				E44C18591A36203E00734F8B /* Supporting Files */,
-				BB303DF01C41EF2F00FCAF24 /* WebBluetooth.js */,
+				BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */,
 				BB303DF21C42070C00FCAF24 /* WBManager.swift */,
 				BB4DE1F31C8D0A44003151BF /* WBDevice.swift */,
 				BB4DBE641C97F577000D2C35 /* WBTransaction.swift */,
@@ -220,7 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E44C18611A36203E00734F8B /* Main.storyboard in Resources */,
-				BB303DF11C41EF2F00FCAF24 /* WebBluetooth.js in Resources */,
+				BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */,
 				E44C18661A36203E00734F8B /* LaunchScreen.xib in Resources */,
 				E44C18631A36203E00734F8B /* Images.xcassets in Resources */,
 			);

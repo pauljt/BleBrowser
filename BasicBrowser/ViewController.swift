@@ -24,7 +24,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         
         //load polyfill script
         var script:String?
-        if let filePath:String = Bundle(for: ViewController.self).path(forResource: "WebBluetooth", ofType:"js") {
+        if let filePath:String = Bundle(for: ViewController.self).path(forResource: "WBPolyfill", ofType:"js") {
             do {
                 script = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
             } catch _ {
