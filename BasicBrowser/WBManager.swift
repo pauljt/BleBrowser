@@ -132,6 +132,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate,WKScriptMessageHandler,
         }
 
         NSLog("Picker view did select \(deviceId)")
+        device.view = self.requestDeviceTransaction?.webView
         self.requestDeviceTransaction?.resolveAsSuccess(withObject: device)
         self.deviceWasSelected(device)
 

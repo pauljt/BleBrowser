@@ -100,12 +100,14 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     /*
      * ========== Properties ==========
      */
-    var deviceId = UUID() //generated ID used instead of internal IOS name
+    var deviceId = UUID() // generated ID used instead of internal IOS name
     var peripheral: CBPeripheral
     var adData: BluetoothAdvertisingData
 
-//    let transactionManager = WBTransactionManager()
     weak var manager: WBManager!
+
+    /*! @abstract The view should be set when the device is selected by a particular web view. */
+    weak var view: WKWebView? = nil
 
     /*! @abstract The current transactions to connect to this device. There can be multiple outstanding at any one time and they are all resolved together. */
     var connectTransactions = [WBTransaction]()
@@ -117,7 +119,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     /*
      * ========== Initializers ==========
      */
-    init(peripheral: CBPeripheral, advertisementData: [String: Any] = [String: Any](), RSSI: NSNumber = 0, manager: WBManager){
+    init(peripheral: CBPeripheral, advertisementData: [String: Any] = [:], RSSI: NSNumber = 0, manager: WBManager) {
         self.peripheral = peripheral
         self.adData = BluetoothAdvertisingData(advertisementData:advertisementData,RSSI: RSSI)
         self.manager = manager
@@ -315,7 +317,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
     
     /*
-     * ========== CBPeripheralDelegate ==========
+     * ===== CBPeripheralDelegate =====
      */
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         var resolve: (WBTransaction) -> Void
@@ -368,17 +370,34 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
         NSLog("Characteristic Updated: \(characteristic.uuid.uuidString) -> \(characteristic.value)")
 
-        self.readCharacteristicTM.apply(
-            {
-                if let err = error {
-                    $0.resolveAsFailure(withMessage: "Error reading characteristic: \(err.localizedDescription)")
-                    return
-                }
-                $0.resolveAsSuccess(withObject: characteristic.value!)
-        },
-            iff: {
-                let cview = CharacteristicView(transaction: $0)!
-                return cview.serviceUUID == characteristic.service.uuid && cview.characteristicUUID == characteristic.uuid})
+        if self.readCharacteristicTM.transactions.count > 0 {
+            // We have read transactions outstanding, which means that this is a response after a read request, so complete those transactions.
+            self.readCharacteristicTM.apply(
+                {
+                    if let err = error {
+                        $0.resolveAsFailure(withMessage: "Error reading characteristic: \(err.localizedDescription)")
+                        return
+                    }
+                    $0.resolveAsSuccess(withObject: characteristic.value!)
+            },
+                iff: {
+                    let cview = CharacteristicView(transaction: $0)!
+                    return cview.serviceUUID == characteristic.service.uuid && cview.characteristicUUID == characteristic.uuid
+            })
+        }
+        // If we're doing notifications on the characteristic send them up.
+        if characteristic.isNotifying {
+            if let wv = self.view {
+                wv.evaluateJavaScript(
+                    "receiveCharacteristicValueNotification(" +
+                    "\(peripheral.identifier.uuidString.jsonify()), " +
+                    "\(characteristic.service.uuid.uuidString.jsonify()), " +
+                    "\(characteristic.uuid.uuidString.jsonify()), " +
+                    "\(characteristic.value!.jsonify())" +
+                    ")")
+
+            }
+        }
     }
 
     /*

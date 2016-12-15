@@ -9,8 +9,8 @@
   NSLog("Initialize web bluetooth runtime");
 
   if (navigator.bluetooth) {
-    //already exists, don't polyfill
-    console.log('navigator.bluetooth already exists, skipping polyfill')
+    // already exists, don't polyfill
+    console.log('navigator.bluetooth already exists, skipping polyfill');
     return;
   }
 
@@ -22,7 +22,58 @@
         binary += String.fromCharCode(bytes[ii]);
     }
     return window.btoa(binary);
-}
+  }
+
+  //
+  // We need an EventTarget implementation. This one nicked wholesale from
+  // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
+  //
+  NSLog("Build EventTarget");
+  var EventTarget = function() {
+    this.listeners = {};
+  };
+
+  EventTarget.prototype.addEventListener = function(type, callback) {
+    if (this.allowedListeners && !(this.allowedListeners.has(type))) {
+      console.log("Unknown event type: " + type);
+    }
+    if(!(type in this.listeners)) {
+      this.listeners[type] = [];
+    }
+    this.listeners[type].push(callback);
+  };
+  EventTarget.prototype.removeEventListener = function(type, callback) {
+    if(!(type in this.listeners)) {
+      return;
+    }
+    var stack = this.listeners[type];
+    for(var i = 0, l = stack.length; i < l; i++) {
+      if(stack[i] === callback){
+        stack.splice(i, 1);
+        return this.removeEventListener(type, callback);
+      }
+    }
+  };
+  EventTarget.prototype.dispatchEvent = function(event) {
+    if(!(event.type in this.listeners)) {
+      return;
+    }
+    var stack = this.listeners[event.type];
+    event.target = this;
+    for(var i = 0, l = stack.length; i < l; i++) {
+        stack[i].call(this, event);
+    }
+  };
+
+  //
+  // And this function is how we add EventTarget to the "sub"classes.
+  //
+  function mixin(target, src) {
+    for (let attr in src) {
+      NSLog("mixin " + attr);
+      target[attr] = src[attr];
+    }
+  }
 
   // https://webbluetoothcg.github.io/web-bluetooth/ interface
   NSLog("Create BluetoothDevice");
@@ -47,6 +98,9 @@
     this._productVersion = deviceJSON.productVersion || 0;
     this._gatt = new BluetoothRemoteGATTServer(this);
     this._uuids = deviceJSON.uuids;
+
+    // EventTarget
+    this.listeners = {};
   };
 
   BluetoothDevice.prototype = {
@@ -83,11 +137,9 @@
     },
     toString: function () {
       return "BluetoothDevice(" + this._id + ")";
-    },
-    addEventListener: function () {
-      console.log("DUMMY device addEventListener");
     }
   };
+  mixin(BluetoothDevice.prototype, EventTarget.prototype);
 
   NSLog("Create BluetoothRemoteGATTServer");
   function BluetoothRemoteGATTServer(webBluetoothDevice) {
@@ -609,8 +661,9 @@
       });
   }
 
-
-  ////////////Communication with Native
+  //
+  // ===== Communication with Native =====
+  //
   var _messageCount = 0;
   var _callbacks = {}; // callbacks for responses to requests
 
@@ -657,6 +710,38 @@
     }
   }
 
+  var _devicesBeingNotified = {};
+  function registerDeviceForNotifications(device) {
+    var did = device.deviceId;
+    if (!(did in _devicesBeingNotified)) {
+      _devicesBeingNotified[did] = [];
+    }
+    var devs = _devicesBeingNotified[did];
+    for (let ii = 0; ii < devs.length; ii++) {
+      if (devs[ii] === device) {
+        throw new Error("Device already registered for notifications");
+      }
+    }
+    devs.push(device);
+  }
+  function unregisterDeviceForNotifications(device) {
+    var did = device.deviceId;
+    if (!(did in _devicesBeingNotified))
+      return;
+    var devs = _devicesBeingNotified[did];
+    for (let ii = 0; ii < devs.length; ii++) {
+      if (devs[ii] === device) {
+        devs.splice(ii, 1);
+        return;
+      }
+    }
+  }
+  function receiveCharacteristicValueNotification(
+      deviceId, serviceId, characteristicId, data) {
+    console.log(
+      "<-- char val notification", deviceId, serviceId, characteristicId, data);
+  }
+
   function NamedError(name, message) {
     var e = new Error(message || '');
     e.name = name;
@@ -682,6 +767,7 @@
   window.BluetoothDevice = BluetoothDevice;
   window.BluetoothUUID = BluetoothUUID;
   window.receiveMessageResponse = receiveMessageResponse;
+  window.receiveCharacteristicValueNotification = receiveCharacteristicValueNotification;
   navigator.bluetooth = bluetooth;
   window.BluetoothUUID = BluetoothUUID;
   NSLog("navigator.bluetooth: " + navigator.bluetooth);
