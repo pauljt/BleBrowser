@@ -263,8 +263,8 @@
     readValue: function () {
       return this.sendMessage("readCharacteristicValue")
         .then((valueEncoded) => {
-          this.value = str2ab(atob(valueEncoded))
-          return new DataView(this.value, 0);
+          this.value = new DataView(str2ab(atob(valueEncoded)));
+          return this.value;
         });
     },
     writeValue: function (value) {
@@ -725,15 +725,16 @@
   let _characteristicsBeingNotified = {};
   function registerCharacteristicForNotifications(characteristic) {
     let cid = characteristic.uuid;
+    console.log("Registering char UUID", cid);
     if (!_characteristicsBeingNotified[cid]) {
       _characteristicsBeingNotified[cid] = [];
     }
     _characteristicsBeingNotified[cid].push(characteristic);
   }
-  function receiveCharacteristicValueNotification(characteristicId, data) {
+  function receiveCharacteristicValueNotification(characteristicId, d64) {
     let chars = _characteristicsBeingNotified[characteristicId];
     console.log(
-      "<-- char val notification", characteristicId, data);
+      "<-- char val notification", characteristicId, d64);
     if (!chars) {
       console.log(
         "Characteristic notification ignored for unknown characteristic",
@@ -741,7 +742,10 @@
       console.log('Know characteristics', Object.keys(_characteristicsBeingNotified));
       return
     }
+    let strData = atob(d64)
+    let dataView = new DataView(str2ab(strData));
     chars.forEach(function (char){
+      char.value = dataView;
       char.dispatchEvent(new BluetoothEvent("characteristicvaluechanged", char));
     });
   }

@@ -63,13 +63,6 @@ WKFrameInfo
 
 
 
-Bluetooth Manager option 1 (Current design)
-
-- 1 <-> 1 ViewController, lives for the lifetime of the programme.
-  a) devices globally retained and linked to source URL, and never released.
-
-- 2 
-
 ## TODO before shipping 1.0.0
 
 1. Handle spontaneous disconnects
@@ -79,6 +72,8 @@ Bluetooth Manager option 1 (Current design)
 5. clear state after navigation
 6. native logging window
 7. should readValue return the value or should we just rely on notifications
+8. gatt server disconnect
+9. rename GATTCharacteristic to RemoteGATTCharacteristic
 
 ## Limitations
 
@@ -86,3 +81,4 @@ Bluetooth Manager option 1 (Current design)
 2. Not clear how attempting to select / use multiple devices is going to work.
 3. Handling of devices with the same UUIDs (internal / external) is non-existent.
 4. events not propagated 
+5. UUIDs are uppercase in apple land, lower case on the web, sigh.
