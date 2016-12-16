@@ -390,9 +390,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             if let wv = self.view {
                 wv.evaluateJavaScript(
                     "receiveCharacteristicValueNotification(" +
-                    "\(peripheral.identifier.uuidString.jsonify()), " +
-                    "\(characteristic.service.uuid.uuidString.jsonify()), " +
-                    "\(characteristic.uuid.uuidString.jsonify()), " +
+                    "\(characteristic.uuid.uuidString.lowercased().jsonify()), " +
                     "\(characteristic.value!.jsonify())" +
                     ")")
 

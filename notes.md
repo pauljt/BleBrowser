@@ -76,10 +76,13 @@ Bluetooth Manager option 1 (Current design)
 2. Add forward / back buttons.
 3. Get HTTPS up on website.
 4. Read characteristics
+5. clear state after navigation
+6. native logging window
+7. should readValue return the value or should we just rely on notifications
 
 ## Limitations
 
 1. Device associations with web addresses do not persist on navigation, including page refresh.
 2. Not clear how attempting to select / use multiple devices is going to work.
 3. Handling of devices with the same UUIDs (internal / external) is non-existent.
-
+4. events not propagated 

@@ -34,53 +34,67 @@
   };
 
   EventTarget.prototype.addEventListener = function(type, callback) {
-    if (this.allowedListeners && !(this.allowedListeners.has(type))) {
-      console.log("Unknown event type: " + type);
-    }
     if(!(type in this.listeners)) {
       this.listeners[type] = [];
     }
     this.listeners[type].push(callback);
   };
   EventTarget.prototype.removeEventListener = function(type, callback) {
-    if(!(type in this.listeners)) {
+
+    let stack = this.listeners[type];
+    if (stack == null) {
       return;
     }
-    var stack = this.listeners[type];
-    for(var i = 0, l = stack.length; i < l; i++) {
+    let l = stack.length;
+    for(i = 0; i < l; i += 1) {
       if(stack[i] === callback){
         stack.splice(i, 1);
         return this.removeEventListener(type, callback);
       }
     }
   };
-  EventTarget.prototype.dispatchEvent = function(event) {
-    if(!(event.type in this.listeners)) {
+  EventTarget.prototype.dispatchEvent = function (event) {
+    let stack = this.listeners[event.type];
+    if (stack == null) {
       return;
     }
-    var stack = this.listeners[event.type];
-    event.target = this;
-    for(var i = 0, l = stack.length; i < l; i++) {
-        stack[i].call(this, event);
-    }
+    event.currentTarget = this;
+    stack.forEach(function (cb) {
+      try {
+        cb.call(this, event);
+      }
+      catch (e) {
+        console.log("Exception dispatching to callback " + cb, e);
+      }
+    });
   };
 
   //
   // And this function is how we add EventTarget to the "sub"classes.
   //
   function mixin(target, src) {
-    for (let attr in src) {
-      NSLog("mixin " + attr);
-      target[attr] = src[attr];
-    }
+    Object.assign(target.prototype, src.prototype);
+    target.prototype.constructor = target;
+  }
+
+  function defineROProperties(target, roDescriptors) {
+      Object.keys(roDescriptors).forEach(function (key) {
+          Object.defineProperty(target, key, {value: roDescriptors[key]});
+      });
   }
 
   // https://webbluetoothcg.github.io/web-bluetooth/ interface
   NSLog("Create BluetoothDevice");
   function BluetoothDevice(deviceJSON) {
-    console.log("got device: ", deviceJSON.id);
-    this._id = deviceJSON.id;
-    this._name = deviceJSON.name;
+    EventTarget.call(this);
+
+    let roProps = {
+      id: deviceJSON.id,
+      gatt: new BluetoothRemoteGATTServer(this)
+    };
+    defineROProperties(this, roProps);
+
+    this.name = deviceJSON.name;
 
     this._adData = {};
     if (deviceJSON.adData) {
@@ -96,21 +110,10 @@
     this._vendorId = deviceJSON.vendorId || 0;
     this._productId = deviceJSON.productId || 0;
     this._productVersion = deviceJSON.productVersion || 0;
-    this._gatt = new BluetoothRemoteGATTServer(this);
     this._uuids = deviceJSON.uuids;
-
-    // EventTarget
-    this.listeners = {};
   };
 
   BluetoothDevice.prototype = {
-
-    get id() {
-      return this._id;
-    },
-    get name() {
-      return this._name;
-    },
     get adData() {
       return this._adData;
     },
@@ -129,27 +132,21 @@
     get productVersion() {
       return this._productVersion;
     },
-    get gatt() {
-      return this._gatt;
-    },
     get uuids() {
       return this._uuids;
     },
     toString: function () {
-      return "BluetoothDevice(" + this._id + ")";
+      return "BluetoothDevice(" + this.id.slice(0, 10) + ")";
     }
   };
-  mixin(BluetoothDevice.prototype, EventTarget.prototype);
+  mixin(BluetoothDevice, EventTarget);
 
   NSLog("Create BluetoothRemoteGATTServer");
   function BluetoothRemoteGATTServer(webBluetoothDevice) {
-    this._device = webBluetoothDevice;
+    defineROProperties(this, {device: webBluetoothDevice});
     this._connected = false;
   };
   BluetoothRemoteGATTServer.prototype = {
-    get device() {
-      return this._device;
-    },
     get connected() {
       return this._connected;
     },
@@ -170,12 +167,11 @@
       var canonicalUUID = window.BluetoothUUID.getService(UUID);
       return this.sendMessage("getPrimaryService", {serviceUUID: canonicalUUID})
         .then((service) => {
-          console.log("GOT SERVICE", service, this._device, typeof this._device, this._device.prototype);
-          return new BluetoothGATTService(this._device, canonicalUUID, true);
+          return new BluetoothGATTService(this.device, canonicalUUID, true);
         })
     },
 
- getPrimaryServices: function (UUID) {
+    getPrimaryServices: function (UUID) {
       throw new Error("Not implemented");
       var canonicalUUID = window.BluetoothUUID.getService(UUID)
       return this.sendMessage("getPrimaryServices", {serviceUUID: canonicalUUID})
@@ -186,15 +182,14 @@
           // this is a problem - all services will have the same information (UUID) so no way for this side of the code to differentiate.
           // we need to add an identifier GUID to tell them apart
           servicesData.forEach((service) => {
-            services.push(new BluetoothGATTService(this._device, canonicalUUID, true))
+            services.push(new BluetoothGATTService(this.device, canonicalUUID, true))
           });
           return services;
         });
     },
     sendMessage: function (type, data) {
       data = data || {};
-      console.log("info", this._device.id, data);
-      data["deviceId"] = this._device.id;
+      data["deviceId"] = this.device.id;
       return sendMessage("device:" + type, data);
     },
     toString: function () {
@@ -207,21 +202,12 @@
     if (device == null || uuid == null || isPrimary == null) {
       throw new Error("Invalid call to BluetoothGATTService constructor")
     }
-    this._device = device;
-    this._uuid = uuid;
-    this._isPrimary = isPrimary;
+    defineROProperties(this, {
+      device: device, uuid: uuid, isPrimary: isPrimary
+    });
   }
 
   BluetoothGATTService.prototype = {
-    get device() {
-      return this._device;
-    },
-    get uuid() {
-      return this._uuid;
-    },
-    get isPrimary() {
-      return this._isPrimary;
-    },
     getCharacteristic: function (uuid) {
       var canonicalUUID = BluetoothUUID.getCharacteristic(uuid);
 
@@ -245,32 +231,29 @@
     },
     sendMessage: function (type, data) {
       data = data || {};
-      data["serviceUUID"] = this._uuid;
+      data["serviceUUID"] = this.uuid;
       return this.device.gatt.sendMessage(type, data)
+    },
+    toString: function () {
+      return (
+        "BluetoothGATTService(" + this.uuid + ")");
     }
   };
 
   NSLog("Create BluetoothGATTCharacteristic");
   function BluetoothGATTCharacteristic(service, uuid, properties) {
-    this._service = service;
-    this._uuid = uuid;
-    this._properties = properties;
-    this._value = null;
+    var roProps = {
+      service: service,
+      properties: properties,
+      uuid: uuid,
+    };
+    defineROProperties(this, roProps);
+    this.value = null;
+    EventTarget.call(this);
+    registerCharacteristicForNotifications(this);
   }
 
   BluetoothGATTCharacteristic.prototype = {
-    get service() {
-      return this._service;
-    },
-    get uuid() {
-      return this._uuid;
-    },
-    get properties() {
-      return this._properties;
-    },
-    get value() {
-      return this._value;
-    },
     getDescriptor: function (descriptor) {
       throw new Error('Not implemented');
     },
@@ -280,14 +263,13 @@
     readValue: function () {
       return this.sendMessage("readCharacteristicValue")
         .then((valueEncoded) => {
-          this._value = str2ab(atob(valueEncoded))
-          console.log(valueEncoded, this._value)
-          return new DataView(this._value, 0);
+          this.value = str2ab(atob(valueEncoded))
+          return new DataView(this.value, 0);
         });
     },
     writeValue: function (value) {
       // Can't send raw array bytes since we use JSON, so base64 encode.
-      var v64 = _arrayBufferToBase64(value)
+      let v64 = _arrayBufferToBase64(value);
       return this.sendMessage("writeCharacteristicValue", {value: v64});
     },
     startNotifications: function () {
@@ -296,15 +278,18 @@
     stopNotifications: function() {
       return this.sendMessage("stopNotifications")
     },
-    addEventListener: function() {
-     console.log("DUMMY characteristic addEventListener");
-    },
     sendMessage: function (type, data) {
       data = data || {};
       data.characteristicUUID = this.uuid;
       return this.service.sendMessage(type, data);
+    },
+    toString: function () {
+      return (
+        "BluetoothGATTCharacteristic(" + this.service.toString() + ", " +
+        this.uuid + ")");
     }
   };
+  mixin(BluetoothGATTCharacteristic, EventTarget);
 
   NSLog("Create BluetoothCharacteristicProperties");
   function BluetoothCharacteristicProperties() {
@@ -343,8 +328,7 @@
 
   NSLog("Create BluetoothGATTDescriptor");
   function BluetoothGATTDescriptor(characteristic, uuid) {
-    this._characteristic = characteristic;
-    this._uuid = uuid;
+    defineROProperties(this, {characteristic: characteristic, uuid: uuid});
 
     this._callRemote = function (method) {
       throw new Error("Not implemented.");
@@ -354,21 +338,15 @@
       return sendMessage("bluetooth:deviceMessage", {
         method: method,
         args: args,
-        deviceId: self._characteristic.service.device.id,
-        uuid: self._uuid
+        deviceId: self.characteristic.service.device.id,
+        uuid: self.uuid
       })
     }
   }
 
   BluetoothGATTDescriptor.prototype = {
-    get characteristic() {
-      return this._characteristic;
-    },
-    get uuid() {
-      return this._uuid;
-    },
     get writableAuxiliaries() {
-      return this._value;
+      return this.value;
     },
     readValue: function () {
       return callRemote("BluetoothGATTDescriptor.startNotifications")
@@ -661,6 +639,14 @@
       });
   }
 
+  function BluetoothEvent(type, target) {
+    defineROProperties(this, {type: type, target: target});
+  }
+  BluetoothEvent.prototype = {
+    prototype: Event.prototype,
+    constructor: BluetoothEvent
+  };
+
   //
   // ===== Communication with Native =====
   //
@@ -736,10 +722,28 @@
       }
     }
   }
-  function receiveCharacteristicValueNotification(
-      deviceId, serviceId, characteristicId, data) {
+  let _characteristicsBeingNotified = {};
+  function registerCharacteristicForNotifications(characteristic) {
+    let cid = characteristic.uuid;
+    if (!_characteristicsBeingNotified[cid]) {
+      _characteristicsBeingNotified[cid] = [];
+    }
+    _characteristicsBeingNotified[cid].push(characteristic);
+  }
+  function receiveCharacteristicValueNotification(characteristicId, data) {
+    let chars = _characteristicsBeingNotified[characteristicId];
     console.log(
-      "<-- char val notification", deviceId, serviceId, characteristicId, data);
+      "<-- char val notification", characteristicId, data);
+    if (!chars) {
+      console.log(
+        "Characteristic notification ignored for unknown characteristic",
+        characteristicId);
+      console.log('Know characteristics', Object.keys(_characteristicsBeingNotified));
+      return
+    }
+    chars.forEach(function (char){
+      char.dispatchEvent(new BluetoothEvent("characteristicvaluechanged", char));
+    });
   }
 
   function NamedError(name, message) {
@@ -771,5 +775,4 @@
   navigator.bluetooth = bluetooth;
   window.BluetoothUUID = BluetoothUUID;
   NSLog("navigator.bluetooth: " + navigator.bluetooth);
-
 })();
