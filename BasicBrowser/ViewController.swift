@@ -3,83 +3,39 @@ import WebKit
 
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate,WKUIDelegate {
 
-    class WKLogger: NSObject, WKScriptMessageHandler {
-        open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            NSLog("WKLog: \(message.body)")
-        }
-    }
-
     @IBOutlet weak var locationTextField: UITextField!
-    @IBOutlet weak var containerView: UIView!
-    let devicePicker = PopUpPickerView()
+
+    @IBOutlet var goBackButton: UIBarButtonItem!
+    @IBOutlet var goForwardButton: UIBarButtonItem!
+    @IBOutlet var refreshButton: UIBarButtonItem!
     
-    var webView: WKWebView!
+    @IBOutlet var webView: WBWebView!
     var wbManager = WBManager()
-    let wkLogger = WKLogger()
     
     override func viewDidLoad() {
        
         super.viewDidLoad()
         locationTextField.delegate = self
-        
-        //load polyfill script
-        var script:String?
-        if let filePath:String = Bundle(for: ViewController.self).path(forResource: "WBPolyfill", ofType:"js") {
-            do {
-                script = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
-            } catch _ {
-                print("Error loading polyfil")
-                return
-            }
-        }
-
-        // Before configuring the WKWebView, delete caches since
-        // it seems a bit arbitrary when this happens otherwise.
-        // This from http://stackoverflow.com/a/34376943/5920499
-        let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache]) as! Set<String>
-        WKWebsiteDataStore.default().removeData(
-            ofTypes: websiteDataTypes,
-            modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
-            completionHandler:{})
-
-        //create bluetooth object, and set it to listen to messages
-        let webCfg = WKWebViewConfiguration()
-        let userController = WKUserContentController()
-        userController.add(self.wbManager, name: "bluetooth")
-        userController.add(self.wkLogger, name: "logger")
 
         // connect picker
-        self.devicePicker.delegate = self.wbManager
-        self.view.addSubview(devicePicker)
-        self.wbManager.devicePicker = devicePicker
-        
-        // add the bluetooth script prior to loading all frames
-        let userScript = WKUserScript(
-            source: script!, injectionTime: .atDocumentStart,
-            forMainFrameOnly: false)
-        userController.addUserScript(userScript)
-        webCfg.userContentController = userController
-        
-        webView = WKWebView(
-            frame: self.containerView.bounds,
-            configuration:webCfg
-        )
-        webView.uiDelegate = self
-        
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.allowsBackForwardNavigationGestures = true
-        webView.navigationDelegate = self
-        containerView.addSubview(webView)
-        
-        let views = ["webView": webView!]
-        containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[webView]|",
-            options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[webView]|",
-            options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        
-        loadLocation("http://caliban.local:8000/projects/puck.js/0.1.0/puckdemo")
+        self.webView.devicePicker.delegate = self.wbManager
+        self.wbManager.devicePicker = self.webView.devicePicker
+
+        self.webView.navigationDelegate = self
+        self.webView.uiDelegate = self
+
+
+        self.loadLocation("http://caliban.local:8000/projects/puck.js/0.1.0/puckdemo")
+
+        NSLog("WebView Frame \(self.webView.frame)")
+
+        self.goBackButton.target = self.webView
+        self.goBackButton.action = #selector(self.webView.goBack)
+        self.goForwardButton.target = self.webView
+        self.goForwardButton.action = #selector(self.webView.goForward)
+        self.refreshButton.target = self.webView
+        self.refreshButton.action = #selector(self.webView.reload)
     }
-    
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -93,7 +49,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             location = "http://" + location
         }
         locationTextField.text = location
-        webView.load(URLRequest(url: URL(string: location)!))
+        self.webView.load(URLRequest(url: URL(string: location)!))
         
     }
     

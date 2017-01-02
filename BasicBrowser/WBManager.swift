@@ -8,7 +8,7 @@ import Foundation
 import CoreBluetooth
 import WebKit
 
-open class WBManager: NSObject, CBCentralManagerDelegate,WKScriptMessageHandler, PopUpPickerViewDelegate {
+open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler, PopUpPickerViewDelegate {
 
     /*
      * ========== Class constants ==========
@@ -42,7 +42,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate,WKScriptMessageHandler,
     /*
      * ========== Initialization ==========
      */
-    override init(){
+    override init() {
         super.init()
         self.centralManager.delegate = self
     }
