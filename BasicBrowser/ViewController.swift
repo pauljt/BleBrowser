@@ -17,13 +17,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         super.viewDidLoad()
         locationTextField.delegate = self
 
-        // connect picker
-        self.webView.devicePicker.delegate = self.wbManager
-        self.wbManager.devicePicker = self.webView.devicePicker
-
+        // connect view to manager
+        self.webView.wbManager = self.wbManager
         self.webView.navigationDelegate = self
         self.webView.uiDelegate = self
-
 
         self.loadLocation("http://caliban.local:8000/projects/puck.js/0.1.0/puckdemo")
 

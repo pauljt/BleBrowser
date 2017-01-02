@@ -34,7 +34,7 @@
 
 /* Begin PBXFileReference section */
 		5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Jsonifiable.swift; sourceTree = "<group>"; };
-		5A95DDF71E0C080B00DFE26B /* WBWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WBWebView.swift; path = BasicBrowser/WBWebView.swift; sourceTree = "<group>"; };
+		5A95DDF71E0C080B00DFE26B /* WBWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBWebView.swift; sourceTree = "<group>"; };
 		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
 		BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = WBPolyfill.js; sourceTree = "<group>"; tabWidth = 2; };
 		BB303DF21C42070C00FCAF24 /* WBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBManager.swift; sourceTree = "<group>"; };
@@ -74,7 +74,6 @@
 		E44C184D1A36203E00734F8B = {
 			isa = PBXGroup;
 			children = (
-				5A95DDF71E0C080B00DFE26B /* WBWebView.swift */,
 				5AF110A51DDC6AA3006CB88F /* notes.md */,
 				E44C18581A36203E00734F8B /* BleBrowser */,
 				E44C186E1A36203E00734F8B /* BleBrowserTests */,
@@ -94,18 +93,19 @@
 		E44C18581A36203E00734F8B /* BleBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */,
 				5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */,
 				E44C185B1A36203E00734F8B /* AppDelegate.swift */,
 				BBA6730D1C535B8C00076CBA /* PopUpPickerView.swift */,
 				E44C185D1A36203E00734F8B /* ViewController.swift */,
-				E44C185F1A36203E00734F8B /* Main.storyboard */,
-				E44C18621A36203E00734F8B /* Images.xcassets */,
-				E44C18641A36203E00734F8B /* LaunchScreen.xib */,
-				E44C18591A36203E00734F8B /* Supporting Files */,
-				BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */,
 				BB303DF21C42070C00FCAF24 /* WBManager.swift */,
 				BB4DE1F31C8D0A44003151BF /* WBDevice.swift */,
 				BB4DBE641C97F577000D2C35 /* WBTransaction.swift */,
+				5A95DDF71E0C080B00DFE26B /* WBWebView.swift */,
+				E44C18641A36203E00734F8B /* LaunchScreen.xib */,
+				E44C185F1A36203E00734F8B /* Main.storyboard */,
+				E44C18621A36203E00734F8B /* Images.xcassets */,
+				E44C18591A36203E00734F8B /* Supporting Files */,
 			);
 			name = BleBrowser;
 			path = BasicBrowser;

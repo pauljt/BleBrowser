@@ -18,7 +18,26 @@ open class WBWebView: WKWebView {
         }
     }
     let wkLogger = WKLogger()
-    let devicePicker = PopUpPickerView()
+    @IBOutlet var devicePicker: PopUpPickerView!
+
+    let webBluetoothHandlerName = "bluetooth"
+    private var _wbManager: WBManager?
+    var wbManager: WBManager? {
+        get {
+            return self._wbManager
+        }
+        set(newWBManager) {
+            if self._wbManager != nil {
+                self.configuration.userContentController.removeScriptMessageHandler(forName: self.webBluetoothHandlerName)
+            }
+            self._wbManager = newWBManager
+            self.devicePicker.delegate = newWBManager
+            if let newMan = newWBManager {
+                self.configuration.userContentController.add(newMan, name: self.webBluetoothHandlerName)
+                newMan.devicePicker = self.devicePicker
+            }
+        }
+    }
 
     required public override init(frame: CGRect, configuration: WKWebViewConfiguration) {
         NSLog("WBWebView init frame \(frame)")
@@ -59,7 +78,6 @@ open class WBWebView: WKWebView {
             completionHandler:{})
 
         userController.add(self.wkLogger, name: "logger")
-        self.addSubview(devicePicker)
 
         // add the bluetooth script prior to loading all frames
         let userScript = WKUserScript(
