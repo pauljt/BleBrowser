@@ -2,7 +2,7 @@
         browser
 */
 /*global
-        window
+        atob, Event, window
 */
 // adapted from chrome app polyfill https://github.com/WebBluetoothCG/chrome-app-polyfill
 
@@ -20,6 +20,8 @@
         return;
     }
 
+    let native;
+
     function _arrayBufferToBase64(buffer) {
         let binary = '';
         let bytes = new Uint8Array(buffer);
@@ -27,6 +29,18 @@
             binary += String.fromCharCode(byte);
         });
         return window.btoa(binary);
+    }
+
+    //Safari 9 doesn't have TextDecoder API
+    function str2ab(str) {
+        let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+        let bufView = new Uint16Array(buf);
+        let ii;
+        let strLen = str.length;
+        for (ii = 0; ii < strLen; ii += 1) {
+            bufView[ii] = str.charCodeAt(ii);
+        }
+        return buf;
     }
 
     //
@@ -38,37 +52,37 @@
         this.listeners = {};
     }
 
-    EventTarget.prototype.addEventListener = function(type, callback) {
-        if(!(type in this.listeners)) {
+    EventTarget.prototype.addEventListener = function (type, callback) {
+        if (this.listeners[type] === undefined) {
             this.listeners[type] = [];
         }
         this.listeners[type].push(callback);
     };
-    EventTarget.prototype.removeEventListener = function(type, callback) {
+    EventTarget.prototype.removeEventListener = function (type, callback) {
 
         let stack = this.listeners[type];
-        if (stack == null) {
+        if (stack === undefined) {
             return;
         }
         let l = stack.length;
-        for(i = 0; i < l; i += 1) {
-            if(stack[i] === callback){
-                stack.splice(i, 1);
+        let ii;
+        for (ii = 0; ii < l; ii += 1) {
+            if (stack[ii] === callback) {
+                stack.splice(ii, 1);
                 return this.removeEventListener(type, callback);
             }
         }
     };
     EventTarget.prototype.dispatchEvent = function (event) {
         let stack = this.listeners[event.type];
-        if (stack == null) {
+        if (stack === undefined) {
             return;
         }
         event.currentTarget = this;
         stack.forEach(function (cb) {
             try {
                 cb.call(this, event);
-            }
-            catch (e) {
+            } catch (e) {
                 console.log("Exception dispatching to callback " + cb, e);
             }
         });
@@ -97,7 +111,7 @@
             adData: {},
             deviceClass: deviceJSON.deviceClass || 0,
             id: deviceJSON.id,
-            gatt: new BluetoothRemoteGATTServer(this),
+            gatt: new native.BluetoothRemoteGATTServer(this),
             productId: deviceJSON.productId || 0,
             productVersion: deviceJSON.productVersion || 0,
             uuids: deviceJSON.uuids,
@@ -133,17 +147,15 @@
             this.gatt.connected = false;
             // 3.2-3.7 not implemented
             // 3.8
-            this.dispatchEvent(new BluetoothEvent("gattserverdisconnected", this));
+            this.dispatchEvent(new native.BluetoothEvent("gattserverdisconnected", this));
         }
     };
     mixin(BluetoothDevice, EventTarget);
 
     nslog("Create BluetoothRemoteGATTServer");
     function BluetoothRemoteGATTServer(webBluetoothDevice) {
-        if (webBluetoothDevice == null) {
-            throw new Error(
-                "Attempt to create BluetoothRemoteGATTServer with " +
-                webBluetoothDevice + " device");
+        if (webBluetoothDevice === undefined) {
+            throw new Error("Attempt to create BluetoothRemoteGATTServer with no device");
         }
         defineROProperties(this, {device: webBluetoothDevice});
         this.connected = false;
@@ -154,7 +166,7 @@
             return this.sendMessage("connectGATT")
                 .then(function () {
                     self.connected = true;
-                    registerDeviceForNotifications(self.device);
+                    native.registerDeviceForNotifications(self.device);
                     return self;
                 });
         },
@@ -162,14 +174,19 @@
             let self = this;
             return this.sendMessage("disconnectGATT")
                 .then(function () {
-                    unregisterDeviceForNotifications(self.device);
+                    native.unregisterDeviceForNotifications(self.device);
                     self.connected = false;
                 });
         },
         getPrimaryService: function (UUID) {
             let canonicalUUID = window.BluetoothUUID.getService(UUID);
+            let self = this;
             return this.sendMessage("getPrimaryService", {serviceUUID: canonicalUUID})
-                .then((service) => new BluetoothGATTService(this.device, canonicalUUID, true));
+                .then(() => new native.BluetoothGATTService(
+                    self.device,
+                    canonicalUUID,
+                    true
+                ));
         },
 
         getPrimaryServices: function (UUID) {
@@ -181,22 +198,24 @@
             return this.sendMessage("getPrimaryServices", {serviceUUID: canonicalUUID})
                 .then(function (servicesJSON) {
                     let servicesData = JSON.parse(servicesJSON);
-                    let services = [];
+                    let services = servicesData;
+                    services = device;
+                    services = [];
 
                     // this is a problem - all services will have the same information (UUID) so no way for this side of the code to differentiate.
                     // we need to add an identifier GUID to tell them apart
-                    servicesData.forEach(
-                        (service) => services.push(
-                            new BluetoothGATTService(device, canonicalUUID, true)
-                        )
-                    );
+                    // servicesData.forEach(
+                    //     (service) => services.push(
+                    //         new native.BluetoothGATTService(device, canonicalUUID, true)
+                    //     )
+                    // );
                     return services;
                 });
         },
         sendMessage: function (type, data) {
             data = data || {};
             data.deviceId = this.device.id;
-            return sendMessage("device:" + type, data);
+            return native.sendMessage("device:" + type, data);
         },
         toString: function () {
             return "BluetoothRemoteGATTServer";
@@ -205,7 +224,7 @@
 
     nslog("Create BluetoothGATTService");
     function BluetoothGATTService(device, uuid, isPrimary) {
-        if (device == null || uuid == null || isPrimary == null) {
+        if (device === undefined || uuid === undefined || isPrimary === undefined) {
             throw new Error("Invalid call to BluetoothGATTService constructor");
         }
         defineROProperties(this, {
@@ -217,27 +236,27 @@
 
     BluetoothGATTService.prototype = {
         getCharacteristic: function (uuid) {
-            let canonicalUUID = BluetoothUUID.getCharacteristic(uuid);
+            let canonicalUUID = native.BluetoothUUID.getCharacteristic(uuid);
             let service = this;
             return this.sendMessage(
                 "getCharacteristic",
                 {characteristicUUID: canonicalUUID}
             ).then(function (CharacteristicJSON) {
                 console.log('Got characteristic', uuid);
-                return new BluetoothGATTCharacteristic(
+                return new native.BluetoothGATTCharacteristic(
                     service,
                     canonicalUUID,
                     CharacteristicJSON.properties
                 );
             });
         },
-        getCharacteristics: function (uuid) {
+        getCharacteristics: function (ignore) {
             throw new Error('Not implemented');
         },
-        getIncludedService: function (uuid) {
+        getIncludedService: function (ignore) {
             throw new Error('Not implemented');
         },
-        getIncludedServices: function (uuids) {
+        getIncludedServices: function (ignore) {
             throw new Error('Not implemented');
         },
         sendMessage: function (type, data) {
@@ -260,14 +279,14 @@
         defineROProperties(this, roProps);
         this.value = null;
         EventTarget.call(this);
-        registerCharacteristicForNotifications(this);
+        native.registerCharacteristicForNotifications(this);
     }
 
     BluetoothGATTCharacteristic.prototype = {
-        getDescriptor: function (descriptor) {
+        getDescriptor: function (ignore) {
             throw new Error('Not implemented');
         },
-        getDescriptors: function (descriptor) {
+        getDescriptors: function (ignore) {
             throw new Error("Not implemented");
         },
         readValue: function () {
@@ -313,10 +332,10 @@
             return this.value;
         },
         readValue: function () {
-            return callRemote("BluetoothGATTDescriptor.startNotifications");
+            throw new Error("Not implemented");
         },
         writeValue: function () {
-            return callRemote("BluetoothGATTDescriptor.startNotifications");
+            throw new Error("Not implemented");
         }
     };
 
@@ -571,7 +590,7 @@
     let bluetooth = {};
     bluetooth.requestDevice = function (requestDeviceOptions) {
         if (!requestDeviceOptions.filters || requestDeviceOptions.filters.length === 0) {
-            message = 'The first argument to navigator.bluetooth.requestDevice() must have a non-zero length filters parameter';
+            let message = 'The first argument to navigator.bluetooth.requestDevice() must have a non-zero length filters parameter';
             console.log(message);
             throw new TypeError(message);
         }
@@ -599,7 +618,7 @@
             validatedDeviceOptions.optionalServices = optionalServices;
         }
 
-        return sendMessage("requestDevice", validatedDeviceOptions)
+        return native.sendMessage("requestDevice", validatedDeviceOptions)
             .then(function (device) {
                 return new BluetoothDevice(device);
             });
@@ -616,149 +635,131 @@
     //
     // ===== Communication with Native =====
     //
-    let _messageCount = 0;
-    let _callbacks = {}; // callbacks for responses to requests
+    native = {
+        messageCount: 0,
+        callbacks: {}, // callbacks for responses to requests
 
-    function sendMessage(type, data) {
+        sendMessage: function (type, data) {
 
-        let callbackID, message;
-        callbackID = _messageCount;
-
-        if (typeof type == 'undefined') {
-            throw new Error("CallRemote should never be called without a type!");
-        }
-
-        data = data || {};
-        message = {
-            type: type,
-            data: data,
-            callbackID: callbackID
-        };
-
-        console.log("--> sending " + type, JSON.stringify(data));
-        window.webkit.messageHandlers.bluetooth.postMessage(message);
-
-        _messageCount++;
-        return new Promise(function (resolve, reject) {
-            _callbacks[callbackID] = function (success, result) {
-                if (success) {
-                    resolve(result);
-                } else {
-                    reject(result);
-                }
-                delete _callbacks[callbackID];
-            };
-        });
-    }
-
-    function receiveMessageResponse(success, resultString, callbackID) {
-        console.log("<-- receiving response", success, resultString, callbackID);
-
-        if (callbackID != null && _callbacks[callbackID]) {
-            _callbacks[callbackID](success, resultString);
-        }
-        else {
-            console.log("Response for unknown callbackID", callbackID);
-        }
-    }
-
-    let _devicesBeingNotified = {};
-    function registerDeviceForNotifications(device) {
-        let did = device.id;
-        if (!(did in _devicesBeingNotified)) {
-            _devicesBeingNotified[did] = [];
-        }
-        let devs = _devicesBeingNotified[did];
-        devs.forEach(function (dev) {
-            if (dev === device) {
-                throw new Error("Device already registered for notifications");
+            let callbackID = native.messageCount;
+            let message;
+            if (type === undefined) {
+                throw new Error("CallRemote should never be called without a type!");
             }
-        });
-        console.log("Register device " + did + " for notifications");
-        devs.push(device);
-    }
-    function unregisterDeviceForNotifications(device) {
-        let did = device.id;
-        if (!(did in _devicesBeingNotified)) {
-            return;
-        }
-        let devs = _devicesBeingNotified[did];
-        devs.forEach(function (dev) {
-            if (dev === device) {
-                devs.splice(ii, 1);
+
+            data = data || {};
+            message = {
+                type: type,
+                data: data,
+                callbackID: callbackID
+            };
+
+            console.log("--> sending " + type, JSON.stringify(data));
+            window.webkit.messageHandlers.bluetooth.postMessage(message);
+
+            this.messageCount += 1;
+            return new Promise(function (resolve, reject) {
+                native.callbacks[callbackID] = function (success, result) {
+                    if (success) {
+                        resolve(result);
+                    } else {
+                        reject(result);
+                    }
+                    delete native.callbacks[callbackID];
+                };
+            });
+        },
+        receiveMessageResponse: function (success, resultString, callbackID) {
+            console.log("<-- receiving response", success, resultString, callbackID);
+
+            if (callbackID !== undefined && native.callbacks[callbackID]) {
+                native.callbacks[callbackID](success, resultString);
+            } else {
+                console.log("Response for unknown callbackID", callbackID);
+            }
+        },
+        devicesBeingNotified: {},
+        registerDeviceForNotifications: function (device) {
+            let did = device.id;
+            if (native.devicesBeingNotified[did] === undefined) {
+                native.devicesBeingNotified[did] = [];
+            }
+            let devs = native.devicesBeingNotified[did];
+            devs.forEach(function (dev) {
+                if (dev === device) {
+                    throw new Error("Device already registered for notifications");
+                }
+            });
+            console.log("Register device " + did + " for notifications");
+            devs.push(device);
+        },
+        unregisterDeviceForNotifications: function (device) {
+            let did = device.id;
+            if (native.devicesBeingNotified[did] === undefined) {
                 return;
             }
-        });
-    }
-    function receiveDeviceDisconnectEvent(deviceId) {
-        console.log("<-- device disconnect event", deviceId);
-        let devices = _devicesBeingNotified[deviceId];
-        if (devices == null || !devices.length) {
-            console.log("Device not registered for notifications");
-            return;
-        }
-        devices.forEach(function (device) {
-            device.handleSpontaneousDisconnectEvent();
-        });
-    }
-
-    let _characteristicsBeingNotified = {};
-    function registerCharacteristicForNotifications(characteristic) {
-        let cid = characteristic.uuid;
-        console.log("Registering char UUID", cid);
-        if (!_characteristicsBeingNotified[cid]) {
-            _characteristicsBeingNotified[cid] = [];
-        }
-        _characteristicsBeingNotified[cid].push(characteristic);
-    }
-    function receiveCharacteristicValueNotification(characteristicId, d64) {
-        let chars = _characteristicsBeingNotified[characteristicId];
-        console.log("<-- char val notification", characteristicId, d64);
-        if (!chars) {
-            console.log(
-                "Characteristic notification ignored for unknown characteristic",
-                characteristicId
-            );
-            console.log('Know characteristics', Object.keys(_characteristicsBeingNotified));
-            return;
-        }
-        let strData = atob(d64);
-        let dataView = new DataView(str2ab(strData));
-        chars.forEach(function (char){
-            char.value = dataView;
-            char.dispatchEvent(new BluetoothEvent("characteristicvaluechanged", char));
-        });
-    }
-
-    function NamedError(name, message) {
-        let e = new Error(message || '');
-        e.name = name;
-        return e;
-    }
-
-    //Safari 9 doesn't have TextDecoder API
-    function ab2str(buf) {
-        return String.fromCharCode.apply(null, new Uint16Array(buf));
-    }
-
-    function str2ab(str) {
-        let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-        let bufView = new Uint16Array(buf);
-        let ii;
-        let strLen = str.length;
-        for (ii = 0; ii < strLen; ii += 1) {
-            bufView[ii] = str.charCodeAt(ii);
-        }
-        return buf;
-    }
+            let devs = native.devicesBeingNotified[did];
+            let ii;
+            for (ii = 0; ii < devs.length; ii += 1) {
+                if (devs[ii] === device) {
+                    devs.splice(ii, 1);
+                    return;
+                }
+            }
+        },
+        receiveDeviceDisconnectEvent: function (deviceId) {
+            console.log("<-- device disconnect event", deviceId);
+            let devices = native.devicesBeingNotified[deviceId];
+            if (devices === undefined || devices.length === 0) {
+                console.log("Device not registered for notifications");
+                return;
+            }
+            devices.forEach(function (device) {
+                device.handleSpontaneousDisconnectEvent();
+            });
+        },
+        characteristicsBeingNotified: {},
+        registerCharacteristicForNotifications: function (characteristic) {
+            let cid = characteristic.uuid;
+            console.log("Registering char UUID", cid);
+            if (native.characteristicsBeingNotified[cid] === undefined) {
+                native.devicesBeingNotified[cid] = [];
+            }
+            native.devicesBeingNotified[cid].push(characteristic);
+        },
+        receiveCharacteristicValueNotification: function (characteristicId, d64) {
+            let chars = native.devicesBeingNotified[characteristicId];
+            console.log("<-- char val notification", characteristicId, d64);
+            if (!chars) {
+                console.log(
+                    "Characteristic notification ignored for unknown characteristic",
+                    characteristicId
+                );
+                console.log('Know characteristics', Object.keys(native.devicesBeingNotified));
+                return;
+            }
+            let strData = atob(d64);
+            let dataView = new DataView(str2ab(strData));
+            chars.forEach(function (char) {
+                char.value = dataView;
+                char.dispatchEvent(new BluetoothEvent("characteristicvaluechanged", char));
+            });
+        },
+        // defeat the linter's "out of scope" warnings for not yet defined functions
+        BluetoothGATTCharacteristic: BluetoothGATTCharacteristic,
+        BluetoothUUID: BluetoothUUID,
+        BluetoothRemoteGATTServer: BluetoothRemoteGATTServer,
+        BluetoothGATTService: BluetoothGATTService,
+        BluetoothEvent: BluetoothEvent
+    };
 
     //Exposed interfaces
     nslog("POLYFILL");
     window.BluetoothDevice = BluetoothDevice;
     window.BluetoothUUID = BluetoothUUID;
-    window.receiveDeviceDisconnectEvent = receiveDeviceDisconnectEvent;
-    window.receiveMessageResponse = receiveMessageResponse;
-    window.receiveCharacteristicValueNotification = receiveCharacteristicValueNotification;
+    window.receiveDeviceDisconnectEvent = native.receiveDeviceDisconnectEvent;
+    window.receiveMessageResponse = native.receiveMessageResponse;
+    window.receiveCharacteristicValueNotification = native.receiveCharacteristicValueNotification;
     navigator.bluetooth = bluetooth;
     window.BluetoothUUID = BluetoothUUID;
     nslog("navigator.bluetooth: " + navigator.bluetooth);
