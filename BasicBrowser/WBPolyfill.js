@@ -17,10 +17,9 @@
   function _arrayBufferToBase64(buffer) {
     let binary = '';
     let bytes = new Uint8Array(buffer);
-    let len = bytes.byteLength;
-    for (let ii = 0; ii < len; ii++) {
-        binary += String.fromCharCode(bytes[ii]);
-    }
+    bytes.forEach(function (byte) {
+        binary += String.fromCharCode(byte);
+    });
     return window.btoa(binary);
   }
 
@@ -31,7 +30,7 @@
   nslog("Build EventTarget");
   function EventTarget() {
     this.listeners = {};
-  };
+  }
 
   EventTarget.prototype.addEventListener = function(type, callback) {
     if(!(type in this.listeners)) {
