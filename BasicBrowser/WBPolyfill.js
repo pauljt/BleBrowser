@@ -3,10 +3,10 @@
 (function () {
   "use strict";
 
-  function NSLog(message) {
+  function nslog(message) {
     window.webkit.messageHandlers.logger.postMessage(message);
   }
-  NSLog("Initialize web bluetooth runtime");
+  nslog("Initialize web bluetooth runtime");
 
   if (navigator.bluetooth) {
     // already exists, don't polyfill
@@ -15,9 +15,9 @@
   }
 
   function _arrayBufferToBase64(buffer) {
-    var binary = '';
-    var bytes = new Uint8Array(buffer);
-    var len = bytes.byteLength;
+    let binary = '';
+    let bytes = new Uint8Array(buffer);
+    let len = bytes.byteLength;
     for (let ii = 0; ii < len; ii++) {
         binary += String.fromCharCode(bytes[ii]);
     }
@@ -28,8 +28,8 @@
   // We need an EventTarget implementation. This one nicked wholesale from
   // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
   //
-  NSLog("Build EventTarget");
-  var EventTarget = function() {
+  nslog("Build EventTarget");
+  function EventTarget() {
     this.listeners = {};
   };
 
@@ -84,7 +84,7 @@
   }
 
   // https://webbluetoothcg.github.io/web-bluetooth/ interface
-  NSLog("Create BluetoothDevice");
+  nslog("Create BluetoothDevice");
   function BluetoothDevice(deviceJSON) {
     EventTarget.call(this);
 
@@ -155,7 +155,7 @@
   };
   mixin(BluetoothDevice, EventTarget);
 
-  NSLog("Create BluetoothRemoteGATTServer");
+  nslog("Create BluetoothRemoteGATTServer");
   function BluetoothRemoteGATTServer(webBluetoothDevice) {
     if (webBluetoothDevice == null) {
       throw new Error(
@@ -185,7 +185,7 @@
         });
     },
     getPrimaryService: function (UUID) {
-      var canonicalUUID = window.BluetoothUUID.getService(UUID);
+      let canonicalUUID = window.BluetoothUUID.getService(UUID);
       return this.sendMessage("getPrimaryService", {serviceUUID: canonicalUUID})
         .then((service) => {
           return new BluetoothGATTService(this.device, canonicalUUID, true);
@@ -194,11 +194,11 @@
 
     getPrimaryServices: function (UUID) {
       throw new Error("Not implemented");
-      var canonicalUUID = window.BluetoothUUID.getService(UUID)
+      let canonicalUUID = window.BluetoothUUID.getService(UUID)
       return this.sendMessage("getPrimaryServices", {serviceUUID: canonicalUUID})
         .then((servicesJSON) => {
-          var servicesData = JSON.parse(servicesJSON);
-          var services = [];
+          let servicesData = JSON.parse(servicesJSON);
+          let services = [];
 
           // this is a problem - all services will have the same information (UUID) so no way for this side of the code to differentiate.
           // we need to add an identifier GUID to tell them apart
@@ -218,7 +218,7 @@
     }
   };
 
-  NSLog("Create BluetoothGATTService");
+  nslog("Create BluetoothGATTService");
   function BluetoothGATTService(device, uuid, isPrimary) {
     if (device == null || uuid == null || isPrimary == null) {
       throw new Error("Invalid call to BluetoothGATTService constructor")
@@ -230,7 +230,7 @@
 
   BluetoothGATTService.prototype = {
     getCharacteristic: function (uuid) {
-      var canonicalUUID = BluetoothUUID.getCharacteristic(uuid);
+      let canonicalUUID = BluetoothUUID.getCharacteristic(uuid);
 
       return this.sendMessage(
         "getCharacteristic", {characteristicUUID: canonicalUUID})
@@ -261,9 +261,9 @@
     }
   };
 
-  NSLog("Create BluetoothGATTCharacteristic");
+  nslog("Create BluetoothGATTCharacteristic");
   function BluetoothGATTCharacteristic(service, uuid, properties) {
-    var roProps = {
+    let roProps = {
       service: service,
       properties: properties,
       uuid: uuid,
@@ -312,7 +312,7 @@
   };
   mixin(BluetoothGATTCharacteristic, EventTarget);
 
-  NSLog("Create BluetoothCharacteristicProperties");
+  nslog("Create BluetoothCharacteristicProperties");
   function BluetoothCharacteristicProperties() {
 
   }
@@ -347,14 +347,14 @@
     }
   }
 
-  NSLog("Create BluetoothGATTDescriptor");
+  nslog("Create BluetoothGATTDescriptor");
   function BluetoothGATTDescriptor(characteristic, uuid) {
     defineROProperties(this, {characteristic: characteristic, uuid: uuid});
 
     this._callRemote = function (method) {
       throw new Error("Not implemented.");
-      var self = this;
-      var args = Array.prototype.slice.call(arguments).slice(1, arguments.length)
+      let self = this;
+      let args = Array.prototype.slice.call(arguments).slice(1, arguments.length)
       console.log("Send device message with args", args);
       return sendMessage("bluetooth:deviceMessage", {
         method: method,
@@ -379,15 +379,15 @@
 
   function canonicalUUID(uuidAlias) {
     uuidAlias >>>= 0;  // Make sure the number is positive and 32 bits.
-    var strAlias = "0000000" + uuidAlias.toString(16);
+    let strAlias = "0000000" + uuidAlias.toString(16);
     strAlias = strAlias.substr(-8);
     return strAlias + "-0000-1000-8000-00805f9b34fb"
   }
 
-  var uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+  let uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
-  NSLog("Create BluetoothUUID");
-  var BluetoothUUID = {};
+  nslog("Create BluetoothUUID");
+  let BluetoothUUID = {};
   BluetoothUUID.canonicalUUID = canonicalUUID;
   BluetoothUUID.service = {
     alert_notification: canonicalUUID(0x1811),
@@ -605,7 +605,7 @@
   };
 
   function ResolveUUIDName(tableName) {
-    var table = BluetoothUUID[tableName];
+    let table = BluetoothUUID[tableName];
     return function (name) {
       if (typeof name === "number") {
         return canonicalUUID(name);
@@ -624,17 +624,17 @@
   BluetoothUUID.getCharacteristic = ResolveUUIDName('characteristic');
   BluetoothUUID.getDescriptor = ResolveUUIDName('descriptor');
 
-  NSLog("Create bluetooth");
-  var bluetooth = {};
+  nslog("Create bluetooth");
+  let bluetooth = {};
   bluetooth.requestDevice = function (requestDeviceOptions) {
     if (!requestDeviceOptions.filters || requestDeviceOptions.filters.length === 0) {
       message = 'The first argument to navigator.bluetooth.requestDevice() must have a non-zero length filters parameter';
       console.log(message);
       throw new TypeError(message);
     }
-    var validatedDeviceOptions = {}
+    let validatedDeviceOptions = {}
 
-    var filters = requestDeviceOptions.filters;
+    let filters = requestDeviceOptions.filters;
     filters = filters.map(function (filter) {
       if (!filter.services) filter.services = [];
       return {
@@ -648,7 +648,7 @@
     validatedDeviceOptions.filters = filters;
 
 
-    var optionalServices = requestDeviceOptions.optionalService;
+    let optionalServices = requestDeviceOptions.optionalService;
     if (optionalServices) {
       optionalServices = optionalServices.services.map(window.BluetoothUUID.getService)
       validatedDeviceOptions.optionalServices = optionalServices;
@@ -671,12 +671,12 @@
   //
   // ===== Communication with Native =====
   //
-  var _messageCount = 0;
-  var _callbacks = {}; // callbacks for responses to requests
+  let _messageCount = 0;
+  let _callbacks = {}; // callbacks for responses to requests
 
   function sendMessage(type, data) {
 
-    var callbackID, message;
+    let callbackID, message;
     callbackID = _messageCount;
 
     if (typeof type == 'undefined') {
@@ -717,13 +717,13 @@
     }
   }
 
-  var _devicesBeingNotified = {};
+  let _devicesBeingNotified = {};
   function registerDeviceForNotifications(device) {
     let did = device.id;
     if (!(did in _devicesBeingNotified)) {
       _devicesBeingNotified[did] = [];
     }
-    var devs = _devicesBeingNotified[did];
+    let devs = _devicesBeingNotified[did];
     for (let ii = 0; ii < devs.length; ii++) {
       if (devs[ii] === device) {
         throw new Error("Device already registered for notifications");
@@ -736,7 +736,7 @@
     let did = device.id;
     if (!(did in _devicesBeingNotified))
       return;
-    var devs = _devicesBeingNotified[did];
+    let devs = _devicesBeingNotified[did];
     for (let ii = 0; ii < devs.length; ii++) {
       if (devs[ii] === device) {
         devs.splice(ii, 1);
@@ -785,7 +785,7 @@
   }
 
   function NamedError(name, message) {
-    var e = new Error(message || '');
+    let e = new Error(message || '');
     e.name = name;
     return e;
   };
@@ -796,16 +796,16 @@
   }
 
   function str2ab(str) {
-    var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-    var bufView = new Uint16Array(buf);
-    for (var i = 0, strLen = str.length; i < strLen; i++) {
+    let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+    let bufView = new Uint16Array(buf);
+    for (let i = 0, strLen = str.length; i < strLen; i++) {
       bufView[i] = str.charCodeAt(i);
     }
     return buf;
   }
 
   //Exposed interfaces
-  NSLog("POLYFILL");
+  nslog("POLYFILL");
   window.BluetoothDevice = BluetoothDevice;
   window.BluetoothUUID = BluetoothUUID;
   window.receiveDeviceDisconnectEvent = receiveDeviceDisconnectEvent;
@@ -813,5 +813,5 @@
   window.receiveCharacteristicValueNotification = receiveCharacteristicValueNotification;
   navigator.bluetooth = bluetooth;
   window.BluetoothUUID = BluetoothUUID;
-  NSLog("navigator.bluetooth: " + navigator.bluetooth);
+  nslog("navigator.bluetooth: " + navigator.bluetooth);
 })();
