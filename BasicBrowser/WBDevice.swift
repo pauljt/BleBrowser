@@ -100,7 +100,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     /*
      * ========== Properties ==========
      */
-    var deviceId = UUID() // generated ID used instead of internal IOS name
+    var deviceId = UUID() // generated ID used instead of internal iOS name
     var peripheral: CBPeripheral
     var adData: BluetoothAdvertisingData
 
@@ -139,8 +139,22 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     func didDisconnect(error: Error?) {
         self.connectTransactions.forEach {$0.resolveAsFailure(withMessage: "Connection was cancelled or prematurely disconnected. Extra error info: \(error as? String ?? "<none>")")}
         if let err = error {
-            NSLog("Spontaneous device disconnect not yet supported. Error was \(err)")
-            self.disconnectTransactions.forEach {$0.resolveAsFailure(withMessage: "\(err)")}
+            NSLog("Spontaneous device disconnect. \(err)")
+            if self.disconnectTransactions.count > 0 {
+                self.disconnectTransactions.forEach {$0.resolveAsFailure(withMessage: "\(err)")}
+            }
+            else {
+                /* Don't lower case the deviceId string because we rely on the web page not to touch it. */
+                let commandString = "window.receiveDeviceDisconnectEvent(\(self.deviceId.uuidString.jsonify()));\n"
+                NSLog("--> device disconnect execute js: \"\(commandString)\"")
+                if let wv = self.view {
+                    wv.evaluateJavaScript(commandString, completionHandler: {
+                        _, error in
+                        if let err = error {
+                            NSLog("Error evaluating \(commandString): \(err)")
+                        }})
+                }
+            }
             return
         }
         self.disconnectTransactions.forEach {$0.resolveAsSuccess()}

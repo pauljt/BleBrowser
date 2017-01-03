@@ -137,12 +137,31 @@
     },
     toString: function () {
       return "BluetoothDevice(" + this.id.slice(0, 10) + ")";
+    },
+    _handleSpontaneousDisconnectEvent: function () {
+      // Code references as per
+      // https://webbluetoothcg.github.io/web-bluetooth/#disconnection-events
+      // 1. not implemented
+      // 2.
+      if (!this.gatt.connected) {
+        return;
+      }
+      // 3.1
+      this.gatt._connected = false;
+      // 3.2-3.7 not implemented
+      // 3.8
+      this.dispatchEvent(new BluetoothEvent("gattserverdisconnected", this));
     }
   };
   mixin(BluetoothDevice, EventTarget);
 
   NSLog("Create BluetoothRemoteGATTServer");
   function BluetoothRemoteGATTServer(webBluetoothDevice) {
+    if (webBluetoothDevice == null) {
+      throw new Error(
+        "Attempt to create BluetoothRemoteGATTServer with " +
+        webBluetoothDevice + " device");
+    }
     defineROProperties(this, {device: webBluetoothDevice});
     this._connected = false;
   };
@@ -154,12 +173,14 @@
       return this.sendMessage("connectGATT")
         .then(() => {
           this._connected = true;
+          registerDeviceForNotifications(this.device);
           return this;
         });
     },
     disconnect: function () {
       return this.sendMessage("disconnectGATT")
         .then(() => {
+          unregisterDeviceForNotifications(this.device);
           this._connected = false;
         });
     },
@@ -698,7 +719,7 @@
 
   var _devicesBeingNotified = {};
   function registerDeviceForNotifications(device) {
-    var did = device.deviceId;
+    let did = device.id;
     if (!(did in _devicesBeingNotified)) {
       _devicesBeingNotified[did] = [];
     }
@@ -708,10 +729,11 @@
         throw new Error("Device already registered for notifications");
       }
     }
+    console.log("Register device " + did + " for notifications");
     devs.push(device);
   }
   function unregisterDeviceForNotifications(device) {
-    var did = device.deviceId;
+    let did = device.id;
     if (!(did in _devicesBeingNotified))
       return;
     var devs = _devicesBeingNotified[did];
@@ -722,6 +744,18 @@
       }
     }
   }
+  function receiveDeviceDisconnectEvent(deviceId) {
+    console.log("<-- device disconnect event", deviceId);
+    let devices = _devicesBeingNotified[deviceId];
+    if (devices == null || !devices.length) {
+      console.log("Device not registered for notifications");
+      return;
+    }
+    devices.forEach(function (device) {
+      device._handleSpontaneousDisconnectEvent();
+    });
+  }
+
   let _characteristicsBeingNotified = {};
   function registerCharacteristicForNotifications(characteristic) {
     let cid = characteristic.uuid;
@@ -774,6 +808,7 @@
   NSLog("POLYFILL");
   window.BluetoothDevice = BluetoothDevice;
   window.BluetoothUUID = BluetoothUUID;
+  window.receiveDeviceDisconnectEvent = receiveDeviceDisconnectEvent;
   window.receiveMessageResponse = receiveMessageResponse;
   window.receiveCharacteristicValueNotification = receiveCharacteristicValueNotification;
   navigator.bluetooth = bluetooth;

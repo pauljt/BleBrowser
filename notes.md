@@ -75,10 +75,19 @@ WKFrameInfo
 8. gatt server disconnect
 9. rename GATTCharacteristic to RemoteGATTCharacteristic
 
-## Limitations
+## Smallish bugs
+
+1. Characteristics are not de-notified / torn down when device disconnects
+2. Handling of devices with the same UUIDs (internal / external) is non-existent.
+
+## Large limitations
 
 1. Device associations with web addresses do not persist on navigation, including page refresh.
 2. Not clear how attempting to select / use multiple devices is going to work.
-3. Handling of devices with the same UUIDs (internal / external) is non-existent.
-4. events not propagated 
-5. UUIDs are uppercase in apple land, lower case on the web, sigh.
+3. events not propagated 
+4. Descriptors not supported
+5. Services within services not supported
+
+## Weird stuff
+
+1. UUIDs are uppercase in apple land, lower case on the web, sigh.

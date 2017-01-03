@@ -99,7 +99,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         guard
             let device = self.devicesByInternalUUID[peripheral.identifier]
             else {
-                NSLog("Unexpected didConnect notification for \(peripheral.name) \(peripheral.identifier)")
+                NSLog("Unexpected didDisconnect notification for unknown device \(peripheral.name) \(peripheral.identifier)")
                 return
         }
         device.didDisconnect(error: error)
