@@ -65,20 +65,24 @@ WKFrameInfo
 
 ## TODO before shipping 1.0.0
 
-1. Handle spontaneous disconnects
-2. Add forward / back buttons.
-3. Get HTTPS up on website.
-4. Read characteristics
-5. clear state after navigation
-6. native logging window
-7. should readValue return the value or should we just rely on notifications
-8. gatt server disconnect
+1. Handle spontaneous disconnects -- done
+2. Add forward / back buttons. -- done
+   a. disable / enable forward / back buttons depending on whether there is something to go back or forward to.
+3. Get HTTPS up on website. -- done
+4. Read characteristics -- done
+5. clear state after navigation -- done
+8. gatt server disconnect -- done
+10. Icon
+6. ?? native logging window
 9. rename GATTCharacteristic to RemoteGATTCharacteristic
+11. Done + Cancel when no devices are in range
+10. Test plan and test
 
 ## Smallish bugs
 
 1. Characteristics are not de-notified / torn down when device disconnects
 2. Handling of devices with the same UUIDs (internal / external) is non-existent.
+3. in BluetoothGATTService.getCharacteristic check we got the correct char UUID back.
 
 ## Large limitations
 
@@ -87,6 +91,7 @@ WKFrameInfo
 3. events not propagated 
 4. Descriptors not supported
 5. Services within services not supported
+6. no bookmarks
 
 ## Weird stuff
 
