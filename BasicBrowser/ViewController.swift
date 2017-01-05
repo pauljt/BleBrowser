@@ -10,7 +10,21 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var refreshButton: UIBarButtonItem!
     
     @IBOutlet var webView: WBWebView!
-    var wbManager = WBManager()
+    var wbManager: WBManager? {
+        didSet {
+            self.webView.wbManager = wbManager
+        }
+    }
+
+    @IBAction func reload() {
+        if (self.webView?.url?.absoluteString ?? "about:blank") == "about:blank",
+            let text = self.locationTextField.text,
+            !text.isEmpty {
+            self.loadLocation(text)
+        } else {
+            self.webView.reload()
+        }
+    }
     
     override func viewDidLoad() {
        
@@ -30,13 +44,13 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.goBackButton.action = #selector(self.webView.goBack)
         self.goForwardButton.target = self.webView
         self.goForwardButton.action = #selector(self.webView.goForward)
-        self.refreshButton.target = self.webView
-        self.refreshButton.action = #selector(self.webView.reload)
+        self.refreshButton.target = self
+        self.refreshButton.action = #selector(self.reload)
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        loadLocation(textField.text!)
+        self.loadLocation(textField.text!)
         return true
     }
     
@@ -49,19 +63,28 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.webView.load(URLRequest(url: URL(string: location)!))
         
     }
+
+    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        if let man = self.wbManager {
+            man.clearState()
+        }
+        self.wbManager = WBManager()
+    }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        locationTextField.text = webView.url?.absoluteString
+        NSLog("didFinish: \(webView.url?.absoluteString)")
+        if let urlString = webView.url?.absoluteString,
+            urlString != "about:blank" {
+            locationTextField.text = urlString
+        }
         
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        locationTextField.text = webView.url?.absoluteString
         webView.loadHTMLString("<p>Fail Navigation: \(error.localizedDescription)</p>", baseURL: nil)
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        locationTextField.text = webView.url?.absoluteString
         webView.loadHTMLString("<p>Fail Provisional Navigation: \(error.localizedDescription)</p>", baseURL: nil)
     }
     

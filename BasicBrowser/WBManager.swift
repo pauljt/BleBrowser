@@ -48,7 +48,20 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     }
     deinit {
         NSLog("WBManager deinit")
+        self.clearState()
+    }
+
+    func clearState() {
         self.stopScanForPeripherals()
+        self.requestDeviceTransaction?.abandon()
+        self.requestDeviceTransaction = nil
+        // the external and internal devices are the same, but tidier to do this in one loop; calling clearState on a device twice is OK.
+        for var devMap in [self.devicesByExternalUUID, self.devicesByInternalUUID, self.discoveredDevicesByInternalUUID] {
+            for (_, device) in devMap {
+                device.clearState()
+            }
+            devMap.removeAll()
+        }
     }
 
     /*

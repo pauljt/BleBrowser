@@ -13,6 +13,14 @@ import WebKit
 class WBTransactionManager<K> where K: Hashable {
     var transactions = [K: [WBTransaction]]()
 
+    func abandonAll() {
+        for (_, ta) in self.transactions {
+            for tr in ta {
+                tr.abandon()
+            }
+        }
+        self.transactions.removeAll()
+    }
     func addTransaction(_ transaction: WBTransaction, atPath path: K) {
         var ts = self.transactions[path] ?? []
         ts.append(transaction)
@@ -136,6 +144,11 @@ class WBTransaction: Equatable, CustomStringConvertible {
     /*
      * ========== Public methods ==========
      */
+    /*! @abstract Abandon the transaction and release all completion handlers. */
+    func abandon() {
+        self.completionHandlers = []
+        self.resolved = true
+    }
     func addCompletionHandler(_ handler: @escaping (WBTransaction, Bool) -> Void) {
         self.completionHandlers.append(handler)
     }

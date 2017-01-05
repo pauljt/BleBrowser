@@ -104,7 +104,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     var peripheral: CBPeripheral
     var adData: BluetoothAdvertisingData
 
-    weak var manager: WBManager!
+    weak var manager: WBManager?
 
     /*! @abstract The view should be set when the device is selected by a particular web view. */
     weak var view: WKWebView? = nil
@@ -130,6 +130,18 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     /*
      * ========== Instance API ==========
      */
+    func clearState() {
+        self.manager?.centralManager.cancelPeripheralConnection(self.peripheral)
+        for var ta in [self.connectTransactions, self.disconnectTransactions] {
+            for trans in ta {
+                trans.abandon()
+            }
+            ta.removeAll()
+        }
+        self.getPrimaryServiceTM.abandonAll()
+        self.getCharacteristicTM.abandonAll()
+        self.readCharacteristicTM.abandonAll()
+    }
     func didConnect() {
         self.connectTransactions.forEach{$0.resolveAsSuccess()}
     }
@@ -173,7 +185,11 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
         switch deviceMessageType {
         case .connectGATT:
-            self.manager.centralManager.connect(self.peripheral)
+            guard let man = self.manager else {
+                transaction.resolveAsFailure(withMessage: "Failed due to internal inconsistency likely related to a recent page navigation (device's manager was released)")
+                return
+            }
+            man.centralManager.connect(self.peripheral)
             // async, so save transaction to resolve when connected
             transaction.addCompletionHandler({
                 transaction, _ in
@@ -184,7 +200,11 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.connectTransactions.append(transaction)
 
         case .disconnectGATT:
-            self.manager.centralManager.cancelPeripheralConnection(
+            guard let man = self.manager else {
+                transaction.resolveAsFailure(withMessage: "Failed due to internal inconsistency likely related to a recent page navigation (device's manager was released)")
+                return
+            }
+            man.centralManager.cancelPeripheralConnection(
                 self.peripheral)
             transaction.addCompletionHandler({
                 transaction, _ in
