@@ -36,6 +36,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.webView.navigationDelegate = self
         self.webView.uiDelegate = self
 
+        for path in ["canGoBack", "canGoForward"] {
+            self.webView.addObserver(self, forKeyPath: path, options: NSKeyValueObservingOptions.new, context: nil)
+        }
+
         self.loadLocation("http://caliban.local:8000/projects/puck.js/0.1.0/puckdemo")
 
         NSLog("WebView Frame \(self.webView.frame)")
@@ -95,5 +99,18 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         alertController.addAction(UIAlertAction(
             title: "OK", style: .default, handler: {_ in completionHandler()}))
         self.present(alertController, animated: true, completion: nil)
+    }
+
+    // MARK: observe protocol
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        let defKeyPath = keyPath!
+        switch defKeyPath {
+        case "canGoBack":
+            self.goBackButton.isEnabled = change![NSKeyValueChangeKey.newKey] as! Bool
+        case "canGoForward":
+            self.goForwardButton.isEnabled = change![NSKeyValueChangeKey.newKey] as! Bool
+        default:
+            NSLog("Unexpected change observed by ViewController: \(keyPath)")
+        }
     }
 }

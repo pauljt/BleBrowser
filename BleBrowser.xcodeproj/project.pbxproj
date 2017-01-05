@@ -104,19 +104,11 @@
 				5A95DDF71E0C080B00DFE26B /* WBWebView.swift */,
 				E44C18641A36203E00734F8B /* LaunchScreen.xib */,
 				E44C185F1A36203E00734F8B /* Main.storyboard */,
+				E44C185A1A36203E00734F8B /* Info.plist */,
 				E44C18621A36203E00734F8B /* Images.xcassets */,
-				E44C18591A36203E00734F8B /* Supporting Files */,
 			);
 			name = BleBrowser;
 			path = BasicBrowser;
-			sourceTree = "<group>";
-		};
-		E44C18591A36203E00734F8B /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				E44C185A1A36203E00734F8B /* Info.plist */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		E44C186E1A36203E00734F8B /* BleBrowserTests */ = {
