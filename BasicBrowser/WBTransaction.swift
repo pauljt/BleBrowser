@@ -118,7 +118,7 @@ class WBTransaction: Equatable, CustomStringConvertible {
     /*
      * ========== Initializers ==========
      */
-    init(id: Int, typeComponents: [String], messageData: [String:AnyObject], webView: WKWebView?){
+    init(id: Int, typeComponents: [String], messageData: [String: AnyObject], webView: WKWebView?){
         self.id = id
         self.key = Key(typeComponents: typeComponents)
         self.messageData = messageData

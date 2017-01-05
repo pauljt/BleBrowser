@@ -266,17 +266,6 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         self.pickerNamesIds.sort(by: {$0.name < $1.name})
         self.devicePicker.updatePicker()
     }
-    
-    func transformArguments(_ args: [AnyObject]) -> [AnyObject?] {
-        assert(false, "not expecting transformArguments to get called.")
-        return args.map { arg in
-            if arg is NSNull {
-                return nil
-            } else {
-                return arg
-            }
-        }
-    }
 
     func _peripheralIsIncludedByFilters(_ peripheral: CBPeripheral) -> Bool {
         for filter in self.filters {
