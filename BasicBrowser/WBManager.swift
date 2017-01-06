@@ -73,7 +73,6 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
             /* The transaction will have handled the error */
             return
         }
-        NSLog("<-- new transaction #\(trans)")
         self.triage(transaction: trans)
     }
 
@@ -123,9 +122,13 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         
     }
     
-    /*
-     * ========== PopUpPickerViewDelegate ==========
-     */
+    // MARK: - PopUpPickerViewDelegate
+    public var numberOfItems: Int {
+        get {
+            return self.discoveredDevicesByInternalUUID.count
+        }
+    }
+
     public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return pickerNamesIds[row].name
     }
@@ -144,7 +147,6 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
             return
         }
 
-        NSLog("Picker view did select \(deviceId)")
         device.view = self.requestDeviceTransaction?.webView
         self.requestDeviceTransaction?.resolveAsSuccess(withObject: device)
         self.deviceWasSelected(device)
@@ -153,6 +155,8 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     public func pickerViewCancelled(_ pickerView: UIPickerView) {
         NSLog("User cancelled device selection.")
         self.requestDeviceTransaction?.resolveAsFailure(withMessage: "User cancelled")
+        self.discoveredDevicesByInternalUUID = [:]
+        self.updatePickerData()
     }
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -162,9 +166,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         return self.pickerNamesIds.count
     }
     
-    /*
-     * ========== Private ==========
-     */
+    // MARK - Private
     private func triage(transaction: WBTransaction){
 
         guard

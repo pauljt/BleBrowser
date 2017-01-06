@@ -19,6 +19,7 @@ through to the CoreBluetooth iOS API via a thin transaction management layer.
 - `.id`
 - `.name`
 - `.gatt`
+- `.gattserverdisconnected: EventHandler`
 
 ### `BluetoothRemoteGATTServer`
 
@@ -33,26 +34,18 @@ through to the CoreBluetooth iOS API via a thin transaction management layer.
 - `.device`
 - `.getCharacteristic(uuid)`
 
-### `BluetoothGATTCharacteristic`
+### `BluetoothRemoteGATTCharacteristic`
 
 - `.service`
 - `.uuid`
 - `.value`
 - `.readValue()`
 - `.writeValue(value)`
-
-## Non-supported APIs but planned for development soon
-
-### `BluetoothDevice`
-
-- `.gattserverdisconnected: EventHandler`
-
-### `BluetoothGATTCharacteristic`
-
 - `.oncharacteristicvaluechanged: EventHandler`
 - `.startNotifications()`
 - `.stopNotifications()`
 - `.addEventListener()`
 - `.removeEventListener()`
+
 
 Everything else is TBD!

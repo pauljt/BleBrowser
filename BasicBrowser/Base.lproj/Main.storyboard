@@ -40,7 +40,7 @@
                                                 <items>
                                                     <barButtonItem systemItem="cancel" id="eYY-A5-dLj"/>
                                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="iTx-fl-yVJ"/>
-                                                    <barButtonItem systemItem="done" id="O0z-Ct-EQb"/>
+                                                    <barButtonItem enabled="NO" systemItem="done" id="O0z-Ct-EQb"/>
                                                 </items>
                                             </toolbar>
                                             <pickerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jgr-9N-Ch2">

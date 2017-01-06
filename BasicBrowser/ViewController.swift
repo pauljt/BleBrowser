@@ -42,8 +42,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         self.loadLocation("http://caliban.local:8000/projects/puck.js/0.1.0/puckdemo")
 
-        NSLog("WebView Frame \(self.webView.frame)")
-
         self.goBackButton.target = self.webView
         self.goBackButton.action = #selector(self.webView.goBack)
         self.goForwardButton.target = self.webView
@@ -76,7 +74,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        NSLog("didFinish: \(webView.url?.absoluteString)")
         if let urlString = webView.url?.absoluteString,
             urlString != "about:blank" {
             locationTextField.text = urlString
@@ -103,12 +100,19 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     // MARK: observe protocol
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        let defKeyPath = keyPath!
+        guard
+            let defKeyPath = keyPath,
+            let defChange = change
+        else {
+            NSLog("Unexpected change with either no keyPath or no change dictionary!")
+            return
+        }
+
         switch defKeyPath {
         case "canGoBack":
-            self.goBackButton.isEnabled = change![NSKeyValueChangeKey.newKey] as! Bool
+            self.goBackButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
         case "canGoForward":
-            self.goForwardButton.isEnabled = change![NSKeyValueChangeKey.newKey] as! Bool
+            self.goForwardButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
         default:
             NSLog("Unexpected change observed by ViewController: \(keyPath)")
         }

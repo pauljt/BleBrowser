@@ -13,8 +13,13 @@ import WebKit
 open class WBWebView: WKWebView {
 
     class WKLogger: NSObject, WKScriptMessageHandler {
+
+        let debug = false
+
         open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            NSLog("WKLog: \(message.body)")
+            if self.debug {
+                NSLog("WKLog: \(message.body)")
+            }
         }
     }
     let wkLogger = WKLogger()
@@ -40,7 +45,6 @@ open class WBWebView: WKWebView {
     }
 
     required public override init(frame: CGRect, configuration: WKWebViewConfiguration) {
-        NSLog("WBWebView init frame \(frame)")
         super.init(frame: frame, configuration: configuration)
     }
 

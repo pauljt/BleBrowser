@@ -22,9 +22,9 @@ class PopUpPickerView: UIView {
     }
     @IBOutlet var doneButton: UIBarButtonItem! {
         didSet {
-            if self.doneButton != nil {
-                self.doneButton.target = self
-                self.doneButton.action = #selector(PopUpPickerView.endPicker)
+            if let doneButton = self.doneButton {
+                doneButton.target = self
+                doneButton.action = #selector(PopUpPickerView.endPicker)
             }
         }
     }
@@ -34,15 +34,12 @@ class PopUpPickerView: UIView {
             self.configureDelegates()
         }
     }
-    fileprivate var selectedRows: [Int]?
+    fileprivate var selectedRows = [Int]()
 
-    /*
-     * ========== MARK: Manipulate the picker into and out of the view =========
-     */
+
+    // MARK: - Manipulate the picker into and out of the view
     func showPicker() {
-        if selectedRows == nil {
-            selectedRows = getSelectedRows()
-        }
+        self.selectedRows = self.getSelectedRows()
         self.bottomConstraint.constant = 0
         self._animateIntoPlace()
     }
@@ -50,20 +47,23 @@ class PopUpPickerView: UIView {
         self.hidePicker()
         self.restoreSelectedRows()
         self.delegate?.pickerViewCancelled?(self.pickerView)
-        self.selectedRows = nil
     }
     func endPicker() {
         self.hidePicker()
         self.delegate?.pickerView?(self.pickerView, didSelect: self.getSelectedRows())
-        self.selectedRows = nil
     }
     func updatePicker() {
+        if let numDevices = self.delegate?.numberOfItems,
+            numDevices > 0 {
+            self.doneButton.isEnabled = true
+        }
+        else {
+            self.doneButton.isEnabled = false
+        }
         self.pickerView.reloadAllComponents()
     }
 
-    /*
-     * ========== Private ==========
-     */
+    // MARK: - Private
     private func _animateIntoPlace() {
         UIView.animate(withDuration: self.animationDuration, animations: {
             self.superview?.layoutIfNeeded()
@@ -80,20 +80,23 @@ class PopUpPickerView: UIView {
     }
     fileprivate func getSelectedRows() -> [Int] {
         var selectedRows = [Int]()
-        for i in 0..<pickerView.numberOfComponents {
-            selectedRows.append(pickerView.selectedRow(inComponent: i))
+        for ii in 0 ..< pickerView.numberOfComponents {
+            selectedRows.append(pickerView.selectedRow(inComponent: ii))
         }
         return selectedRows
     }
     fileprivate func restoreSelectedRows() {
-        for i in 0 ..< selectedRows!.count {
-            pickerView.selectRow(selectedRows![i], inComponent: i, animated: true)
+        for ii in 0 ..< self.selectedRows.count {
+            pickerView.selectRow(self.selectedRows[ii], inComponent: ii, animated: true)
         }
     }
 }
+
+// MARK: - Delegate Protocol
 
 @objc
 protocol PopUpPickerViewDelegate: UIPickerViewDelegate, UIPickerViewDataSource {
     @objc optional func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int])
     @objc optional func pickerViewCancelled(_ pickerView: UIPickerView)
+    @objc var numberOfItems: Int { get }
 }

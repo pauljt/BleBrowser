@@ -73,11 +73,15 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 8. gatt server disconnect
 10. Icon
 9. rename GATTCharacteristic to RemoteGATTCharacteristic
+11. Done + Cancel when no devices are in range
 
 ## TODO before shipping 1.0.0
 
-11. Done + Cancel when no devices are in range
-10. Test plan and test
+10. Complete test plan and test
+11. Push GPS changes to site.
+12. Remove security exceptions.
+13. Check version numbers.
+14. Send to App store.
 
 ## Version 1.1
 
@@ -88,6 +92,7 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 1. Characteristics are not de-notified / torn down when device disconnects
 2. Handling of devices with the same UUIDs (internal / external) is non-existent.
 3. in BluetoothGATTService.getCharacteristic check we got the correct char UUID back.
+4. Going back doesn't refresh the page, but state has been lost meaning there's a lack of sync between page and native
 
 ## Large limitations
 
