@@ -243,7 +243,7 @@
                 {characteristicUUID: canonicalUUID}
             ).then(function (CharacteristicJSON) {
                 console.log('Got characteristic', uuid);
-                return new native.BluetoothGATTCharacteristic(
+                return new native.BluetoothRemoteGATTCharacteristic(
                     service,
                     canonicalUUID,
                     CharacteristicJSON.properties
@@ -269,8 +269,8 @@
         }
     };
 
-    nslog("Create BluetoothGATTCharacteristic");
-    function BluetoothGATTCharacteristic(service, uuid, properties) {
+    nslog("Create BluetoothRemoteGATTCharacteristic");
+    function BluetoothRemoteGATTCharacteristic(service, uuid, properties) {
         let roProps = {
             service: service,
             properties: properties,
@@ -282,7 +282,7 @@
         native.registerCharacteristicForNotifications(this);
     }
 
-    BluetoothGATTCharacteristic.prototype = {
+    BluetoothRemoteGATTCharacteristic.prototype = {
         getDescriptor: function (ignore) {
             throw new Error('Not implemented');
         },
@@ -315,12 +315,12 @@
         },
         toString: function () {
             return (
-                "BluetoothGATTCharacteristic(" + this.service.toString() + ", " +
+                "BluetoothRemoteGATTCharacteristic(" + this.service.toString() + ", " +
                 this.uuid + ")"
             );
         }
     };
-    mixin(BluetoothGATTCharacteristic, EventTarget);
+    mixin(BluetoothRemoteGATTCharacteristic, EventTarget);
 
     nslog("Create BluetoothGATTDescriptor");
     function BluetoothGATTDescriptor(characteristic, uuid) {
@@ -746,7 +746,7 @@
             });
         },
         // defeat the linter's "out of scope" warnings for not yet defined functions
-        BluetoothGATTCharacteristic: BluetoothGATTCharacteristic,
+        BluetoothRemoteGATTCharacteristic: BluetoothRemoteGATTCharacteristic,
         BluetoothUUID: BluetoothUUID,
         BluetoothRemoteGATTServer: BluetoothRemoteGATTServer,
         BluetoothGATTService: BluetoothGATTService,

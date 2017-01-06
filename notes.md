@@ -62,21 +62,26 @@ WKFrameInfo
    - got device UUID
 
 
+## Done in 1.0.0
+
+1. Handle spontaneous disconnects
+2. Add forward / back buttons.
+a. disable / enable forward / back buttons depending on whether there is something to go back or forward to.
+3. Get HTTPS up on website.
+4. Read characteristics
+5. clear state after navigation
+8. gatt server disconnect
+10. Icon
+9. rename GATTCharacteristic to RemoteGATTCharacteristic
 
 ## TODO before shipping 1.0.0
 
-1. Handle spontaneous disconnects -- done
-2. Add forward / back buttons. -- done
-   a. disable / enable forward / back buttons depending on whether there is something to go back or forward to.
-3. Get HTTPS up on website. -- done
-4. Read characteristics -- done
-5. clear state after navigation -- done
-8. gatt server disconnect -- done
-10. Icon
-6. ?? native logging window
-9. rename GATTCharacteristic to RemoteGATTCharacteristic
 11. Done + Cancel when no devices are in range
 10. Test plan and test
+
+## Version 1.1
+
+1. native logging window
 
 ## Smallish bugs
 
