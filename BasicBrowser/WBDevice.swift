@@ -11,14 +11,13 @@ import WebKit
 
 
 open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
-    /*
-     * ========== Types ==========
-     */
+    // MARK: - Embedded types
     enum DeviceRequests: String {
         case connectGATT, disconnectGATT,  getPrimaryService,
         getCharacteristic, readCharacteristicValue, startNotifications,
         writeCharacteristicValue
     }
+    // MARK: Transaction views
     class DeviceTransactionView: WBTransaction.View {
         let externalDeviceUUID: UUID
 
@@ -97,9 +96,8 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
     }
 
-    /*
-     * ========== Properties ==========
-     */
+    // MARK: - Properties
+    let debug = true
     var deviceId = UUID() // generated ID used instead of internal iOS name
     var peripheral: CBPeripheral
     var adData: BluetoothAdvertisingData
@@ -116,9 +114,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     var getCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
     var readCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
 
-    /*
-     * ========== Initializers ==========
-     */
+    // MARK: - Constructor
     init(peripheral: CBPeripheral, advertisementData: [String: Any] = [:], RSSI: NSNumber = 0, manager: WBManager) {
         self.peripheral = peripheral
         self.adData = BluetoothAdvertisingData(advertisementData:advertisementData,RSSI: RSSI)
@@ -127,9 +123,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         self.peripheral.delegate = self
     }
 
-    /*
-     * ========== Instance API ==========
-     */
+    // MARK: - API
     func clearState() {
         self.manager?.centralManager.cancelPeripheralConnection(self.peripheral)
         for var ta in [self.connectTransactions, self.disconnectTransactions] {
@@ -189,6 +183,11 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 transaction.resolveAsFailure(withMessage: "Failed due to internal inconsistency likely related to a recent page navigation (device's manager was released)")
                 return
             }
+
+            if self.debug {
+                NSLog("Connecting to GATT on device \(self)")
+            }
+
             man.centralManager.connect(self.peripheral)
             // async, so save transaction to resolve when connected
             transaction.addCompletionHandler({
@@ -350,9 +349,8 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
     }
     
-    /*
-     * ===== CBPeripheralDelegate =====
-     */
+
+    // MARK: - CBPeripheralDelegate
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         var resolve: (WBTransaction) -> Void
         if let err = error {
@@ -432,10 +430,8 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
     }
 
-    /*
-     * ========== Internal ==========
-     */
-   private func getService(withUUID uuid: CBUUID) -> CBService?{
+    // MARK: - Private
+    private func getService(withUUID uuid: CBUUID) -> CBService?{
         guard
             let pservs = self.peripheral.services,
             let ind = pservs.index(where: {$0.uuid == uuid})

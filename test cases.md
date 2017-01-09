@@ -7,11 +7,12 @@
 2. request device when no devices in range. "Done" should be disabled, "Cancel" should cancel. 
   - ok 1
 3. request device, see device appear, turn off device, device should disappear... 
-  - fail 1, replace with 4 (but it will never disappear).
+  - na 1, replace with 4.
 4. request device, see device appear, turn off device and select it before it has a chance to disappear.
-  - fail 1
+  - ok 1, behaviour is that we should attempt to connect, but that it will continue attempting even if device doesn't come back
 5. connect to a device, send a command, turn off device, request new device should be clear of that old device
   - fail 1, it wasn't clear, but came clear after cancelling and trying again.
+6. select device after it has been switched off. Cancel connection attempt. Request, no device shown.
 
 
 ## Browser controls
@@ -28,3 +29,7 @@
   - ok 1
 6. on failed navigation, address bar shows URL of location we attempted to navigate to.
   - ok 1
+
+# 1.1 test cases
+
+1. requestDevice, see popup come up, then navigate to a different page. popup should go away.

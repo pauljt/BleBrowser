@@ -8,11 +8,15 @@ This builds on [Paul Thierault](https://github.com/pauljt)'s [original implement
 The app is fundamentally a `WKWebView` with a polyfill providing the javascript APIs calling 
 through to the CoreBluetooth iOS API via a thin transaction management layer.
 
-## Supported APIs
+## Supported APIs v1.0
 
 ### `navigator.bluetooth.requestDevice()`
 
 - `.requestDevice(options)`
+  - `options.acceptAllDevices = true` to ask for any device
+  - `options.filters` is a list of filters (mutually exclusive with `acceptAllDevices`) with properties
+    - `namePrefix`: devices with names with this prefix will be included
+    - `services`: list of service aliases or uuids.
 
 ### `BluetoothDevice`
 

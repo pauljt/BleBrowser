@@ -159,11 +159,14 @@
         }
         defineROProperties(this, {device: webBluetoothDevice});
         this.connected = false;
+        this.connectionTransactionIDs = [];
     }
     BluetoothRemoteGATTServer.prototype = {
         connect: function () {
             let self = this;
-            return this.sendMessage("connectGATT")
+            let tid = native.getTransactionID();
+            this.connectionTransactionIDs.push(tid);
+            return this.sendMessage("connectGATT", {callbackID: tid})
                 .then(function () {
                     self.connected = true;
                     native.registerDeviceForNotifications(self.device);
@@ -171,6 +174,8 @@
                 });
         },
         disconnect: function () {
+            this.connectionTransactionIDs.forEach((tid) => native.cancelTransaction(tid));
+            this.connectionTransactionIDs = [];
             let self = this;
             return this.sendMessage("disconnectGATT")
                 .then(function () {
@@ -181,7 +186,7 @@
         getPrimaryService: function (UUID) {
             let canonicalUUID = window.BluetoothUUID.getService(UUID);
             let self = this;
-            return this.sendMessage("getPrimaryService", {serviceUUID: canonicalUUID})
+            return this.sendMessage("getPrimaryService", {data: {serviceUUID: canonicalUUID}})
                 .then(() => new native.BluetoothGATTService(
                     self.device,
                     canonicalUUID,
@@ -195,7 +200,7 @@
             }
             let device = this.device;
             let canonicalUUID = window.BluetoothUUID.getService(UUID);
-            return this.sendMessage("getPrimaryServices", {serviceUUID: canonicalUUID})
+            return this.sendMessage("getPrimaryServices", {data: {serviceUUID: canonicalUUID}})
                 .then(function (servicesJSON) {
                     let servicesData = JSON.parse(servicesJSON);
                     let services = servicesData;
@@ -212,13 +217,14 @@
                     return services;
                 });
         },
-        sendMessage: function (type, data) {
-            data = data || {};
-            data.deviceId = this.device.id;
-            return native.sendMessage("device:" + type, data);
+        sendMessage: function (type, messageParms) {
+            messageParms = messageParms || {};
+            messageParms.data = messageParms.data || {};
+            messageParms.data.deviceId = this.device.id;
+            return native.sendMessage("device:" + type, messageParms);
         },
         toString: function () {
-            return "BluetoothRemoteGATTServer";
+            return "BluetoothRemoteGATTServer(" + this.device.toString() + ")";
         }
     };
 
@@ -240,7 +246,7 @@
             let service = this;
             return this.sendMessage(
                 "getCharacteristic",
-                {characteristicUUID: canonicalUUID}
+                {data: {characteristicUUID: canonicalUUID}}
             ).then(function (CharacteristicJSON) {
                 console.log('Got characteristic', uuid);
                 return new native.BluetoothRemoteGATTCharacteristic(
@@ -259,10 +265,11 @@
         getIncludedServices: function (ignore) {
             throw new Error('Not implemented');
         },
-        sendMessage: function (type, data) {
-            data = data || {};
-            data.serviceUUID = this.uuid;
-            return this.device.gatt.sendMessage(type, data);
+        sendMessage: function (type, messageParms) {
+            messageParms = messageParms || {};
+            messageParms.data = messageParms.data || {};
+            messageParms.data.serviceUUID = this.uuid;
+            return this.device.gatt.sendMessage(type, messageParms);
         },
         toString: function () {
             return ("BluetoothGATTService(" + this.uuid + ")");
@@ -300,7 +307,7 @@
         writeValue: function (value) {
             // Can't send raw array bytes since we use JSON, so base64 encode.
             let v64 = _arrayBufferToBase64(value);
-            return this.sendMessage("writeCharacteristicValue", {value: v64});
+            return this.sendMessage("writeCharacteristicValue", {data: {value: v64}});
         },
         startNotifications: function () {
             return this.sendMessage("startNotifications");
@@ -308,10 +315,11 @@
         stopNotifications: function () {
             return this.sendMessage("stopNotifications");
         },
-        sendMessage: function (type, data) {
-            data = data || {};
-            data.characteristicUUID = this.uuid;
-            return this.service.sendMessage(type, data);
+        sendMessage: function (type, messageParms) {
+            messageParms = messageParms || {};
+            messageParms.data = messageParms.data || {};
+            messageParms.data.characteristicUUID = this.uuid;
+            return this.service.sendMessage(type, messageParms);
         },
         toString: function () {
             return (
@@ -589,36 +597,49 @@
     nslog("Create bluetooth");
     let bluetooth = {};
     bluetooth.requestDevice = function (requestDeviceOptions) {
-        if (!requestDeviceOptions.filters || requestDeviceOptions.filters.length === 0) {
-            let message = 'The first argument to navigator.bluetooth.requestDevice() must have a non-zero length filters parameter';
-            console.log(message);
-            throw new TypeError(message);
+        if (!requestDeviceOptions) {
+            throw new TypeError("requestDeviceOptions not provided");
         }
-        let validatedDeviceOptions = {};
-
+        let acceptAllDevices = requestDeviceOptions.acceptAllDevices;
         let filters = requestDeviceOptions.filters;
-        filters = filters.map(function (filter) {
+        if (acceptAllDevices) {
+            if (filters && filters.length > 0) {
+                throw new TypeError("acceptAllDevices was true but filters was not empty");
+            }
+            return native.sendMessage("requestDevice", {data: {filters: []}})
+                .then(function (device) {
+                    return new BluetoothDevice(device);
+                });
+        }
+
+        let hasAtLeastOneFilter = false;
+        filters = Array.prototype.map.call(filters, function (filter) {
             if (!filter.services) {
                 filter.services = [];
             }
+            if (filter.services.length > 0 ||
+                    (filter.namePrefix !== undefined && filter.namePrefix.length > 0)) {
+                hasAtLeastOneFilter = true;
+            }
             return {
                 services: filter.services.map(window.BluetoothUUID.getService),
-                name: filter.name,
                 namePrefix: filter.namePrefix
             };
         });
-        validatedDeviceOptions.filters = filters;
-        validatedDeviceOptions.name = filters;
-        validatedDeviceOptions.filters = filters;
-
-
-        let optionalServices = requestDeviceOptions.optionalService;
-        if (optionalServices) {
-            optionalServices = optionalServices.services.map(window.BluetoothUUID.getService);
-            validatedDeviceOptions.optionalServices = optionalServices;
+        if (!hasAtLeastOneFilter) {
+            throw new TypeError("Must specify at least one thing to filter on");
         }
+        let validatedDeviceOptions = {};
+        validatedDeviceOptions.filters = filters;
 
-        return native.sendMessage("requestDevice", validatedDeviceOptions)
+        // Optional services not yet suppoprted.
+        // let optionalServices = requestDeviceOptions.optionalServices;
+        // if (optionalServices) {
+        //     optionalServices = optionalServices.services.map(window.BluetoothUUID.getService);
+        //     validatedDeviceOptions.optionalServices = optionalServices;
+        // }
+
+        return native.sendMessage("requestDevice", {data: validatedDeviceOptions})
             .then(function (device) {
                 return new BluetoothDevice(device);
             });
@@ -639,15 +660,33 @@
         messageCount: 0,
         callbacks: {}, // callbacks for responses to requests
 
-        sendMessage: function (type, data) {
+        cancelTransaction: function (tid) {
+            let trans = this.callbacks[tid];
+            if (!trans) {
+                console.log("No transaction " + tid + " outstanding to fail.");
+                return;
+            }
+            delete this.callbacks[tid];
+            trans(false, "Premature cancellation.");
+        },
+        getTransactionID: function () {
+            let mc = this.messageCount;
+            do {
+                mc += 1;
+            } while (native.callbacks[mc] !== undefined);
+            this.messageCount = mc;
+            return this.messageCount;
+        },
+        sendMessage: function (type, sendMessageParms) {
 
-            let callbackID = native.messageCount;
             let message;
             if (type === undefined) {
                 throw new Error("CallRemote should never be called without a type!");
             }
 
-            data = data || {};
+            sendMessageParms = sendMessageParms || {};
+            let data = sendMessageParms.data || {};
+            let callbackID = sendMessageParms.callbackID || this.getTransactionID();
             message = {
                 type: type,
                 data: data,

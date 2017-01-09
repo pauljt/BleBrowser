@@ -10,21 +10,15 @@ import WebKit
 
 open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler, PopUpPickerViewDelegate {
 
-    /*
-     * ========== Class constants ==========
-     */
+    // MARK: - Embedded types
     enum ManagerRequests: String {
         case device, requestDevice
     }
 
-    /*
-     * ========== Properties ==========
-     */
+    // MARK: - Properties
+    let debug = true
     let centralManager = CBCentralManager(delegate: nil, queue: nil)
     var devicePicker: PopUpPickerView!
-    
-    var WBDeviceOption_filters: [CBUUID]?
-    var WBDeviceOption_optionalService: [CBUUID]?
 
     /*! @abstract The devices selected by the user for use by this manager. Keyed by the UUID provided by the system. */
     var devicesByInternalUUID = [UUID: WBDevice]()
@@ -32,16 +26,15 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     /*! @abstract The devices selected by the user for use by this manager. Keyed by the UUID we create and pass to the web page. This seems to be for security purposes, and seems sensible. */
     var devicesByExternalUUID = [UUID: WBDevice]()
 
-    /*! @abstract The outstanding request for a device from the web page, if one is outstanding. Ony one may be outstanding at any one time and should be policed by a modal dialog box. TODO: how modal is the current solution? */
+    /*! @abstract The outstanding request for a device from the web page, if one is outstanding. Ony one may be outstanding at any one time and should be policed by a modal dialog box. TODO: how modal is the current solution?
+     */
     var requestDeviceTransaction: WBTransaction? = nil
     var discoveredDevicesByInternalUUID = [UUID: WBDevice]()
 
     var filters = [[String: AnyObject]]()
     var pickerNamesIds = [(name: String, id: UUID)]()
 
-    /*
-     * ========== Initialization ==========
-     */
+    // MARK: - Constructors / destructors
     override init() {
         super.init()
         self.centralManager.delegate = self
@@ -51,22 +44,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         self.clearState()
     }
 
-    func clearState() {
-        self.stopScanForPeripherals()
-        self.requestDeviceTransaction?.abandon()
-        self.requestDeviceTransaction = nil
-        // the external and internal devices are the same, but tidier to do this in one loop; calling clearState on a device twice is OK.
-        for var devMap in [self.devicesByExternalUUID, self.devicesByInternalUUID, self.discoveredDevicesByInternalUUID] {
-            for (_, device) in devMap {
-                device.clearState()
-            }
-            devMap.removeAll()
-        }
-    }
-
-    /*
-     * ========== WKScriptMessageHandler ==========
-     */
+    // MARK: - WKScriptMessageHandler
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
 
         guard let trans = WBTransaction(withMessage: message) else {
@@ -76,9 +54,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         self.triage(transaction: trans)
     }
 
-    /*
-     * ========== CBCentralManagerDelegate ==========
-     */
+    // MARK: - CBCentralManagerDelegate
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
         NSLog("Bluetooth is \(central.state == CBManagerState.poweredOn ? "ON" : "OFF")")
     }
@@ -166,7 +142,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         return self.pickerNamesIds.count
     }
     
-    // MARK - Private
+    // MARK: - Private
     private func triage(transaction: WBTransaction){
 
         guard
@@ -196,6 +172,11 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
                 transaction.resolveAsFailure(withMessage: "Previous device request is still in progress")
                 break
             }
+
+            if self.debug {
+                NSLog("Requesting device with filters \(filters)")
+            }
+
             self.requestDeviceTransaction = transaction
             self.scanForPeripherals(filters)
             transaction.addCompletionHandler {_, _ in
@@ -218,6 +199,19 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
                 break
             }
             device.triage(transaction: transaction)
+        }
+    }
+
+    func clearState() {
+        self.stopScanForPeripherals()
+        self.requestDeviceTransaction?.abandon()
+        self.requestDeviceTransaction = nil
+        // the external and internal devices are the same, but tidier to do this in one loop; calling clearState on a device twice is OK.
+        for var devMap in [self.devicesByExternalUUID, self.devicesByInternalUUID, self.discoveredDevicesByInternalUUID] {
+            for (_, device) in devMap {
+                device.clearState()
+            }
+            devMap.removeAll()
         }
     }
 
@@ -248,7 +242,9 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
 
         let servicesCBUUID = servicesCBUUIDq.filter{$0 != nil}.map{$0!}
 
-        NSLog("Scanning for peripherals...")
+        if (self.debug) {
+            NSLog("Scanning for peripherals... (services: \(servicesCBUUID))")
+        }
         
         self.discoveredDevicesByInternalUUID.removeAll();
         self.filters = filters

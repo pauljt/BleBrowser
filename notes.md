@@ -93,6 +93,7 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 2. Handling of devices with the same UUIDs (internal / external) is non-existent.
 3. in BluetoothGATTService.getCharacteristic check we got the correct char UUID back.
 4. Going back doesn't refresh the page, but state has been lost meaning there's a lack of sync between page and native
+5. Don't handle filters properly, if you specify `[{namePrefix: "puck", services: ["xyz"]}, {namePrefix: "other", services: ["abc"]}]` this will offer a device with name `"puck"` and service `"abc"`.
 
 ## Large limitations
 

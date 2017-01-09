@@ -40,7 +40,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.webView.addObserver(self, forKeyPath: path, options: NSKeyValueObservingOptions.new, context: nil)
         }
 
-        self.loadLocation("http://caliban.local:8000/projects/puck.js/0.1.0/puckdemo")
+        self.loadLocation("http://caliban.local:8000/projects/puck.js/0.1.0/pucktest")
 
         self.goBackButton.target = self.webView
         self.goBackButton.action = #selector(self.webView.goBack)
