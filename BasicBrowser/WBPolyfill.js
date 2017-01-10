@@ -187,7 +187,7 @@
             let canonicalUUID = window.BluetoothUUID.getService(UUID);
             let self = this;
             return this.sendMessage("getPrimaryService", {data: {serviceUUID: canonicalUUID}})
-                .then(() => new native.BluetoothGATTService(
+                .then(() => new native.BluetoothRemoteGATTService(
                     self.device,
                     canonicalUUID,
                     true
@@ -211,7 +211,7 @@
                     // we need to add an identifier GUID to tell them apart
                     // servicesData.forEach(
                     //     (service) => services.push(
-                    //         new native.BluetoothGATTService(device, canonicalUUID, true)
+                    //         new native.BluetoothRemoteGATTService(device, canonicalUUID, true)
                     //     )
                     // );
                     return services;
@@ -228,10 +228,10 @@
         }
     };
 
-    nslog("Create BluetoothGATTService");
-    function BluetoothGATTService(device, uuid, isPrimary) {
+    nslog("Create BluetoothRemoteGATTService");
+    function BluetoothRemoteGATTService(device, uuid, isPrimary) {
         if (device === undefined || uuid === undefined || isPrimary === undefined) {
-            throw new Error("Invalid call to BluetoothGATTService constructor");
+            throw new Error("Invalid call to BluetoothRemoteGATTService constructor");
         }
         defineROProperties(this, {
             device: device,
@@ -240,7 +240,7 @@
         });
     }
 
-    BluetoothGATTService.prototype = {
+    BluetoothRemoteGATTService.prototype = {
         getCharacteristic: function (uuid) {
             let canonicalUUID = native.BluetoothUUID.getCharacteristic(uuid);
             let service = this;
@@ -272,7 +272,7 @@
             return this.device.gatt.sendMessage(type, messageParms);
         },
         toString: function () {
-            return ("BluetoothGATTService(" + this.uuid + ")");
+            return ("BluetoothRemoteGATTService(" + this.uuid + ")");
         }
     };
 
@@ -788,7 +788,7 @@
         BluetoothRemoteGATTCharacteristic: BluetoothRemoteGATTCharacteristic,
         BluetoothUUID: BluetoothUUID,
         BluetoothRemoteGATTServer: BluetoothRemoteGATTServer,
-        BluetoothGATTService: BluetoothGATTService,
+        BluetoothRemoteGATTService: BluetoothRemoteGATTService,
         BluetoothEvent: BluetoothEvent
     };
 

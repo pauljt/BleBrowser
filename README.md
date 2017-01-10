@@ -32,7 +32,7 @@ through to the CoreBluetooth iOS API via a thin transaction management layer.
 - `.disconnect()`
 - `.getPrimaryService(uuid)`
 
-### `BluetoothGATTService`
+### `BluetoothRemoteGATTService`
 
 - `.uuid`
 - `.device`
