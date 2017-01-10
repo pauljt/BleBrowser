@@ -346,6 +346,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             return String(data: jsonData, encoding: String.Encoding.utf8)!
         } catch let error {
             assert(false, "error converting to json: \(error)")
+            return ""
         }
     }
     

@@ -43,7 +43,7 @@
 		BB4DBE641C97F577000D2C35 /* WBTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBTransaction.swift; sourceTree = "<group>"; };
 		BB4DE1F31C8D0A44003151BF /* WBDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBDevice.swift; sourceTree = "<group>"; };
 		BBA6730D1C535B8C00076CBA /* PopUpPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpPickerView.swift; sourceTree = "<group>"; };
-		E44C18561A36203E00734F8B /* BleBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BleBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E44C18561A36203E00734F8B /* WebBLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebBLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44C185A1A36203E00734F8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E44C185B1A36203E00734F8B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E44C185D1A36203E00734F8B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -88,7 +88,7 @@
 		E44C18571A36203E00734F8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E44C18561A36203E00734F8B /* BleBrowser.app */,
+				E44C18561A36203E00734F8B /* WebBLE.app */,
 				E44C186B1A36203E00734F8B /* BleBrowser.xctest */,
 			);
 			name = Products;
@@ -150,7 +150,7 @@
 			);
 			name = BleBrowser;
 			productName = BasicBrowser;
-			productReference = E44C18561A36203E00734F8B /* BleBrowser.app */;
+			productReference = E44C18561A36203E00734F8B /* WebBLE.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E44C186A1A36203E00734F8B /* BleBrowserTests */ = {
@@ -386,7 +386,7 @@
 				INFOPLIST_FILE = BasicBrowser/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.cm.blebrowser;
-				PRODUCT_NAME = BleBrowser;
+				PRODUCT_NAME = WebBLE;
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -402,7 +402,7 @@
 				INFOPLIST_FILE = BasicBrowser/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.cm.blebrowser;
-				PRODUCT_NAME = BleBrowser;
+				PRODUCT_NAME = WebBLE;
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
