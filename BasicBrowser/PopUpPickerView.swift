@@ -3,102 +3,100 @@
 import UIKit
 
 class PopUpPickerView: UIView {
-    var pickerView: UIPickerView!
-    var pickerToolbar: UIToolbar!
-    var toolbarItems: [UIBarButtonItem]!
-    
+
+    let animationDuration: TimeInterval = 0.2
+
+    @IBOutlet var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet var pickerView: UIPickerView! {
+        didSet {
+            self.configureDelegates()
+        }
+    }
+    @IBOutlet var cancelButton: UIBarButtonItem! {
+        didSet {
+            if self.cancelButton != nil {
+                self.cancelButton.target = self
+                self.cancelButton.action = #selector(PopUpPickerView.cancelPicker)
+            }
+        }
+    }
+    @IBOutlet var doneButton: UIBarButtonItem! {
+        didSet {
+            if let doneButton = self.doneButton {
+                doneButton.target = self
+                doneButton.action = #selector(PopUpPickerView.endPicker)
+            }
+        }
+    }
+
     var delegate: PopUpPickerViewDelegate? {
         didSet {
-            pickerView.delegate = delegate
+            self.configureDelegates()
         }
     }
-    private var selectedRows: [Int]?
-    
-    // MARK: Initializer
+    fileprivate var selectedRows = [Int]()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        initFunc()
-    }
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)!
-        initFunc()
-    }
-    private func initFunc() {
-        let screenSize = UIScreen.mainScreen().bounds.size
-        self.backgroundColor = UIColor.blackColor()
-        
-        pickerToolbar = UIToolbar()
-        pickerView = UIPickerView()
-        toolbarItems = []
-        
-        pickerToolbar.translucent = true
-        pickerView.showsSelectionIndicator = true
-        pickerView.backgroundColor = UIColor.whiteColor()
-        
-        self.bounds = CGRectMake(0, 0, screenSize.width, 260)
-        self.frame = CGRectMake(0, screenSize.height, screenSize.width, 260)
-        pickerToolbar.bounds = CGRectMake(0, 0, screenSize.width, 44)
-        pickerToolbar.frame = CGRectMake(0, 0, screenSize.width, 44)
-        pickerView.bounds = CGRectMake(0, 0, screenSize.width, 216)
-        pickerView.frame = CGRectMake(0, 44, screenSize.width, 216)
-        
-        let space = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FixedSpace, target: nil, action: nil)
-        space.width = 12
-        let cancelItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "cancelPicker")
-        let flexSpaceItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil)
-        let doneButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: Selector("endPicker"))
-        toolbarItems! += [space, cancelItem, flexSpaceItem, doneButtonItem, space]
-        
-        pickerToolbar.setItems(toolbarItems, animated: false)
-        self.addSubview(pickerToolbar)
-        self.addSubview(pickerView)
-    }
+
+    // MARK: - Manipulate the picker into and out of the view
     func showPicker() {
-        if selectedRows == nil {
-            selectedRows = getSelectedRows()
-        }
-        let screenSize = UIScreen.mainScreen().bounds.size
-        UIView.animateWithDuration(0.2) {
-            self.frame = CGRectMake(0, screenSize.height - 260.0, screenSize.width, 260.0)
-        }
+        self.selectedRows = self.getSelectedRows()
+        self.bottomConstraint.constant = 0
+        self._animateIntoPlace()
     }
     func cancelPicker() {
-        hidePicker()
-        restoreSelectedRows()
-        selectedRows = nil
+        self.hidePicker()
+        self.restoreSelectedRows()
+        self.delegate?.pickerViewCancelled?(self.pickerView)
     }
     func endPicker() {
-        hidePicker()
-        delegate?.pickerView?(pickerView, didSelect: getSelectedRows())
-        selectedRows = nil
+        self.hidePicker()
+        self.delegate?.pickerView?(self.pickerView, didSelect: self.getSelectedRows())
     }
-    
     func updatePicker() {
-        pickerView.reloadAllComponents()
-    }
-    
-    private func hidePicker() {
-        let screenSize = UIScreen.mainScreen().bounds.size
-        UIView.animateWithDuration(0.2) {
-            self.frame = CGRectMake(0, screenSize.height, screenSize.width, 260.0)
+        if let numDevices = self.delegate?.numberOfItems,
+            numDevices > 0 {
+            self.doneButton.isEnabled = true
         }
+        else {
+            self.doneButton.isEnabled = false
+        }
+        self.pickerView.reloadAllComponents()
     }
-    private func getSelectedRows() -> [Int] {
+
+    // MARK: - Private
+    private func _animateIntoPlace() {
+        UIView.animate(withDuration: self.animationDuration, animations: {
+            self.superview?.layoutIfNeeded()
+        })
+    }
+
+    private func configureDelegates() {
+        self.pickerView?.delegate = self.delegate
+    }
+
+    fileprivate func hidePicker() {
+        self.bottomConstraint.constant = -self.frame.height
+        self._animateIntoPlace()
+    }
+    fileprivate func getSelectedRows() -> [Int] {
         var selectedRows = [Int]()
-        for i in 0..<pickerView.numberOfComponents {
-            selectedRows.append(pickerView.selectedRowInComponent(i))
+        for ii in 0 ..< pickerView.numberOfComponents {
+            selectedRows.append(pickerView.selectedRow(inComponent: ii))
         }
         return selectedRows
     }
-    private func restoreSelectedRows() {
-        for i in 0..<selectedRows!.count {
-            pickerView.selectRow(selectedRows![i], inComponent: i, animated: true)
+    fileprivate func restoreSelectedRows() {
+        for ii in 0 ..< self.selectedRows.count {
+            pickerView.selectRow(self.selectedRows[ii], inComponent: ii, animated: true)
         }
     }
 }
 
+// MARK: - Delegate Protocol
+
 @objc
-protocol PopUpPickerViewDelegate: UIPickerViewDelegate {
-    optional func pickerView(pickerView: UIPickerView, didSelect numbers: [Int])
+protocol PopUpPickerViewDelegate: UIPickerViewDelegate, UIPickerViewDataSource {
+    @objc optional func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int])
+    @objc optional func pickerViewCancelled(_ pickerView: UIPickerView)
+    @objc var numberOfItems: Int { get }
 }

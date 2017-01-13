@@ -4,107 +4,118 @@ import WebKit
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate,WKUIDelegate {
 
     @IBOutlet weak var locationTextField: UITextField!
-    @IBOutlet weak var containerView: UIView!
+
+    @IBOutlet var goBackButton: UIBarButtonItem!
+    @IBOutlet var goForwardButton: UIBarButtonItem!
+    @IBOutlet var refreshButton: UIBarButtonItem!
     
-    var devicePicker: PopUpPickerView!
-    
-    var webView: WKWebView!
-    var webBluetoothManager:WebBluetoothManager!
+    @IBOutlet var webView: WBWebView!
+    var wbManager: WBManager? {
+        didSet {
+            self.webView.wbManager = wbManager
+        }
+    }
+
+    @IBAction func reload() {
+        if (self.webView?.url?.absoluteString ?? "about:blank") == "about:blank",
+            let text = self.locationTextField.text,
+            !text.isEmpty {
+            self.loadLocation(text)
+        } else {
+            self.webView.reload()
+        }
+    }
     
     override func viewDidLoad() {
        
         super.viewDidLoad()
         locationTextField.delegate = self
-        
-        //load polyfill script
-        var script:String?
-        if let filePath:String = NSBundle(forClass: ViewController.self).pathForResource("WebBluetooth", ofType:"js") {
-            do {
-                script = try NSString(contentsOfFile: filePath, encoding: NSUTF8StringEncoding) as String
-            } catch _ {
-                print("Error loading polyfil")
-                return
-            }
-        }
-        
-        //create bluetooth object, and set it to listen to messages
-        webBluetoothManager = WebBluetoothManager();
-        let webCfg:WKWebViewConfiguration = WKWebViewConfiguration()
-        let userController:WKUserContentController = WKUserContentController()
-        userController.addScriptMessageHandler(webBluetoothManager, name: "bluetooth")
-        
-        // connect picker
-        devicePicker = PopUpPickerView()
-        devicePicker.delegate = webBluetoothManager
-        self.view.addSubview(devicePicker)
-        webBluetoothManager.devicePicker = devicePicker
-        
-        //add the bluetooth script prior to loading all frames
-        let userScript:WKUserScript =  WKUserScript(source: script!, injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: false)
-        userController.addUserScript(userScript)
-        webCfg.userContentController = userController;
-        
-        
-        webView = WKWebView(
-            frame: self.containerView.bounds,
-            configuration:webCfg
-        )
-        webView.UIDelegate = self
-        
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.allowsBackForwardNavigationGestures = true
-        webView.navigationDelegate = self
-        containerView.addSubview(webView)
-        
-        let views = ["webView": webView]
-        containerView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[webView]|",
-            options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        containerView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[webView]|",
-            options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        
-        loadLocation("https://pauljt.github.io/bletest/") 
-    }
-    
 
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        // connect view to manager
+        self.webView.wbManager = self.wbManager
+        self.webView.navigationDelegate = self
+        self.webView.uiDelegate = self
+
+        for path in ["canGoBack", "canGoForward"] {
+            self.webView.addObserver(self, forKeyPath: path, options: NSKeyValueObservingOptions.new, context: nil)
+        }
+
+        let svers = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        self.loadLocation("https://www.greenparksoftware.co.uk/projects/webble/\(svers)")
+
+        self.goBackButton.target = self.webView
+        self.goBackButton.action = #selector(self.webView.goBack)
+        self.goForwardButton.target = self.webView
+        self.goForwardButton.action = #selector(self.webView.goForward)
+        self.refreshButton.target = self
+        self.refreshButton.action = #selector(self.reload)
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        loadLocation(textField.text!)
+        self.loadLocation(textField.text!)
         return true
     }
     
-    func loadLocation(var location: String) {
+    func loadLocation(_ location: String) {
+        var location = location
         if !location.hasPrefix("http://") && !location.hasPrefix("https://") {
             location = "http://" + location
         }
         locationTextField.text = location
-        webView.loadRequest(NSURLRequest(URL: NSURL(string: location)!))
+        self.webView.load(URLRequest(url: URL(string: location)!))
+        
+    }
+
+    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        if let man = self.wbManager {
+            man.clearState()
+        }
+        self.wbManager = WBManager()
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        if let urlString = webView.url?.absoluteString,
+            urlString != "about:blank" {
+            locationTextField.text = urlString
+        }
         
     }
     
-    func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
-        locationTextField.text = webView.URL?.absoluteString
-        
-    }
-    
-    func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
-        locationTextField.text = webView.URL?.absoluteString
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         webView.loadHTMLString("<p>Fail Navigation: \(error.localizedDescription)</p>", baseURL: nil)
     }
     
-    func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
-        locationTextField.text = webView.URL?.absoluteString
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         webView.loadHTMLString("<p>Fail Provisional Navigation: \(error.localizedDescription)</p>", baseURL: nil)
     }
     
-    func webView(webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (() -> Void)) {
-        print("webView:\(webView) runJavaScriptAlertPanelWithMessage:\(message) initiatedByFrame:\(frame) completionHandler:\(completionHandler)")
-        
-        let alertController = UIAlertController(title: frame.request.URL?.host, message: message, preferredStyle: .Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: { action in
-            completionHandler()
-        }))
-        self.presentViewController(alertController, animated: true, completion: nil)
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (@escaping () -> Void)) {
+        let alertController = UIAlertController(
+            title: frame.request.url?.host, message: message,
+            preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(
+            title: "OK", style: .default, handler: {_ in completionHandler()}))
+        self.present(alertController, animated: true, completion: nil)
     }
-    
-    
+
+    // MARK: observe protocol
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard
+            let defKeyPath = keyPath,
+            let defChange = change
+        else {
+            NSLog("Unexpected change with either no keyPath or no change dictionary!")
+            return
+        }
+
+        switch defKeyPath {
+        case "canGoBack":
+            self.goBackButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
+        case "canGoForward":
+            self.goForwardButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
+        default:
+            NSLog("Unexpected change observed by ViewController: \(keyPath)")
+        }
+    }
 }

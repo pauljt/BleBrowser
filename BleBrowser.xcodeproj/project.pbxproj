@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BB303DF11C41EF2F00FCAF24 /* WebBluetooth.js in Resources */ = {isa = PBXBuildFile; fileRef = BB303DF01C41EF2F00FCAF24 /* WebBluetooth.js */; };
-		BB303DF31C42070C00FCAF24 /* WebBluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB303DF21C42070C00FCAF24 /* WebBluetoothManager.swift */; };
-		BB4DBE651C97F577000D2C35 /* JSRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DBE641C97F577000D2C35 /* JSRequest.swift */; };
-		BB4DE1F41C8D0A44003151BF /* WebBluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DE1F31C8D0A44003151BF /* WebBluetooth.swift */; };
+		5A0F91CC1E01546200CB2C64 /* Jsonifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */; };
+		5A95DDF81E0C080C00DFE26B /* WBWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A95DDF71E0C080B00DFE26B /* WBWebView.swift */; };
+		BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */ = {isa = PBXBuildFile; fileRef = BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */; };
+		BB303DF31C42070C00FCAF24 /* WBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB303DF21C42070C00FCAF24 /* WBManager.swift */; };
+		BB4DBE651C97F577000D2C35 /* WBTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DBE641C97F577000D2C35 /* WBTransaction.swift */; };
+		BB4DE1F41C8D0A44003151BF /* WBDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DE1F31C8D0A44003151BF /* WBDevice.swift */; };
 		BBA6730E1C535B8C00076CBA /* PopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA6730D1C535B8C00076CBA /* PopUpPickerView.swift */; };
 		E44C185C1A36203E00734F8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C185B1A36203E00734F8B /* AppDelegate.swift */; };
 		E44C185E1A36203E00734F8B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C185D1A36203E00734F8B /* ViewController.swift */; };
@@ -31,12 +33,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		BB303DF01C41EF2F00FCAF24 /* WebBluetooth.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = WebBluetooth.js; sourceTree = "<group>"; tabWidth = 2; };
-		BB303DF21C42070C00FCAF24 /* WebBluetoothManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebBluetoothManager.swift; sourceTree = "<group>"; };
-		BB4DBE641C97F577000D2C35 /* JSRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSRequest.swift; sourceTree = "<group>"; };
-		BB4DE1F31C8D0A44003151BF /* WebBluetooth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebBluetooth.swift; sourceTree = "<group>"; };
+		5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Jsonifiable.swift; sourceTree = "<group>"; };
+		5A95DDF71E0C080B00DFE26B /* WBWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBWebView.swift; sourceTree = "<group>"; };
+		5A9B90F71E1FB32E00AEDC07 /* test cases.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "test cases.md"; sourceTree = "<group>"; };
+		5A9B90F81E1FBCFD00AEDC07 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
+		BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = WBPolyfill.js; sourceTree = "<group>"; tabWidth = 2; };
+		BB303DF21C42070C00FCAF24 /* WBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBManager.swift; sourceTree = "<group>"; };
+		BB4DBE641C97F577000D2C35 /* WBTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBTransaction.swift; sourceTree = "<group>"; };
+		BB4DE1F31C8D0A44003151BF /* WBDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBDevice.swift; sourceTree = "<group>"; };
 		BBA6730D1C535B8C00076CBA /* PopUpPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpPickerView.swift; sourceTree = "<group>"; };
-		E44C18561A36203E00734F8B /* BleBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BleBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E44C18561A36203E00734F8B /* WebBLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebBLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44C185A1A36203E00734F8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E44C185B1A36203E00734F8B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E44C185D1A36203E00734F8B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -69,6 +76,9 @@
 		E44C184D1A36203E00734F8B = {
 			isa = PBXGroup;
 			children = (
+				5A9B90F81E1FBCFD00AEDC07 /* README.md */,
+				5AF110A51DDC6AA3006CB88F /* notes.md */,
+				5A9B90F71E1FB32E00AEDC07 /* test cases.md */,
 				E44C18581A36203E00734F8B /* BleBrowser */,
 				E44C186E1A36203E00734F8B /* BleBrowserTests */,
 				E44C18571A36203E00734F8B /* Products */,
@@ -78,7 +88,7 @@
 		E44C18571A36203E00734F8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E44C18561A36203E00734F8B /* BleBrowser.app */,
+				E44C18561A36203E00734F8B /* WebBLE.app */,
 				E44C186B1A36203E00734F8B /* BleBrowser.xctest */,
 			);
 			name = Products;
@@ -87,28 +97,22 @@
 		E44C18581A36203E00734F8B /* BleBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */,
+				5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */,
 				E44C185B1A36203E00734F8B /* AppDelegate.swift */,
 				BBA6730D1C535B8C00076CBA /* PopUpPickerView.swift */,
 				E44C185D1A36203E00734F8B /* ViewController.swift */,
-				E44C185F1A36203E00734F8B /* Main.storyboard */,
-				E44C18621A36203E00734F8B /* Images.xcassets */,
+				BB303DF21C42070C00FCAF24 /* WBManager.swift */,
+				BB4DE1F31C8D0A44003151BF /* WBDevice.swift */,
+				BB4DBE641C97F577000D2C35 /* WBTransaction.swift */,
+				5A95DDF71E0C080B00DFE26B /* WBWebView.swift */,
 				E44C18641A36203E00734F8B /* LaunchScreen.xib */,
-				E44C18591A36203E00734F8B /* Supporting Files */,
-				BB303DF01C41EF2F00FCAF24 /* WebBluetooth.js */,
-				BB303DF21C42070C00FCAF24 /* WebBluetoothManager.swift */,
-				BB4DE1F31C8D0A44003151BF /* WebBluetooth.swift */,
-				BB4DBE641C97F577000D2C35 /* JSRequest.swift */,
+				E44C185F1A36203E00734F8B /* Main.storyboard */,
+				E44C185A1A36203E00734F8B /* Info.plist */,
+				E44C18621A36203E00734F8B /* Images.xcassets */,
 			);
 			name = BleBrowser;
 			path = BasicBrowser;
-			sourceTree = "<group>";
-		};
-		E44C18591A36203E00734F8B /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				E44C185A1A36203E00734F8B /* Info.plist */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		E44C186E1A36203E00734F8B /* BleBrowserTests */ = {
@@ -146,7 +150,7 @@
 			);
 			name = BleBrowser;
 			productName = BasicBrowser;
-			productReference = E44C18561A36203E00734F8B /* BleBrowser.app */;
+			productReference = E44C18561A36203E00734F8B /* WebBLE.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E44C186A1A36203E00734F8B /* BleBrowserTests */ = {
@@ -174,16 +178,18 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0720;
-				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0610;
+				LastSwiftUpdateCheck = 0810;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Stefan Arentz";
 				TargetAttributes = {
 					E44C18551A36203E00734F8B = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = L4H495YSHK;
+						DevelopmentTeam = 7RKU9LK986;
+						LastSwiftMigration = 0800;
 					};
 					E44C186A1A36203E00734F8B = {
 						CreatedOnToolsVersion = 6.1.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = E44C18551A36203E00734F8B;
 					};
 				};
@@ -213,7 +219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E44C18611A36203E00734F8B /* Main.storyboard in Resources */,
-				BB303DF11C41EF2F00FCAF24 /* WebBluetooth.js in Resources */,
+				BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */,
 				E44C18661A36203E00734F8B /* LaunchScreen.xib in Resources */,
 				E44C18631A36203E00734F8B /* Images.xcassets in Resources */,
 			);
@@ -233,12 +239,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB4DBE651C97F577000D2C35 /* JSRequest.swift in Sources */,
+				BB4DBE651C97F577000D2C35 /* WBTransaction.swift in Sources */,
 				E44C185E1A36203E00734F8B /* ViewController.swift in Sources */,
 				BBA6730E1C535B8C00076CBA /* PopUpPickerView.swift in Sources */,
 				E44C185C1A36203E00734F8B /* AppDelegate.swift in Sources */,
-				BB303DF31C42070C00FCAF24 /* WebBluetoothManager.swift in Sources */,
-				BB4DE1F41C8D0A44003151BF /* WebBluetooth.swift in Sources */,
+				5A95DDF81E0C080C00DFE26B /* WBWebView.swift in Sources */,
+				BB303DF31C42070C00FCAF24 /* WBManager.swift in Sources */,
+				5A0F91CC1E01546200CB2C64 /* Jsonifiable.swift in Sources */,
+				BB4DE1F41C8D0A44003151BF /* WBDevice.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,15 +301,19 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -314,7 +326,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -336,8 +348,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -345,15 +359,17 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -364,14 +380,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 7RKU9LK986;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = BasicBrowser/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				New_Setting = "";
-				PRODUCT_BUNDLE_IDENTIFIER = org.cm.blebrowser;
-				PRODUCT_NAME = BleBrowser;
+				PRODUCT_BUNDLE_IDENTIFIER = co.uk.greenparksoftware.webble;
+				PRODUCT_NAME = WebBLE;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -381,13 +397,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 7RKU9LK986;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = BasicBrowser/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				New_Setting = "";
-				PRODUCT_BUNDLE_IDENTIFIER = org.cm.blebrowser;
-				PRODUCT_NAME = BleBrowser;
+				PRODUCT_BUNDLE_IDENTIFIER = co.uk.greenparksoftware.webble;
+				PRODUCT_NAME = WebBLE;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -396,17 +412,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = BasicBrowserTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = BleBrowser;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BleBrowser.app/BleBrowser";
 			};
 			name = Debug;
@@ -415,13 +424,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = BasicBrowserTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = BleBrowser;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BleBrowser.app/BleBrowser";
 			};
 			name = Release;
