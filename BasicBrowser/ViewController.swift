@@ -3,87 +3,57 @@ import WebKit
 
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate,WKUIDelegate {
 
-    class WKLogger: NSObject, WKScriptMessageHandler {
-        open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            NSLog("WKLog: \(message.body)")
+    @IBOutlet weak var locationTextField: UITextField!
+
+    @IBOutlet var goBackButton: UIBarButtonItem!
+    @IBOutlet var goForwardButton: UIBarButtonItem!
+    @IBOutlet var refreshButton: UIBarButtonItem!
+    
+    @IBOutlet var webView: WBWebView!
+    var wbManager: WBManager? {
+        didSet {
+            self.webView.wbManager = wbManager
         }
     }
 
-    @IBOutlet weak var locationTextField: UITextField!
-    @IBOutlet weak var containerView: UIView!
-    let devicePicker = PopUpPickerView()
-    
-    var webView: WKWebView!
-    var wbManager = WBManager()
-    let wkLogger = WKLogger()
+    @IBAction func reload() {
+        if (self.webView?.url?.absoluteString ?? "about:blank") == "about:blank",
+            let text = self.locationTextField.text,
+            !text.isEmpty {
+            self.loadLocation(text)
+        } else {
+            self.webView.reload()
+        }
+    }
     
     override func viewDidLoad() {
        
         super.viewDidLoad()
         locationTextField.delegate = self
-        
-        //load polyfill script
-        var script:String?
-        if let filePath:String = Bundle(for: ViewController.self).path(forResource: "WBPolyfill", ofType:"js") {
-            do {
-                script = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
-            } catch _ {
-                print("Error loading polyfil")
-                return
-            }
+
+        // connect view to manager
+        self.webView.wbManager = self.wbManager
+        self.webView.navigationDelegate = self
+        self.webView.uiDelegate = self
+
+        for path in ["canGoBack", "canGoForward"] {
+            self.webView.addObserver(self, forKeyPath: path, options: NSKeyValueObservingOptions.new, context: nil)
         }
 
-        // Before configuring the WKWebView, delete caches since
-        // it seems a bit arbitrary when this happens otherwise.
-        // This from http://stackoverflow.com/a/34376943/5920499
-        let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache]) as! Set<String>
-        WKWebsiteDataStore.default().removeData(
-            ofTypes: websiteDataTypes,
-            modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
-            completionHandler:{})
+        let svers = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        self.loadLocation("https://www.greenparksoftware.co.uk/projects/webble/\(svers)")
 
-        //create bluetooth object, and set it to listen to messages
-        let webCfg = WKWebViewConfiguration()
-        let userController = WKUserContentController()
-        userController.add(self.wbManager, name: "bluetooth")
-        userController.add(self.wkLogger, name: "logger")
-
-        // connect picker
-        self.devicePicker.delegate = self.wbManager
-        self.view.addSubview(devicePicker)
-        self.wbManager.devicePicker = devicePicker
-        
-        // add the bluetooth script prior to loading all frames
-        let userScript = WKUserScript(
-            source: script!, injectionTime: .atDocumentStart,
-            forMainFrameOnly: false)
-        userController.addUserScript(userScript)
-        webCfg.userContentController = userController
-        
-        webView = WKWebView(
-            frame: self.containerView.bounds,
-            configuration:webCfg
-        )
-        webView.uiDelegate = self
-        
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.allowsBackForwardNavigationGestures = true
-        webView.navigationDelegate = self
-        containerView.addSubview(webView)
-        
-        let views = ["webView": webView!]
-        containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[webView]|",
-            options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[webView]|",
-            options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        
-        loadLocation("http://caliban.local:8000/projects/puck.js/0.1.0/puckdemo")
+        self.goBackButton.target = self.webView
+        self.goBackButton.action = #selector(self.webView.goBack)
+        self.goForwardButton.target = self.webView
+        self.goForwardButton.action = #selector(self.webView.goForward)
+        self.refreshButton.target = self
+        self.refreshButton.action = #selector(self.reload)
     }
-    
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        loadLocation(textField.text!)
+        self.loadLocation(textField.text!)
         return true
     }
     
@@ -93,22 +63,30 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             location = "http://" + location
         }
         locationTextField.text = location
-        webView.load(URLRequest(url: URL(string: location)!))
+        self.webView.load(URLRequest(url: URL(string: location)!))
         
+    }
+
+    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        if let man = self.wbManager {
+            man.clearState()
+        }
+        self.wbManager = WBManager()
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        locationTextField.text = webView.url?.absoluteString
+        if let urlString = webView.url?.absoluteString,
+            urlString != "about:blank" {
+            locationTextField.text = urlString
+        }
         
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        locationTextField.text = webView.url?.absoluteString
         webView.loadHTMLString("<p>Fail Navigation: \(error.localizedDescription)</p>", baseURL: nil)
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        locationTextField.text = webView.url?.absoluteString
         webView.loadHTMLString("<p>Fail Provisional Navigation: \(error.localizedDescription)</p>", baseURL: nil)
     }
     
@@ -119,5 +97,25 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         alertController.addAction(UIAlertAction(
             title: "OK", style: .default, handler: {_ in completionHandler()}))
         self.present(alertController, animated: true, completion: nil)
+    }
+
+    // MARK: observe protocol
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard
+            let defKeyPath = keyPath,
+            let defChange = change
+        else {
+            NSLog("Unexpected change with either no keyPath or no change dictionary!")
+            return
+        }
+
+        switch defKeyPath {
+        case "canGoBack":
+            self.goBackButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
+        case "canGoForward":
+            self.goForwardButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
+        default:
+            NSLog("Unexpected change observed by ViewController: \(keyPath)")
+        }
     }
 }

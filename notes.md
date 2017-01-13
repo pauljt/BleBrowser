@@ -62,24 +62,48 @@ WKFrameInfo
    - got device UUID
 
 
-
-Bluetooth Manager option 1 (Current design)
-
-- 1 <-> 1 ViewController, lives for the lifetime of the programme.
-  a) devices globally retained and linked to source URL, and never released.
-
-- 2 
-
-## TODO before shipping 1.0.0
+## Done in 1.0.0
 
 1. Handle spontaneous disconnects
 2. Add forward / back buttons.
+a. disable / enable forward / back buttons depending on whether there is something to go back or forward to.
 3. Get HTTPS up on website.
 4. Read characteristics
+5. clear state after navigation
+8. gatt server disconnect
+10. Icon
+9. rename GATTCharacteristic to RemoteGATTCharacteristic
+11. Done + Cancel when no devices are in range
 
-## Limitations
+## TODO before shipping 1.0.0
+
+10. Complete test plan and test
+11. Push GPS changes to site.
+12. Remove security exceptions.
+13. Check version numbers.
+14. Send to App store.
+
+## Version 1.1
+
+1. native logging window
+
+## Smallish bugs
+
+1. Characteristics are not de-notified / torn down when device disconnects
+2. Handling of devices with the same UUIDs (internal / external) is non-existent.
+3. in BluetoothGATTService.getCharacteristic check we got the correct char UUID back.
+4. Going back doesn't refresh the page, but state has been lost meaning there's a lack of sync between page and native
+5. Don't handle filters properly, if you specify `[{namePrefix: "puck", services: ["xyz"]}, {namePrefix: "other", services: ["abc"]}]` this will offer a device with name `"puck"` and service `"abc"`.
+
+## Large limitations
 
 1. Device associations with web addresses do not persist on navigation, including page refresh.
 2. Not clear how attempting to select / use multiple devices is going to work.
-3. Handling of devices with the same UUIDs (internal / external) is non-existent.
+3. events not propagated 
+4. Descriptors not supported
+5. Services within services not supported
+6. no bookmarks
 
+## Weird stuff
+
+1. UUIDs are uppercase in apple land, lower case on the web, sigh.

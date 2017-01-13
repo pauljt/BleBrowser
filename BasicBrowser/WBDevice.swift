@@ -11,14 +11,13 @@ import WebKit
 
 
 open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
-    /*
-     * ========== Types ==========
-     */
+    // MARK: - Embedded types
     enum DeviceRequests: String {
         case connectGATT, disconnectGATT,  getPrimaryService,
         getCharacteristic, readCharacteristicValue, startNotifications,
         writeCharacteristicValue
     }
+    // MARK: Transaction views
     class DeviceTransactionView: WBTransaction.View {
         let externalDeviceUUID: UUID
 
@@ -97,15 +96,16 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
     }
 
-    /*
-     * ========== Properties ==========
-     */
-    var deviceId = UUID() //generated ID used instead of internal IOS name
+    // MARK: - Properties
+    let debug = true
+    var deviceId = UUID() // generated ID used instead of internal iOS name
     var peripheral: CBPeripheral
     var adData: BluetoothAdvertisingData
 
-//    let transactionManager = WBTransactionManager()
-    weak var manager: WBManager!
+    weak var manager: WBManager?
+
+    /*! @abstract The view should be set when the device is selected by a particular web view. */
+    weak var view: WKWebView? = nil
 
     /*! @abstract The current transactions to connect to this device. There can be multiple outstanding at any one time and they are all resolved together. */
     var connectTransactions = [WBTransaction]()
@@ -114,10 +114,8 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     var getCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
     var readCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
 
-    /*
-     * ========== Initializers ==========
-     */
-    init(peripheral: CBPeripheral, advertisementData: [String: Any] = [String: Any](), RSSI: NSNumber = 0, manager: WBManager){
+    // MARK: - Constructor
+    init(peripheral: CBPeripheral, advertisementData: [String: Any] = [:], RSSI: NSNumber = 0, manager: WBManager) {
         self.peripheral = peripheral
         self.adData = BluetoothAdvertisingData(advertisementData:advertisementData,RSSI: RSSI)
         self.manager = manager
@@ -125,9 +123,19 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         self.peripheral.delegate = self
     }
 
-    /*
-     * ========== Instance API ==========
-     */
+    // MARK: - API
+    func clearState() {
+        self.manager?.centralManager.cancelPeripheralConnection(self.peripheral)
+        for var ta in [self.connectTransactions, self.disconnectTransactions] {
+            for trans in ta {
+                trans.abandon()
+            }
+            ta.removeAll()
+        }
+        self.getPrimaryServiceTM.abandonAll()
+        self.getCharacteristicTM.abandonAll()
+        self.readCharacteristicTM.abandonAll()
+    }
     func didConnect() {
         self.connectTransactions.forEach{$0.resolveAsSuccess()}
     }
@@ -137,8 +145,22 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     func didDisconnect(error: Error?) {
         self.connectTransactions.forEach {$0.resolveAsFailure(withMessage: "Connection was cancelled or prematurely disconnected. Extra error info: \(error as? String ?? "<none>")")}
         if let err = error {
-            NSLog("Spontaneous device disconnect not yet supported. Error was \(err)")
-            self.disconnectTransactions.forEach {$0.resolveAsFailure(withMessage: "\(err)")}
+            NSLog("Spontaneous device disconnect. \(err)")
+            if self.disconnectTransactions.count > 0 {
+                self.disconnectTransactions.forEach {$0.resolveAsFailure(withMessage: "\(err)")}
+            }
+            else {
+                /* Don't lower case the deviceId string because we rely on the web page not to touch it. */
+                let commandString = "window.receiveDeviceDisconnectEvent(\(self.deviceId.uuidString.jsonify()));\n"
+                NSLog("--> device disconnect execute js: \"\(commandString)\"")
+                if let wv = self.view {
+                    wv.evaluateJavaScript(commandString, completionHandler: {
+                        _, error in
+                        if let err = error {
+                            NSLog("Error evaluating \(commandString): \(err)")
+                        }})
+                }
+            }
             return
         }
         self.disconnectTransactions.forEach {$0.resolveAsSuccess()}
@@ -157,7 +179,16 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
         switch deviceMessageType {
         case .connectGATT:
-            self.manager.centralManager.connect(self.peripheral)
+            guard let man = self.manager else {
+                transaction.resolveAsFailure(withMessage: "Failed due to internal inconsistency likely related to a recent page navigation (device's manager was released)")
+                return
+            }
+
+            if self.debug {
+                NSLog("Connecting to GATT on device \(self)")
+            }
+
+            man.centralManager.connect(self.peripheral)
             // async, so save transaction to resolve when connected
             transaction.addCompletionHandler({
                 transaction, _ in
@@ -168,7 +199,11 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.connectTransactions.append(transaction)
 
         case .disconnectGATT:
-            self.manager.centralManager.cancelPeripheralConnection(
+            guard let man = self.manager else {
+                transaction.resolveAsFailure(withMessage: "Failed due to internal inconsistency likely related to a recent page navigation (device's manager was released)")
+                return
+            }
+            man.centralManager.cancelPeripheralConnection(
                 self.peripheral)
             transaction.addCompletionHandler({
                 transaction, _ in
@@ -311,12 +346,12 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             return String(data: jsonData, encoding: String.Encoding.utf8)!
         } catch let error {
             assert(false, "error converting to json: \(error)")
+            return ""
         }
     }
     
-    /*
-     * ========== CBPeripheralDelegate ==========
-     */
+
+    // MARK: - CBPeripheralDelegate
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         var resolve: (WBTransaction) -> Void
         if let err = error {
@@ -368,23 +403,36 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
         NSLog("Characteristic Updated: \(characteristic.uuid.uuidString) -> \(characteristic.value)")
 
-        self.readCharacteristicTM.apply(
-            {
-                if let err = error {
-                    $0.resolveAsFailure(withMessage: "Error reading characteristic: \(err.localizedDescription)")
-                    return
-                }
-                $0.resolveAsSuccess(withObject: characteristic.value!)
-        },
-            iff: {
-                let cview = CharacteristicView(transaction: $0)!
-                return cview.serviceUUID == characteristic.service.uuid && cview.characteristicUUID == characteristic.uuid})
+        if self.readCharacteristicTM.transactions.count > 0 {
+            // We have read transactions outstanding, which means that this is a response after a read request, so complete those transactions.
+            self.readCharacteristicTM.apply(
+                {
+                    if let err = error {
+                        $0.resolveAsFailure(withMessage: "Error reading characteristic: \(err.localizedDescription)")
+                        return
+                    }
+                    $0.resolveAsSuccess(withObject: characteristic.value!)
+            },
+                iff: {
+                    let cview = CharacteristicView(transaction: $0)!
+                    return cview.serviceUUID == characteristic.service.uuid && cview.characteristicUUID == characteristic.uuid
+            })
+        }
+        // If we're doing notifications on the characteristic send them up.
+        if characteristic.isNotifying {
+            if let wv = self.view {
+                wv.evaluateJavaScript(
+                    "receiveCharacteristicValueNotification(" +
+                    "\(characteristic.uuid.uuidString.lowercased().jsonify()), " +
+                    "\(characteristic.value!.jsonify())" +
+                    ")")
+
+            }
+        }
     }
 
-    /*
-     * ========== Internal ==========
-     */
-   private func getService(withUUID uuid: CBUUID) -> CBService?{
+    // MARK: - Private
+    private func getService(withUUID uuid: CBUUID) -> CBService?{
         guard
             let pservs = self.peripheral.services,
             let ind = pservs.index(where: {$0.uuid == uuid})

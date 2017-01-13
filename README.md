@@ -8,17 +8,22 @@ This builds on [Paul Thierault](https://github.com/pauljt)'s [original implement
 The app is fundamentally a `WKWebView` with a polyfill providing the javascript APIs calling 
 through to the CoreBluetooth iOS API via a thin transaction management layer.
 
-## Supported APIs
+## Supported APIs v1.0
 
 ### `navigator.bluetooth.requestDevice()`
 
 - `.requestDevice(options)`
+  - `options.acceptAllDevices = true` to ask for any device
+  - `options.filters` is a list of filters (mutually exclusive with `acceptAllDevices`) with properties
+    - `namePrefix`: devices with names with this prefix will be included
+    - `services`: list of service aliases or uuids.
 
 ### `BluetoothDevice`
 
 - `.id`
 - `.name`
 - `.gatt`
+- `.gattserverdisconnected: EventHandler`
 
 ### `BluetoothRemoteGATTServer`
 
@@ -27,32 +32,24 @@ through to the CoreBluetooth iOS API via a thin transaction management layer.
 - `.disconnect()`
 - `.getPrimaryService(uuid)`
 
-### `BluetoothGATTService`
+### `BluetoothRemoteGATTService`
 
 - `.uuid`
 - `.device`
 - `.getCharacteristic(uuid)`
 
-### `BluetoothGATTCharacteristic`
+### `BluetoothRemoteGATTCharacteristic`
 
 - `.service`
 - `.uuid`
 - `.value`
 - `.readValue()`
 - `.writeValue(value)`
-
-## Non-supported APIs but planned for development soon
-
-### `BluetoothDevice`
-
-- `.gattserverdisconnected: EventHandler`
-
-### `BluetoothGATTCharacteristic`
-
 - `.oncharacteristicvaluechanged: EventHandler`
 - `.startNotifications()`
 - `.stopNotifications()`
 - `.addEventListener()`
 - `.removeEventListener()`
+
 
 Everything else is TBD!
