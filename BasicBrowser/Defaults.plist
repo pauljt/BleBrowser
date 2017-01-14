@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bookmarks</key>
+	<array>
+		<dict>
+			<key>url</key>
+			<string>https://www.espruino.com/Puck.js</string>
+			<key>title</key>
+			<string>Puck.js Home</string>
+		</dict>
+		<dict>
+			<key>url</key>
+			<string>https://www.greenparksoftware.co.uk/projects/webble</string>
+			<key>title</key>
+			<string>WebBLE Home</string>
+		</dict>
+	</array>
+</dict>
+</plist>

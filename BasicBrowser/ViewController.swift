@@ -51,6 +51,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.refreshButton.action = #selector(self.reload)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         self.loadLocation(textField.text!)
