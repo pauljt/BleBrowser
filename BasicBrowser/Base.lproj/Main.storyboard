@@ -179,6 +179,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="pCZ-RN-DDT" kind="unwind" unwindAction="unwindToWBControllerWithSender:" id="qAP-ME-rB4"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
@@ -189,6 +192,7 @@
                     </tableView>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Q4-aG-tnr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="pCZ-RN-DDT" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="449" y="367"/>
         </scene>

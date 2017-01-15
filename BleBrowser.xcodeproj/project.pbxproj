@@ -12,6 +12,7 @@
 		5A85B9F71E294B2900E0B718 /* WBBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A85B9F61E294B2900E0B718 /* WBBookmark.swift */; };
 		5A85B9F91E29582400E0B718 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5A85B9F81E29582400E0B718 /* Defaults.plist */; };
 		5A95DDF81E0C080C00DFE26B /* WBWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A95DDF71E0C080B00DFE26B /* WBWebView.swift */; };
+		5AC47CA41E2A73C800BCAE82 /* BookmarkSelectSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC47CA31E2A73C800BCAE82 /* BookmarkSelectSegue.swift */; };
 		BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */ = {isa = PBXBuildFile; fileRef = BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */; };
 		BB303DF31C42070C00FCAF24 /* WBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB303DF21C42070C00FCAF24 /* WBManager.swift */; };
 		BB4DBE651C97F577000D2C35 /* WBTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DBE641C97F577000D2C35 /* WBTransaction.swift */; };
@@ -43,6 +44,7 @@
 		5A95DDF71E0C080B00DFE26B /* WBWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBWebView.swift; sourceTree = "<group>"; };
 		5A9B90F71E1FB32E00AEDC07 /* test cases.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "test cases.md"; sourceTree = "<group>"; };
 		5A9B90F81E1FBCFD00AEDC07 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		5AC47CA31E2A73C800BCAE82 /* BookmarkSelectSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkSelectSegue.swift; sourceTree = "<group>"; };
 		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
 		BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = WBPolyfill.js; sourceTree = "<group>"; tabWidth = 2; };
 		BB303DF21C42070C00FCAF24 /* WBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBManager.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 		E44C18581A36203E00734F8B /* BleBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				5AC47CA31E2A73C800BCAE82 /* BookmarkSelectSegue.swift */,
 				BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */,
 				5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */,
 				E44C185B1A36203E00734F8B /* AppDelegate.swift */,
@@ -251,6 +254,7 @@
 			files = (
 				5A85B9F51E2946DE00E0B718 /* BookmarksViewController.swift in Sources */,
 				BB4DBE651C97F577000D2C35 /* WBTransaction.swift in Sources */,
+				5AC47CA41E2A73C800BCAE82 /* BookmarkSelectSegue.swift in Sources */,
 				E44C185E1A36203E00734F8B /* ViewController.swift in Sources */,
 				BBA6730E1C535B8C00076CBA /* PopUpPickerView.swift in Sources */,
 				5A85B9F71E294B2900E0B718 /* WBBookmark.swift in Sources */,

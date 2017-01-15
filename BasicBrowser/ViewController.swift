@@ -3,6 +3,8 @@ import WebKit
 
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate,WKUIDelegate {
 
+    // MARK: - Properties
+    // MARK: IBOutlets
     @IBOutlet weak var locationTextField: UITextField!
 
     @IBOutlet var goBackButton: UIBarButtonItem!
@@ -16,6 +18,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
     }
 
+    // MARK: - API
+    // MARK: IBActions
     @IBAction func reload() {
         if (self.webView?.url?.absoluteString ?? "about:blank") == "about:blank",
             let text = self.locationTextField.text,
@@ -23,6 +27,21 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.loadLocation(text)
         } else {
             self.webView.reload()
+        }
+    }
+
+    // MARK: - Event handling
+    @IBAction func unwindToWBController(sender: UIStoryboardSegue) {
+        NSLog("Unwinding to WBController")
+        if let bvc = sender.source as? BookmarksViewController,
+            let tv = bvc.view as? UITableView,
+            let ip = tv.indexPathForSelectedRow {
+            if ip.item >= bvc.bookmarks.count {
+                NSLog("Selected bookmark is out of range")
+            }
+            else {
+                self.webView.load(URLRequest(url: bvc.bookmarks[ip.item].url))
+            }
         }
     }
     
@@ -72,6 +91,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         
     }
 
+    // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         if let man = self.wbManager {
             man.clearState()
@@ -94,7 +114,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         webView.loadHTMLString("<p>Fail Provisional Navigation: \(error.localizedDescription)</p>", baseURL: nil)
     }
-    
+
+    // MARK: - WKUIDelegate
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (@escaping () -> Void)) {
         let alertController = UIAlertController(
             title: frame.request.url?.host, message: message,
@@ -104,7 +125,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.present(alertController, animated: true, completion: nil)
     }
 
-    // MARK: observe protocol
+    // MARK: - Observe protocol
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard
             let defKeyPath = keyPath,

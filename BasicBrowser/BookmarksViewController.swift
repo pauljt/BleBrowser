@@ -59,7 +59,6 @@ class BookmarksViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        let selectedBookmark = self.bookmarks[indexPath.item]
-        _ = self.navigationController?.popViewController(animated: true)
     }
 
     // MARK: - Private
