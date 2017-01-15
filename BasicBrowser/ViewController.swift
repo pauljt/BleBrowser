@@ -20,6 +20,24 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     // MARK: - API
     // MARK: IBActions
+    @IBAction func addBookmark() {
+        guard
+            let title = self.webView.title,
+            let url = self.webView.url
+        else {
+            NSLog("Unable to bookmark as don't have title or url")
+            return
+        }
+
+        let bm = WBBookmark(title: title, url: url)
+        let ud = UserDefaults.standard
+
+        var bma = ud.array(forKey: BookmarksViewController.prefKeys.bookmarks.rawValue) ?? [Any]()
+        bma.append(bm.dictionary)
+        ud.setValue(bma, forKey: BookmarksViewController.prefKeys.bookmarks.rawValue)
+
+    }
+
     @IBAction func reload() {
         if (self.webView?.url?.absoluteString ?? "about:blank") == "about:blank",
             let text = self.locationTextField.text,

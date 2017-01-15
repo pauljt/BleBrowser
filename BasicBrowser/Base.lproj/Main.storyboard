@@ -102,12 +102,18 @@
                                 <items>
                                     <barButtonItem enabled="NO" title="&lt;" style="plain" id="NaX-Y9-Gfj"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="sXn-kx-dSX"/>
+                                    <barButtonItem systemItem="add" id="r6k-jv-IC4">
+                                        <connections>
+                                            <action selector="addBookmark" destination="BYZ-38-t0r" id="SvN-L1-pFS"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="9q6-Tp-JwJ"/>
                                     <barButtonItem systemItem="bookmarks" id="jSv-KT-nTS">
                                         <connections>
                                             <segue destination="bL6-a5-4h5" kind="show" id="tde-jn-QQH"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="epH-mD-E7N"/>
+                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="SWJ-63-0dX"/>
                                     <barButtonItem style="plain" systemItem="refresh" id="LXB-CH-4RT"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="pN2-Zw-LM0"/>
                                     <barButtonItem enabled="NO" title="&gt;" id="qhG-nx-nEQ"/>
