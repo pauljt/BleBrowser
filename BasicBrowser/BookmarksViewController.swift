@@ -46,7 +46,6 @@ class BookmarksViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookmark", for: indexPath)
 
-        NSLog("indexPath \(indexPath) \(indexPath.item)")
         cell.textLabel?.text = self.bookmarks[indexPath.item].title
         cell.detailTextLabel?.text = self.bookmarks[indexPath.item].url.absoluteString
 

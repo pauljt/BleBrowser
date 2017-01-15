@@ -32,7 +32,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     // MARK: - Event handling
     @IBAction func unwindToWBController(sender: UIStoryboardSegue) {
-        NSLog("Unwinding to WBController")
         if let bvc = sender.source as? BookmarksViewController,
             let tv = bvc.view as? UITableView,
             let ip = tv.indexPathForSelectedRow {
