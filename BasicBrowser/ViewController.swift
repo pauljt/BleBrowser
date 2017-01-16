@@ -24,9 +24,13 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBAction func addBookmark() {
         guard
             let title = self.webView.title,
-            let url = self.webView.url
+            !title.isEmpty,
+            let url = self.webView.url,
+            url.absoluteString != "about:blank"
         else {
-            NSLog("Unable to bookmark as don't have title or url")
+            let uac = UIAlertController(title: "Unable to bookmark", message: "This page cannot be bookmarked as it has an invalid title or URL, or was a failed navigation", preferredStyle: .alert)
+            uac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(uac, animated: true, completion: nil)
             return
         }
 
@@ -102,7 +106,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     func loadLocation(_ location: String) {
         var location = location
         if !location.hasPrefix("http://") && !location.hasPrefix("https://") {
-            location = "http://" + location
+            location = "https://" + location
         }
         locationTextField.text = location
         self.webView.load(URLRequest(url: URL(string: location)!))
