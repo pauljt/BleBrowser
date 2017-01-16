@@ -251,7 +251,9 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         centralManager.scanForPeripherals(withServices: servicesCBUUID, options: nil)
     }
     func stopScanForPeripherals() {
-        self.centralManager.stopScan()
+        if self.centralManager.state == .poweredOn {
+            self.centralManager.stopScan()
+        }
         self.discoveredDevicesByInternalUUID.removeAll()
     }
     

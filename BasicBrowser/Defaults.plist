@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bookmarks</key>
+	<array>
+		<dict>
+			<key>url</key>
+			<string>https://www.espruino.com/Puck.js</string>
+			<key>title</key>
+			<string>Puck.js Home</string>
+		</dict>
+		<dict>
+			<key>url</key>
+			<string>https://www.greenparksoftware.co.uk/projects/webble/puckdemo</string>
+			<key>title</key>
+			<string>Puck.js demo page @ greenparksoftware.co.uk</string>
+		</dict>
+		<dict>
+			<key>url</key>
+			<string>https://webbluetoothcg.github.io/web-bluetooth/</string>
+			<key>title</key>
+			<string>Web bluetooth spec</string>
+		</dict>
+		<dict>
+			<key>url</key>
+			<string>https://github.com/daphtdazz/BleBrowser</string>
+			<key>title</key>
+			<string>Source on github</string>
+		</dict>
+	</array>
+</dict>
+</plist>

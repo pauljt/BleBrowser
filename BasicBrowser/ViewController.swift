@@ -3,7 +3,10 @@ import WebKit
 
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate,WKUIDelegate {
 
+    // MARK: - Properties
+    // MARK: IBOutlets
     @IBOutlet weak var locationTextField: UITextField!
+    @IBOutlet var tick: UIImageView!
 
     @IBOutlet var goBackButton: UIBarButtonItem!
     @IBOutlet var goForwardButton: UIBarButtonItem!
@@ -16,6 +19,30 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
     }
 
+    // MARK: - API
+    // MARK: IBActions
+    @IBAction func addBookmark() {
+        guard
+            let title = self.webView.title,
+            !title.isEmpty,
+            let url = self.webView.url,
+            url.absoluteString != "about:blank"
+        else {
+            let uac = UIAlertController(title: "Unable to bookmark", message: "This page cannot be bookmarked as it has an invalid title or URL, or was a failed navigation", preferredStyle: .alert)
+            uac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(uac, animated: true, completion: nil)
+            return
+        }
+
+        let bm = WBBookmark(title: title, url: url)
+        let ud = UserDefaults.standard
+
+        var bma = ud.array(forKey: BookmarksViewController.prefKeys.bookmarks.rawValue) ?? [Any]()
+        bma.append(bm.dictionary)
+        ud.setValue(bma, forKey: BookmarksViewController.prefKeys.bookmarks.rawValue)
+        FlashAnimation(withView: self.tick).go()
+    }
+
     @IBAction func reload() {
         if (self.webView?.url?.absoluteString ?? "about:blank") == "about:blank",
             let text = self.locationTextField.text,
@@ -25,11 +52,25 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.webView.reload()
         }
     }
+
+    // MARK: - Event handling
+    @IBAction func unwindToWBController(sender: UIStoryboardSegue) {
+        if let bvc = sender.source as? BookmarksViewController,
+            let tv = bvc.view as? UITableView,
+            let ip = tv.indexPathForSelectedRow {
+            if ip.item >= bvc.bookmarks.count {
+                NSLog("Selected bookmark is out of range")
+            }
+            else {
+                self.webView.load(URLRequest(url: bvc.bookmarks[ip.item].url))
+            }
+        }
+    }
     
     override func viewDidLoad() {
        
         super.viewDidLoad()
-        locationTextField.delegate = self
+        self.locationTextField.delegate = self
 
         // connect view to manager
         self.webView.wbManager = self.wbManager
@@ -51,6 +92,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.refreshButton.action = #selector(self.reload)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         self.loadLocation(textField.text!)
@@ -60,13 +106,14 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     func loadLocation(_ location: String) {
         var location = location
         if !location.hasPrefix("http://") && !location.hasPrefix("https://") {
-            location = "http://" + location
+            location = "https://" + location
         }
         locationTextField.text = location
         self.webView.load(URLRequest(url: URL(string: location)!))
         
     }
 
+    // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         if let man = self.wbManager {
             man.clearState()
@@ -77,7 +124,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if let urlString = webView.url?.absoluteString,
             urlString != "about:blank" {
-            locationTextField.text = urlString
+            self.locationTextField.text = urlString
         }
         
     }
@@ -89,7 +136,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         webView.loadHTMLString("<p>Fail Provisional Navigation: \(error.localizedDescription)</p>", baseURL: nil)
     }
-    
+
+    // MARK: - WKUIDelegate
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (@escaping () -> Void)) {
         let alertController = UIAlertController(
             title: frame.request.url?.host, message: message,
@@ -99,7 +147,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.present(alertController, animated: true, completion: nil)
     }
 
-    // MARK: observe protocol
+    // MARK: - Observe protocol
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard
             let defKeyPath = keyPath,
