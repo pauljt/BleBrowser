@@ -21,11 +21,18 @@ struct FlashAnimation {
     }
     func go() {
 
-        UIView.transition(with: self.view, duration: self.fadeInDuration, options: UIViewAnimationOptions.transitionCrossDissolve, animations: {self.view.isHidden = false}, completion: {
+        guard let sv = self.view.superview else {
+            NSLog("Unable to do flash animation on \(self.view) as it has no superview")
+            return
+        }
+
+        UIView.transition(with: sv, duration: self.fadeInDuration, options: UIViewAnimationOptions.transitionCrossDissolve, animations: {self.view.isHidden = false}, completion: {
             _ in
             Timer.scheduledTimer(withTimeInterval: self.lingerDuration, repeats: false, block: {
                 _ in
-                UIView.transition(with: self.view, duration: self.fadeOutDuration, options: UIViewAnimationOptions.transitionCrossDissolve, animations: {self.view.isHidden = true})
+                UIView.transition(with: sv, duration: self.fadeOutDuration, options: UIViewAnimationOptions.transitionCrossDissolve, animations: {
+                        self.view.isHidden = true
+                })
             })
         })
     }
