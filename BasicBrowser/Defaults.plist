@@ -12,9 +12,21 @@
 		</dict>
 		<dict>
 			<key>url</key>
-			<string>https://www.greenparksoftware.co.uk/projects/webble</string>
+			<string>https://www.greenparksoftware.co.uk/projects/webble/puckdemo</string>
 			<key>title</key>
-			<string>WebBLE Home</string>
+			<string>Puck.js demo page @ greenparksoftware.co.uk</string>
+		</dict>
+		<dict>
+			<key>url</key>
+			<string>https://webbluetoothcg.github.io/web-bluetooth/</string>
+			<key>title</key>
+			<string>Web bluetooth spec</string>
+		</dict>
+		<dict>
+			<key>url</key>
+			<string>https://github.com/daphtdazz/BleBrowser</string>
+			<key>title</key>
+			<string>Source on github</string>
 		</dict>
 	</array>
 </dict>
