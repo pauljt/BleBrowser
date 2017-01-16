@@ -6,6 +6,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     // MARK: - Properties
     // MARK: IBOutlets
     @IBOutlet weak var locationTextField: UITextField!
+    @IBOutlet var tick: UIImageView!
 
     @IBOutlet var goBackButton: UIBarButtonItem!
     @IBOutlet var goForwardButton: UIBarButtonItem!
@@ -35,7 +36,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         var bma = ud.array(forKey: BookmarksViewController.prefKeys.bookmarks.rawValue) ?? [Any]()
         bma.append(bm.dictionary)
         ud.setValue(bma, forKey: BookmarksViewController.prefKeys.bookmarks.rawValue)
-
+        FlashAnimation(withView: self.tick).go()
     }
 
     @IBAction func reload() {
