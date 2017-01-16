@@ -83,6 +83,7 @@ class BookmarksViewController: UITableViewController {
         guard let defPlistURL = mb.url(forResource: "Defaults", withExtension: "plist"),
             let defDict = NSDictionary(contentsOf: defPlistURL) else {
                 assert(false, "Unexpectedly couldn't find defaults")
+                return
         }
 
         var normedBookmarks = [[String: Any]]()
@@ -101,6 +102,7 @@ class BookmarksViewController: UITableViewController {
                     let bdicts = object as? [[String: Any]]
                     else {
                         assert(false, "Unexpectedly couldn't find bookmarks in defaults")
+                        return
                 }
                 for bd in bdicts {
                     guard
@@ -108,6 +110,7 @@ class BookmarksViewController: UITableViewController {
                         let bm = WBBookmark(fromDictionary: bdss)
                         else {
                             assert(false, "bad dictionary array")
+                            return
                     }
                     normedBookmarks.append(bm.dictionary)
                 }
