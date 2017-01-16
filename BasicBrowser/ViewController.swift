@@ -66,7 +66,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     override func viewDidLoad() {
        
         super.viewDidLoad()
-        locationTextField.delegate = self
+        self.locationTextField.delegate = self
 
         // connect view to manager
         self.webView.wbManager = self.wbManager
@@ -120,7 +120,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if let urlString = webView.url?.absoluteString,
             urlString != "about:blank" {
-            locationTextField.text = urlString
+            self.locationTextField.text = urlString
         }
         
     }
