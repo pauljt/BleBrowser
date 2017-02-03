@@ -171,6 +171,11 @@
                 .then(function () {
                     self.connected = true;
                     native.registerDeviceForNotifications(self.device);
+                    self.connectionTransactionIDs.splice(
+                        self.connectionTransactionIDs.indexOf(tid),
+                        1
+                    );
+
                     return self;
                 });
         },
