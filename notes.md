@@ -85,7 +85,19 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 
 ## Version 1.1
 
+1. bookmarks
+
+## Version 1.1.1
+
+1. save last location and restore on relaunch, rather than just going to the same place all the time.
+2. fix open in a new window link bug
+
+## Version 1.2
+
 1. native logging window
+2. iCloud bookmarks
+3. work with Gordon's IDE
+4. security contexts
 
 ## Smallish bugs
 
