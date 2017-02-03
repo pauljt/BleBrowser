@@ -41,4 +41,8 @@ struct WBBookmark {
         }
         self.init(title: title, url: url)
     }
+
+    static func == (left: WBBookmark, right: WBBookmark) -> Bool {
+        return left.url == right.url
+    }
 }

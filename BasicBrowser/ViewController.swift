@@ -4,10 +4,14 @@ import WebKit
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate,WKUIDelegate {
 
     enum prefKeys: String {
+        case bookmarks
         case lastLocation
+        case version
     }
 
     // MARK: - Properties
+    let currentPrefVersion = 1
+
     // MARK: IBOutlets
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet var tick: UIImageView!
@@ -15,7 +19,9 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var goBackButton: UIBarButtonItem!
     @IBOutlet var goForwardButton: UIBarButtonItem!
     @IBOutlet var refreshButton: UIBarButtonItem!
-    
+
+    var bookmarksManager = BookmarksManager(
+        userDefaults: UserDefaults.standard, key: prefKeys.bookmarks.rawValue)
     @IBOutlet var webView: WBWebView!
     var wbManager: WBManager? {
         didSet {
@@ -38,12 +44,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             return
         }
 
-        let bm = WBBookmark(title: title, url: url)
-        let ud = UserDefaults.standard
-
-        var bma = ud.array(forKey: BookmarksViewController.prefKeys.bookmarks.rawValue) ?? [Any]()
-        bma.append(bm.dictionary)
-        ud.setValue(bma, forKey: BookmarksViewController.prefKeys.bookmarks.rawValue)
+        self.bookmarksManager.addBookmarks([WBBookmark(title: title, url: url)])
         FlashAnimation(withView: self.tick).go()
     }
 
@@ -57,26 +58,32 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
     }
 
-    // MARK: - Event handling
+    // MARK: - Segue handling
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let bvc = segue.destination as? BookmarksViewController {
+            bvc.bookmarksManager = self.bookmarksManager
+        }
+    }
     @IBAction func unwindToWBController(sender: UIStoryboardSegue) {
         if let bvc = sender.source as? BookmarksViewController,
             let tv = bvc.view as? UITableView,
             let ip = tv.indexPathForSelectedRow {
-            if ip.item >= bvc.bookmarks.count {
+            if ip.item >= self.bookmarksManager.bookmarks.count {
                 NSLog("Selected bookmark is out of range")
             }
             else {
-                self.webView.load(URLRequest(url: bvc.bookmarks[ip.item].url))
+                self.webView.load(URLRequest(url: self.bookmarksManager.bookmarks[ip.item].url))
             }
         }
     }
-    
+
+    // MARK: - Event handling
     override func viewDidLoad() {
        
         super.viewDidLoad()
-        self.locationTextField.delegate = self
 
-        // connect view to manager
+        // connect view to other objects
+        self.locationTextField.delegate = self
         self.webView.wbManager = self.wbManager
         self.webView.navigationDelegate = self
         self.webView.uiDelegate = self
@@ -85,6 +92,9 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.webView.addObserver(self, forKeyPath: path, options: NSKeyValueObservingOptions.new, context: nil)
         }
 
+        self.loadPreferences()
+
+        // Load last location
         var lastLocation: String
         if let prefLoc = UserDefaults.standard.value(forKey: ViewController.prefKeys.lastLocation.rawValue) as? String {
             lastLocation = prefLoc
@@ -175,5 +185,59 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         default:
             NSLog("Unexpected change observed by ViewController: \(keyPath)")
         }
+    }
+
+    // MARK: - Private
+    private func loadPreferences() {
+
+        // Sort out the preferences we have.
+        let ud = UserDefaults.standard
+
+        let prefsVersion = ud.integer(forKey: ViewController.prefKeys.version.rawValue)
+
+        var hadPrefs = false
+        if let bma = ud.array(forKey: ViewController.prefKeys.bookmarks.rawValue) as? [[String: String]] {
+            self.bookmarksManager.mergeInBookmarkDicts(bookmarkDicts: bma)
+            hadPrefs = true
+        }
+
+        // Merge in any defaults.
+        let mb = Bundle.main
+        guard let defPlistURL = mb.url(forResource: "Defaults", withExtension: "plist"),
+            let defDict = NSDictionary(contentsOf: defPlistURL) else {
+                assert(false, "Unexpectedly couldn't find defaults")
+                return
+        }
+
+        let range = (!hadPrefs ? 0 : prefsVersion + 1) ..< self.currentPrefVersion + 1
+
+        for pref in range {
+            guard let vDict = defDict.value(forKey: "\(pref)") as? [String: Any] else {
+                continue
+            }
+            vDict.forEach({
+                key, object in
+                guard let pKey = ViewController.prefKeys(rawValue: key)
+                    else {
+                        return
+                }
+
+                switch pKey {
+                case .bookmarks:
+                    guard
+                        let bdicts = object as? [[String: String]]
+                        else {
+                            assert(false, "Unexpectedly couldn't find bookmarks in defaults")
+                            return
+                    }
+                    self.bookmarksManager.mergeInBookmarkDicts(bookmarkDicts: bdicts)
+                default:
+                    return
+                }
+            })
+        }
+
+        // Set the preferences version to be up to date.
+        ud.set(self.currentPrefVersion, forKey: ViewController.prefKeys.version.rawValue)
     }
 }
