@@ -401,8 +401,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
     open func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
 
-        NSLog("Characteristic Updated: \(characteristic.uuid.uuidString) -> \(characteristic.value)")
-
         if self.readCharacteristicTM.transactions.count > 0 {
             // We have read transactions outstanding, which means that this is a response after a read request, so complete those transactions.
             self.readCharacteristicTM.apply(
