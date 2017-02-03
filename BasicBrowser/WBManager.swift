@@ -156,6 +156,20 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
 
         switch managerMessageType
         {
+        case .device:
+
+            guard let view = WBDevice.DeviceTransactionView(transaction: transaction) else {
+                transaction.resolveAsFailure(withMessage: "Bad device request")
+                break
+            }
+
+            let devUUID = view.externalDeviceUUID
+            guard let device = self.devicesByExternalUUID[devUUID]
+                else {
+                    transaction.resolveAsFailure(withMessage: "No known device for device transaction \(transaction)")
+                    break
+            }
+            device.triage(transaction: transaction)
         case .requestDevice:
             guard transaction.key.typeComponents.count == 1
             else {
@@ -184,21 +198,6 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
                 self.requestDeviceTransaction = nil
             }
             self.devicePicker.showPicker()
-
-        case .device:
-
-            guard let view = WBDevice.DeviceTransactionView(transaction: transaction) else {
-                transaction.resolveAsFailure(withMessage: "Bad device request")
-                break
-            }
-
-            let devUUID = view.externalDeviceUUID
-            guard let device = self.devicesByExternalUUID[devUUID]
-            else {
-                transaction.resolveAsFailure(withMessage: "No known device for device transaction \(transaction)")
-                break
-            }
-            device.triage(transaction: transaction)
         }
     }
 

@@ -10,7 +10,7 @@ through to the CoreBluetooth iOS API via a thin transaction management layer.
 
 ## Supported APIs v1.0
 
-### `navigator.bluetooth.requestDevice()`
+### `navigator.bluetooth`
 
 - `.requestDevice(options)`
   - `options.acceptAllDevices = true` to ask for any device
