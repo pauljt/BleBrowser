@@ -58,19 +58,6 @@ open class WBWebView: WKWebView {
             configuration:webCfg
         )
 
-        guard let filePath = Bundle(for: WBWebView.self).path(forResource: "WBPolyfill", ofType:"js") else {
-            NSLog("Failed to find polyfill.")
-            return
-        }
-
-        var script: String
-        do {
-            script = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
-        } catch _ {
-            print("Error loading polyfil")
-            return
-        }
-
         // TODO: this probably should be more controllable.
         // Before configuring the WKWebView, delete caches since
         // it seems a bit arbitrary when this happens otherwise.
@@ -81,14 +68,27 @@ open class WBWebView: WKWebView {
             modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
             completionHandler:{})
 
+        // Add logging script
         userController.add(self.wkLogger, name: "logger")
 
-        // add the bluetooth script prior to loading all frames
+        // Load polyfill
+        guard let filePath = Bundle(for: WBWebView.self).path(forResource: "WBPolyfill", ofType:"js") else {
+            NSLog("Failed to find polyfill.")
+            return
+        }
+        var polyfillScriptContent: String
+        do {
+            polyfillScriptContent = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
+        } catch _ {
+            NSLog("Error loading polyfil")
+            return
+        }
         let userScript = WKUserScript(
-            source: script, injectionTime: .atDocumentStart,
+            source: polyfillScriptContent, injectionTime: .atDocumentStart,
             forMainFrameOnly: false)
         userController.addUserScript(userScript)
 
+        // WKWebView static config
         self.translatesAutoresizingMaskIntoConstraints = false
         self.allowsBackForwardNavigationGestures = true
     }

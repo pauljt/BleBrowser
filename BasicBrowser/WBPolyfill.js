@@ -31,7 +31,6 @@
         return window.btoa(binary);
     }
 
-    //Safari 9 doesn't have TextDecoder API
     function str64todv(str64) {
         // Return a DataView from a base64 encoded DOM String.
         let str16 = atob(str64);
@@ -807,4 +806,11 @@
     navigator.bluetooth = bluetooth;
     window.BluetoothUUID = BluetoothUUID;
     nslog("navigator.bluetooth: " + navigator.bluetooth);
+
+    // Patches
+    // Patch window.open so it doesn't attempt to open in a separate window or tab ever.
+    function open(location) {
+        window.location = location;
+    }
+    window.open = open;
 }());
