@@ -3,6 +3,10 @@ import WebKit
 
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate,WKUIDelegate {
 
+    enum prefKeys: String {
+        case lastLocation
+    }
+
     // MARK: - Properties
     // MARK: IBOutlets
     @IBOutlet weak var locationTextField: UITextField!
@@ -81,8 +85,14 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.webView.addObserver(self, forKeyPath: path, options: NSKeyValueObservingOptions.new, context: nil)
         }
 
-        let svers = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-        self.loadLocation("https://www.greenparksoftware.co.uk/projects/webble/\(svers)")
+        var lastLocation: String
+        if let prefLoc = UserDefaults.standard.value(forKey: ViewController.prefKeys.lastLocation.rawValue) as? String {
+            lastLocation = prefLoc
+        } else {
+            let svers = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+            lastLocation = "https://www.greenparksoftware.co.uk/projects/webble/\(svers)"
+        }
+        self.loadLocation(lastLocation)
 
         self.goBackButton.target = self.webView
         self.goBackButton.action = #selector(self.webView.goBack)
@@ -125,8 +135,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         if let urlString = webView.url?.absoluteString,
             urlString != "about:blank" {
             self.locationTextField.text = urlString
+            UserDefaults.standard.setValue(urlString, forKey: ViewController.prefKeys.lastLocation.rawValue)
         }
-        
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
