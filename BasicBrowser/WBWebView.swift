@@ -3,7 +3,19 @@
 //  BleBrowser
 //
 //  Created by David Park on 22/12/2016.
-//  Copyright © 2016 David Park. All rights reserved.
+//  Copyright 2016-2017 David Park. All rights reserved.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 //
 
 import Foundation
@@ -58,19 +70,6 @@ open class WBWebView: WKWebView {
             configuration:webCfg
         )
 
-        guard let filePath = Bundle(for: WBWebView.self).path(forResource: "WBPolyfill", ofType:"js") else {
-            NSLog("Failed to find polyfill.")
-            return
-        }
-
-        var script: String
-        do {
-            script = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
-        } catch _ {
-            print("Error loading polyfil")
-            return
-        }
-
         // TODO: this probably should be more controllable.
         // Before configuring the WKWebView, delete caches since
         // it seems a bit arbitrary when this happens otherwise.
@@ -81,14 +80,27 @@ open class WBWebView: WKWebView {
             modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
             completionHandler:{})
 
+        // Add logging script
         userController.add(self.wkLogger, name: "logger")
 
-        // add the bluetooth script prior to loading all frames
+        // Load polyfill
+        guard let filePath = Bundle(for: WBWebView.self).path(forResource: "WBPolyfill", ofType:"js") else {
+            NSLog("Failed to find polyfill.")
+            return
+        }
+        var polyfillScriptContent: String
+        do {
+            polyfillScriptContent = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
+        } catch _ {
+            NSLog("Error loading polyfil")
+            return
+        }
         let userScript = WKUserScript(
-            source: script, injectionTime: .atDocumentStart,
+            source: polyfillScriptContent, injectionTime: .atDocumentStart,
             forMainFrameOnly: false)
         userController.addUserScript(userScript)
 
+        // WKWebView static config
         self.translatesAutoresizingMaskIntoConstraints = false
         self.allowsBackForwardNavigationGestures = true
     }

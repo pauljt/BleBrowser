@@ -4,6 +4,19 @@
 /*global
         atob, Event, window
 */
+//  Copyright 2016-2017 Paul Theriault and David Park. All rights reserved.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 // adapted from chrome app polyfill https://github.com/WebBluetoothCG/chrome-app-polyfill
 
 (function () {
@@ -31,16 +44,16 @@
         return window.btoa(binary);
     }
 
-    //Safari 9 doesn't have TextDecoder API
-    function str2ab(str) {
-        let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-        let bufView = new Uint16Array(buf);
+    function str64todv(str64) {
+        // Return a DataView from a base64 encoded DOM String.
+        let str16 = atob(str64);
+        let ab = new Int8Array(str16.length);
         let ii;
-        let strLen = str.length;
-        for (ii = 0; ii < strLen; ii += 1) {
-            bufView[ii] = str.charCodeAt(ii);
+        for (ii = 0; ii < ab.length; ii += 1) {
+            // trusted interface, so don't check this is 0 <= charCode < 256
+            ab[ii] = str16.charCodeAt(ii);
         }
-        return buf;
+        return new DataView(ab.buffer);
     }
 
     //
@@ -170,6 +183,11 @@
                 .then(function () {
                     self.connected = true;
                     native.registerDeviceForNotifications(self.device);
+                    self.connectionTransactionIDs.splice(
+                        self.connectionTransactionIDs.indexOf(tid),
+                        1
+                    );
+
                     return self;
                 });
         },
@@ -300,7 +318,7 @@
             let char = this;
             return this.sendMessage("readCharacteristicValue")
                 .then(function (valueEncoded) {
-                    char.value = new DataView(str2ab(atob(valueEncoded)));
+                    char.value = str64todv(valueEncoded);
                     return char.value;
                 });
         },
@@ -777,8 +795,7 @@
                 console.log('Know characteristics', Object.keys(native.devicesBeingNotified));
                 return;
             }
-            let strData = atob(d64);
-            let dataView = new DataView(str2ab(strData));
+            let dataView = str64todv(d64);
             chars.forEach(function (char) {
                 char.value = dataView;
                 char.dispatchEvent(new BluetoothEvent("characteristicvaluechanged", char));
@@ -802,4 +819,11 @@
     navigator.bluetooth = bluetooth;
     window.BluetoothUUID = BluetoothUUID;
     nslog("navigator.bluetooth: " + navigator.bluetooth);
+
+    // Patches
+    // Patch window.open so it doesn't attempt to open in a separate window or tab ever.
+    function open(location) {
+        window.location = location;
+    }
+    window.open = open;
 }());

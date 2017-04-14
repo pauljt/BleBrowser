@@ -91,6 +91,8 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 
 1. save last location and restore on relaunch, rather than just going to the same place all the time.
 2. fix open in a new window link bug
+3. fix base 64 decoding error
+4. add window.alert.
 
 ## Version 1.2
 

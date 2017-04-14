@@ -5,22 +5,29 @@
 //  Created by David Park on 13/01/2017.
 //  Copyright © 2017 David Park. All rights reserved.
 //
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
 
 import UIKit
 
 class BookmarksViewController: UITableViewController {
 
-    enum prefKeys: String {
-        case bookmarks
-    }
-
     // MARK: - Properties
-    var bookmarks = [WBBookmark]()
+    var bookmarksManager: BookmarksManager!
 
     // MARK: - Event handling
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.loadBookmarks()
         self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
@@ -31,7 +38,7 @@ class BookmarksViewController: UITableViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.saveBookmarks()
+        self.bookmarksManager.saveBookmarks()
     }
 
     // MARK: - UITableViewDataSource
@@ -44,8 +51,8 @@ class BookmarksViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookmark", for: indexPath)
 
-        cell.textLabel?.text = self.bookmarks[indexPath.item].title
-        cell.detailTextLabel?.text = self.bookmarks[indexPath.item].url.absoluteString
+        cell.textLabel?.text = self.bookmarksManager.bookmarks[indexPath.item].title
+        cell.detailTextLabel?.text = self.bookmarksManager.bookmarks[indexPath.item].url.absoluteString
 
         return cell
     }
@@ -55,7 +62,7 @@ class BookmarksViewController: UITableViewController {
         case .delete:
             self.tableView.beginUpdates()
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
-            self.bookmarks.remove(at: srci)
+            self.bookmarksManager.bookmarks.remove(at: srci)
             self.tableView.endUpdates()
         default: break
             
@@ -65,81 +72,14 @@ class BookmarksViewController: UITableViewController {
         let srci = sourceIndexPath.item
         let dsti = destinationIndexPath.item
 
-        let bm = self.bookmarks.remove(at: srci)
-        self.bookmarks.insert(bm, at: dsti)
+        let bm = self.bookmarksManager.bookmarks.remove(at: srci)
+        self.bookmarksManager.bookmarks.insert(bm, at: dsti)
 
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.bookmarks.count
+        return self.bookmarksManager.bookmarks.count
     }
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return nil
-    }
-
-    // MARK: - Private
-    private func loadBookmarks() {
-
-        let mb = Bundle.main
-        guard let defPlistURL = mb.url(forResource: "Defaults", withExtension: "plist"),
-            let defDict = NSDictionary(contentsOf: defPlistURL) else {
-                assert(false, "Unexpectedly couldn't find defaults")
-                return
-        }
-
-        var normedBookmarks = [[String: Any]]()
-        defDict.enumerateKeysAndObjects({
-            key, object, _ in
-            guard
-                let strKey = key as? String,
-                let pKey = BookmarksViewController.prefKeys(rawValue: strKey)
-                else {
-                    return
-            }
-
-            switch pKey {
-            case .bookmarks:
-                guard
-                    let bdicts = object as? [[String: Any]]
-                    else {
-                        assert(false, "Unexpectedly couldn't find bookmarks in defaults")
-                        return
-                }
-                for bd in bdicts {
-                    guard
-                        let bdss = bd as? [String: String],
-                        let bm = WBBookmark(fromDictionary: bdss)
-                        else {
-                            assert(false, "bad dictionary array")
-                            return
-                    }
-                    normedBookmarks.append(bm.dictionary)
-                }
-            }
-        })
-
-        let normedDefaults = [BookmarksViewController.prefKeys.bookmarks.rawValue: normedBookmarks]
-        let ud = UserDefaults.standard
-        ud.register(defaults: normedDefaults)
-
-        let bma = ud.array(forKey: BookmarksViewController.prefKeys.bookmarks.rawValue) ?? [Any]()
-
-        var bms = [WBBookmark]()
-        for bment in bma {
-            guard
-                let bmd = bment as? [String: String],
-                let bm = WBBookmark(fromDictionary: bmd)
-                else {
-                    NSLog("Bad entry in bookmarks dict \(bment)")
-                    continue
-            }
-            bms.append(bm)
-        }
-        self.bookmarks = bms
-    }
-    private func saveBookmarks() {
-        let bms = self.bookmarks.map{$0.dictionary}
-        let ud = UserDefaults.standard
-        ud.set(bms, forKey: BookmarksViewController.prefKeys.bookmarks.rawValue)
-        ud.synchronize()
     }
 }

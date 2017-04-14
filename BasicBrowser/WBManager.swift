@@ -2,7 +2,19 @@
 //  WebBluetooth.swift
 //  BasicBrowser
 //
-//  Copyright 2016 Paul Theriault and David Park
+//  Copyright 2016-2017 Paul Theriault and David Park. All rights reserved.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 
 import Foundation
 import CoreBluetooth
@@ -156,6 +168,20 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
 
         switch managerMessageType
         {
+        case .device:
+
+            guard let view = WBDevice.DeviceTransactionView(transaction: transaction) else {
+                transaction.resolveAsFailure(withMessage: "Bad device request")
+                break
+            }
+
+            let devUUID = view.externalDeviceUUID
+            guard let device = self.devicesByExternalUUID[devUUID]
+                else {
+                    transaction.resolveAsFailure(withMessage: "No known device for device transaction \(transaction)")
+                    break
+            }
+            device.triage(transaction: transaction)
         case .requestDevice:
             guard transaction.key.typeComponents.count == 1
             else {
@@ -184,21 +210,6 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
                 self.requestDeviceTransaction = nil
             }
             self.devicePicker.showPicker()
-
-        case .device:
-
-            guard let view = WBDevice.DeviceTransactionView(transaction: transaction) else {
-                transaction.resolveAsFailure(withMessage: "Bad device request")
-                break
-            }
-
-            let devUUID = view.externalDeviceUUID
-            guard let device = self.devicesByExternalUUID[devUUID]
-            else {
-                transaction.resolveAsFailure(withMessage: "No known device for device transaction \(transaction)")
-                break
-            }
-            device.triage(transaction: transaction)
         }
     }
 
