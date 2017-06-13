@@ -261,16 +261,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
             return currReduction
         })
 
-        //todo: determine if uppercase is the standard (bb-b uses uppercase UUID)
-        let servicesCBUUIDq: [CBUUID?] = services.map {
-            servStr -> CBUUID? in
-            guard let uuid = UUID(uuidString: servStr.uppercased()) else {
-                return nil
-            }
-            return CBUUID(nsuuid: uuid)
-        }
-
-        let servicesCBUUID = servicesCBUUIDq.filter{$0 != nil}.map{$0!}
+        let servicesCBUUID = self._convertServicesListToCBUUID(services)
 
         if (self.debug) {
             NSLog("Scanning for peripherals... (services: \(servicesCBUUID))")
@@ -297,11 +288,24 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         self.devicePicker.updatePicker()
     }
 
-    func _peripheral(_ peripheral: CBPeripheral, isIncludedBy filters: [[String: AnyObject]]) -> Bool {
+    private func _convertServicesListToCBUUID(_ services: [String]) -> [CBUUID] {
+        return services.map {
+            servStr -> CBUUID? in
+            guard let uuid = UUID(uuidString: servStr.uppercased()) else {
+                return nil
+            }
+            return CBUUID(nsuuid: uuid)
+            }.filter{$0 != nil}.map{$0!};
+    }
+
+    private func _peripheral(_ peripheral: CBPeripheral, isIncludedBy filters: [[String: AnyObject]]) -> Bool {
         for filter in filters {
             if let pname = peripheral.name {
                 if let namePrefix = filter["namePrefix"] as? String {
                     if pname.hasPrefix(namePrefix) { return true }
+                }
+                if let name = filter["name"] as? String {
+                    if pname == name { return true }
                 }
             }
         }

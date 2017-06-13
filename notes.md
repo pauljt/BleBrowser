@@ -103,6 +103,7 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 ## Version 1.1.2
 
 1. Fix allowing selection of any devices using acceptAllDevices flag.
+2. Fix allowing selection of devices using the "name" filter flag.
 
 ## Version 1.2
 
