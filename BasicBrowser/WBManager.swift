@@ -41,12 +41,11 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     /*! @abstract The outstanding request for a device from the web page, if one is outstanding. Ony one may be outstanding at any one time and should be policed by a modal dialog box. TODO: how modal is the current solution?
      */
     var requestDeviceTransaction: WBTransaction? = nil
-    var discoveredDevicesByInternalUUID = [UUID: WBDevice]()
 
     /*! @abstract Filters in use on the current device request transaction.  If nil, that means we are accepting all devices.
      */
     var filters: [[String: AnyObject]]? = nil
-    var pickerNamesIds = [(name: String, id: UUID)]()
+    var pickerDevices = [WBDevice]()
 
     // MARK: - Constructors / destructors
     override init() {
@@ -80,11 +79,13 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
             return
         }
         
-        self.discoveredDevicesByInternalUUID[peripheral.identifier] = WBDevice(
+        let device = WBDevice(
             peripheral: peripheral, advertisementData: advertisementData,
             RSSI: RSSI, manager: self)
-
-        self.updatePickerData()
+        if !self.pickerDevices.contains(where: {$0 == device}) {
+            self.pickerDevices.append(device)
+            self.updatePickerData()
+        }
     }
     
     public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -115,12 +116,12 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     // MARK: - PopUpPickerViewDelegate
     public var numberOfItems: Int {
         get {
-            return self.discoveredDevicesByInternalUUID.count
+            return self.pickerDevices.count
         }
     }
 
     public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return pickerNamesIds[row].name
+        return self._pv(pickerView, titleForRow: row, forComponent: component)
     }
     
     public func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int]) {
@@ -128,15 +129,14 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         guard
             numbers.count > 0,
             let index = Optional(numbers[0]),
-            self.pickerNamesIds.count > index,
-            let deviceId = Optional(self.pickerNamesIds[index].id),
-            let device = self.discoveredDevicesByInternalUUID[deviceId]
+            self.pickerDevices.count > index
         else {
             NSLog("Invalid device selection \(numbers), try again")
             self.devicePicker.showPicker()
             return
         }
 
+        let device = self.pickerDevices[index]
         device.view = self.requestDeviceTransaction?.webView
         self.requestDeviceTransaction?.resolveAsSuccess(withObject: device)
         self.deviceWasSelected(device)
@@ -145,7 +145,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     public func pickerViewCancelled(_ pickerView: UIPickerView) {
         NSLog("User cancelled device selection.")
         self.requestDeviceTransaction?.resolveAsFailure(withMessage: "User cancelled")
-        self.discoveredDevicesByInternalUUID = [:]
+        self.pickerDevices = []
         self.updatePickerData()
     }
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -153,7 +153,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     }
 
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.pickerNamesIds.count
+        return self.pickerDevices.count
     }
     
     // MARK: - Private
@@ -231,22 +231,23 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         self.requestDeviceTransaction?.abandon()
         self.requestDeviceTransaction = nil
         // the external and internal devices are the same, but tidier to do this in one loop; calling clearState on a device twice is OK.
-        for var devMap in [self.devicesByExternalUUID, self.devicesByInternalUUID, self.discoveredDevicesByInternalUUID] {
+        for var devMap in [self.devicesByExternalUUID, self.devicesByInternalUUID] {
             for (_, device) in devMap {
                 device.clearState()
             }
             devMap.removeAll()
         }
+        self.pickerDevices = []
     }
 
     private func deviceWasSelected(_ device: WBDevice) {
         // TODO: think about whether overwriting any existing device is an issue.
         self.devicesByExternalUUID[device.deviceId] = device;
-        self.devicesByInternalUUID[device.peripheral.identifier] = device;
+        self.devicesByInternalUUID[device.internalUUID] = device;
     }
 
     func scanForAllPeripherals() {
-        self.discoveredDevicesByInternalUUID.removeAll()
+        self.pickerDevices.removeAll()
         self.filters = nil
         centralManager.scanForPeripherals(withServices: nil, options: nil)
     }
@@ -267,7 +268,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
             NSLog("Scanning for peripherals... (services: \(servicesCBUUID))")
         }
         
-        self.discoveredDevicesByInternalUUID.removeAll();
+        self.pickerDevices = [];
         self.filters = filters
         centralManager.scanForPeripherals(withServices: servicesCBUUID, options: nil)
     }
@@ -275,16 +276,26 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         if self.centralManager.state == .poweredOn {
             self.centralManager.stopScan()
         }
-        self.discoveredDevicesByInternalUUID.removeAll()
+        self.pickerDevices.removeAll()
     }
     
     func updatePickerData(){
-        self.pickerNamesIds.removeAll()
-        for (id, device) in self.discoveredDevicesByInternalUUID {
-            self.pickerNamesIds.append(
-                (name: device.peripheral.name ?? "Unknown", id: id))
-        }
-        self.pickerNamesIds.sort(by: {$0.name < $1.name})
+        self.pickerDevices.sort(by: {
+            if $0.name != nil && $1.name == nil {
+                // $1 is "bigger" in that its name is nil
+                return true
+            }
+            // cannot be sorting ids that we haven't discovered
+            if $0.name == $1.name {
+                return $0.internalUUID.uuidString < $1.internalUUID.uuidString
+            }
+            if $0.name == nil {
+                // $0 is "bigger" as it's nil and the other isn't
+                return false
+            }
+            // forced unwrap protected by logic above
+            return $0.name! < $1.name!
+        })
         self.devicePicker.updatePicker()
     }
 
@@ -310,5 +321,16 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
             }
         }
         return false
+    }
+
+    private func _pv(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String {
+
+        let dev = self.pickerDevices[row]
+        let id = dev.internalUUID
+        guard let name = dev.name
+            else {
+                return "(\(id))"
+        }
+        return "\(name) (\(id))"
     }
 }

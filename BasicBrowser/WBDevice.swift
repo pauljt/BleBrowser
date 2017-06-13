@@ -114,6 +114,16 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     var deviceId = UUID() // generated ID used instead of internal iOS name
     var peripheral: CBPeripheral
     var adData: BluetoothAdvertisingData
+    var name: String? {
+        get {
+            return self.peripheral.name
+        }
+    }
+    var internalUUID: UUID {
+        get {
+            return self.peripheral.identifier
+        }
+    }
 
     weak var manager: WBManager?
 
@@ -127,13 +137,16 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     var getCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
     var readCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
 
-    // MARK: - Constructor
+    // MARK: - Constructor and equality
     init(peripheral: CBPeripheral, advertisementData: [String: Any] = [:], RSSI: NSNumber = 0, manager: WBManager) {
         self.peripheral = peripheral
         self.adData = BluetoothAdvertisingData(advertisementData:advertisementData,RSSI: RSSI)
         self.manager = manager
         super.init()
         self.peripheral.delegate = self
+    }
+    static func ==(left: WBDevice, right: WBDevice) -> Bool {
+        return left.peripheral == right.peripheral
     }
 
     // MARK: - API
