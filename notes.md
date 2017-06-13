@@ -64,7 +64,6 @@ WKFrameInfo
 ## Future enhancements
 
 1. Console window to make it easier to debug on the device.
-2. display address and name of device in selector for situation where two devices have the same name.
 3. full screen option
 
 
@@ -104,6 +103,7 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 
 1. Fix allowing selection of any devices using acceptAllDevices flag.
 2. Fix allowing selection of devices using the "name" filter flag.
+2. display address and name of device in picker view.
 
 ## Version 1.2
 
