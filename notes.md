@@ -61,6 +61,12 @@ WKFrameInfo
 2. handle device.connectGATT
    - got device UUID
 
+## Future enhancements
+
+1. Console window to make it easier to debug on the device.
+2. display address and name of device in selector for situation where two devices have the same name.
+3. full screen option
+
 
 ## Done in 1.0.0
 
@@ -93,6 +99,10 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 2. fix open in a new window link bug
 3. fix base 64 decoding error
 4. add window.alert.
+
+## Version 1.1.2
+
+1. Fix allowing selection of any devices using acceptAllDevices flag.
 
 ## Version 1.2
 

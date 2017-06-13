@@ -43,7 +43,9 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     var requestDeviceTransaction: WBTransaction? = nil
     var discoveredDevicesByInternalUUID = [UUID: WBDevice]()
 
-    var filters = [[String: AnyObject]]()
+    /*! @abstract Filters in use on the current device request transaction.  If nil, that means we are accepting all devices.
+     */
+    var filters: [[String: AnyObject]]? = nil
     var pickerNamesIds = [(name: String, id: UUID)]()
 
     // MARK: - Constructors / destructors
@@ -73,8 +75,8 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
 
-        guard self._peripheralIsIncludedByFilters(peripheral)
-        else {
+        if let filters = self.filters,
+            !self._peripheral(peripheral, isIncludedBy: filters) {
             return
         }
         
@@ -89,7 +91,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         guard
             let device = self.devicesByInternalUUID[peripheral.identifier]
         else {
-            NSLog("Unexpected didConnect notification for \(peripheral.name) \(peripheral.identifier)")
+            NSLog("Unexpected didConnect notification for \(peripheral.name ?? "<no-name>") \(peripheral.identifier)")
             return
         }
         device.didConnect()
@@ -99,7 +101,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         guard
             let device = self.devicesByInternalUUID[peripheral.identifier]
             else {
-                NSLog("Unexpected didDisconnect notification for unknown device \(peripheral.name) \(peripheral.identifier)")
+                NSLog("Unexpected didDisconnect notification for unknown device \(peripheral.name ?? "<no-name>") \(peripheral.identifier)")
                 return
         }
         device.didDisconnect(error: error)
@@ -188,9 +190,14 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
                 transaction.resolveAsFailure(withMessage: "Invalid request type \(transaction.key)")
                 break
             }
-            guard let filters = transaction.messageData["filters"] as? [[String: AnyObject]]
+            let acceptAllDevices = transaction.messageData["acceptAllDevices"] as? Bool ?? false
+
+            let filters = transaction.messageData["filters"] as? [[String: AnyObject]]
+
+            // PROTECT force unwrap see below
+            guard acceptAllDevices || filters != nil
             else {
-                transaction.resolveAsFailure(withMessage: "Bad or no filters passed in data: \(transaction.messageData)")
+                transaction.resolveAsFailure(withMessage: "acceptAllDevices false but no filters passed: \(transaction.messageData)")
                 break
             }
             guard self.requestDeviceTransaction == nil
@@ -200,11 +207,17 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
             }
 
             if self.debug {
-                NSLog("Requesting device with filters \(filters)")
+                NSLog("Requesting device with filters \(filters?.description ?? "nil")")
             }
 
             self.requestDeviceTransaction = transaction
-            self.scanForPeripherals(filters)
+            if acceptAllDevices {
+                self.scanForAllPeripherals()
+            }
+            else {
+                // force unwrap, but protected by guard above marked PROTECT
+                self.scanForPeripherals(with: filters!)
+            }
             transaction.addCompletionHandler {_, _ in
                 self.stopScanForPeripherals()
                 self.requestDeviceTransaction = nil
@@ -232,7 +245,13 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         self.devicesByInternalUUID[device.peripheral.identifier] = device;
     }
 
-    func scanForPeripherals(_ filters:[[String: AnyObject]]) {
+    func scanForAllPeripherals() {
+        self.discoveredDevicesByInternalUUID.removeAll()
+        self.filters = nil
+        centralManager.scanForPeripherals(withServices: nil, options: nil)
+    }
+
+    func scanForPeripherals(with filters:[[String: AnyObject]]) {
 
         let services = filters.reduce([String](), {
             (currReduction, nextValue) in
@@ -278,8 +297,8 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         self.devicePicker.updatePicker()
     }
 
-    func _peripheralIsIncludedByFilters(_ peripheral: CBPeripheral) -> Bool {
-        for filter in self.filters {
+    func _peripheral(_ peripheral: CBPeripheral, isIncludedBy filters: [[String: AnyObject]]) -> Bool {
+        for filter in filters {
             if let pname = peripheral.name {
                 if let namePrefix = filter["namePrefix"] as? String {
                     if pname.hasPrefix(namePrefix) { return true }

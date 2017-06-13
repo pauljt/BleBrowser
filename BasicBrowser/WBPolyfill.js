@@ -624,7 +624,7 @@
             if (filters && filters.length > 0) {
                 throw new TypeError("acceptAllDevices was true but filters was not empty");
             }
-            return native.sendMessage("requestDevice", {data: {filters: []}})
+            return native.sendMessage("requestDevice", {data: {acceptAllDevices: true}})
                 .then(function (device) {
                     return new BluetoothDevice(device);
                 });

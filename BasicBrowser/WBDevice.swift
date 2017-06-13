@@ -319,7 +319,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 break
             }
 
-            NSLog("Writing value \(String(data: view.data, encoding: String.Encoding.utf8)) to peripheral")
+            NSLog("Writing value \(String(data: view.data, encoding: String.Encoding.utf8) ?? "<bad data>") to peripheral")
             self.peripheral.writeValue(view.data, for: char, type: CBCharacteristicWriteType.withoutResponse)
             transaction.resolveAsSuccess()
 
@@ -334,7 +334,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 view.resolveUnknownCharacteristic()
                 break
             }
-            NSLog("Starting notifications for characteristic \(view.characteristicUUID.uuidString) on device \(self.peripheral.name)")
+            NSLog("Starting notifications for characteristic \(view.characteristicUUID.uuidString) on device \(self.peripheral.name ?? "<no-name>")")
 
             self.peripheral.setNotifyValue(true, for: char)
             transaction.resolveAsSuccess()
@@ -406,9 +406,9 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
     open func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         if let err = error {
-            NSLog("Error \(err) adding notifications to device \(peripheral.name) for characteristic \(characteristic.uuid.uuidString)")
+            NSLog("Error \(err) adding notifications to device \(peripheral.name ?? "<no-name>") for characteristic \(characteristic.uuid.uuidString)")
         } else {
-            NSLog("Notifications enabled on device \(peripheral.name) for characteristic \(characteristic.uuid.uuidString)")
+            NSLog("Notifications enabled on device \(peripheral.name ?? "<no-name>") for characteristic \(characteristic.uuid.uuidString)")
         }
     }
 
@@ -500,7 +500,7 @@ class BluetoothAdvertisingData{
         let data = advertisementData[CBAdvertisementDataManufacturerDataKey]
         self.manufacturerData = ""
         if data != nil{
-            if let dataString = NSString(data: data as! Data, encoding: String.Encoding.utf8.rawValue) as? String {
+            if let dataString = NSString(data: data as! Data, encoding: String.Encoding.utf8.rawValue) as String? {
                 self.manufacturerData = dataString
             } else {
                 print("Error parsing advertisement data: not a valid UTF-8 sequence")
