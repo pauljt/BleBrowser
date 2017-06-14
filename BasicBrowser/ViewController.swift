@@ -198,7 +198,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         case "canGoForward":
             self.goForwardButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
         default:
-            NSLog("Unexpected change observed by ViewController: \(keyPath)")
+            NSLog("Unexpected change observed by ViewController: \(defKeyPath)")
         }
     }
 

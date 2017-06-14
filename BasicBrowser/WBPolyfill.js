@@ -624,7 +624,7 @@
             if (filters && filters.length > 0) {
                 throw new TypeError("acceptAllDevices was true but filters was not empty");
             }
-            return native.sendMessage("requestDevice", {data: {filters: []}})
+            return native.sendMessage("requestDevice", {data: {acceptAllDevices: true}})
                 .then(function (device) {
                     return new BluetoothDevice(device);
                 });
@@ -636,12 +636,14 @@
                 filter.services = [];
             }
             if (filter.services.length > 0 ||
-                    (filter.namePrefix !== undefined && filter.namePrefix.length > 0)) {
+                    (filter.namePrefix !== undefined && filter.namePrefix.length > 0) ||
+                    (filter.name !== undefined && filter.name.length > 0)) {
                 hasAtLeastOneFilter = true;
             }
             return {
                 services: filter.services.map(window.BluetoothUUID.getService),
-                namePrefix: filter.namePrefix
+                namePrefix: filter.namePrefix,
+                name: filter.name
             };
         });
         if (!hasAtLeastOneFilter) {
