@@ -770,13 +770,13 @@
         receiveDeviceDisconnectEvent: function (deviceId) {
             console.log("<-- device disconnect event", deviceId);
             let devices = native.devicesBeingNotified[deviceId];
-            if (devices === undefined || devices.length === 0) {
+            if (devices !== undefined) {
                 console.log("Device not registered for notifications");
-                return;
+                devices.forEach(function (device) {
+                    device.handleSpontaneousDisconnectEvent();
+                });
             }
-            devices.forEach(function (device) {
-                device.handleSpontaneousDisconnectEvent();
-            });
+            native.characteristicsBeingNotified[deviceId] = undefined;
         },
         // {deviceUUID: {characteristicUUID: BluetoothRemoteGATTCharacteristic}}
         characteristicsBeingNotified: {},
