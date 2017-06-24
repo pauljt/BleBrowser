@@ -4,7 +4,7 @@
 /*global
         atob, Event, window
 */
-//  Copyright 2016-2017 Paul Theriault and David Park. All rights reserved.
+//  Copyright 2016-2017 Paul Theriault and David Park. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -737,6 +737,7 @@
                 console.log("Response for unknown callbackID", callbackID);
             }
         },
+        // {deviceId: BluetoothDevice}
         devicesBeingNotified: {},
         registerDeviceForNotifications: function (device) {
             let did = device.id;
@@ -777,31 +778,40 @@
                 device.handleSpontaneousDisconnectEvent();
             });
         },
+        // {deviceUUID: {characteristicUUID: BluetoothRemoteGATTCharacteristic}}
         characteristicsBeingNotified: {},
         registerCharacteristicForNotifications: function (characteristic) {
+
+            let did = characteristic.service.device.id;
             let cid = characteristic.uuid;
-            console.log("Registering char UUID", cid);
-            if (native.characteristicsBeingNotified[cid] === undefined) {
-                native.devicesBeingNotified[cid] = [];
+            console.log("Registering char UUID " + cid + " on device " + did);
+
+            if (native.characteristicsBeingNotified[did] === undefined) {
+                native.characteristicsBeingNotified[did] = {};
             }
-            native.devicesBeingNotified[cid].push(characteristic);
+            let chars = native.characteristicsBeingNotified[did];
+            chars[cid] = characteristic;
         },
-        receiveCharacteristicValueNotification: function (characteristicId, d64) {
-            let chars = native.devicesBeingNotified[characteristicId];
-            console.log("<-- char val notification", characteristicId, d64);
-            if (!chars) {
+        receiveCharacteristicValueNotification: function (
+            deviceId,
+            characteristicId,
+            d64
+        ) {
+            let chars = native.characteristicsBeingNotified[deviceId];
+            let char = chars !== undefined
+                ? chars[characteristicId]
+                : undefined;
+            if (char === undefined) {
                 console.log(
-                    "Characteristic notification ignored for unknown characteristic",
-                    characteristicId
+                    'Unexpected characteristic value notification for device ' +
+                    deviceId + ' and characteristic ' + characteristicId
                 );
-                console.log('Know characteristics', Object.keys(native.devicesBeingNotified));
                 return;
             }
+            console.log("<-- char val notification", characteristicId, d64);
             let dataView = str64todv(d64);
-            chars.forEach(function (char) {
-                char.value = dataView;
-                char.dispatchEvent(new BluetoothEvent("characteristicvaluechanged", char));
-            });
+            char.value = dataView;
+            char.dispatchEvent(new BluetoothEvent("characteristicvaluechanged", char));
         },
         // defeat the linter's "out of scope" warnings for not yet defined functions
         BluetoothRemoteGATTCharacteristic: BluetoothRemoteGATTCharacteristic,

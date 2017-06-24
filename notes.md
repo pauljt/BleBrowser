@@ -119,6 +119,7 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 3. in BluetoothGATTService.getCharacteristic check we got the correct char UUID back.
 4. Going back doesn't refresh the page, but state has been lost meaning there's a lack of sync between page and native
 5. Don't handle filters properly, if you specify `[{namePrefix: "puck", services: ["xyz"]}, {namePrefix: "other", services: ["abc"]}]` this will offer a device with name `"puck"` and service `"abc"`.
+6. Calling `getCharacteristic()` more than once on a service not well defined... i.e. we should return the same object that we created before if we have it, but we probably create a new one... and this will cause problems if we've registered for notifications on it already.
 
 ## Large limitations
 
