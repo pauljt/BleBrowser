@@ -37,6 +37,11 @@ struct WBBookmark {
             ]
         }
     }
+    var assumedHTTPSURLPath: String {
+        get {
+            return self.url.absoluteString.replacingOccurrences(of: "https://", with: "")
+        }
+    }
 
     init (title: String, url: URL) {
         self.title = title

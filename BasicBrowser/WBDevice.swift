@@ -429,13 +429,12 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
         if self.readCharacteristicTM.transactions.count > 0 {
             // We have read transactions outstanding, which means that this is a response after a read request, so complete those transactions.
-            self.readCharacteristicTM.apply(
-                {
-                    if let err = error {
-                        $0.resolveAsFailure(withMessage: "Error reading characteristic: \(err.localizedDescription)")
-                        return
-                    }
-                    $0.resolveAsSuccess(withObject: characteristic.value!)
+            self.readCharacteristicTM.apply({
+                if let err = error {
+                    $0.resolveAsFailure(withMessage: "Error reading characteristic: \(err.localizedDescription)")
+                    return
+                }
+                $0.resolveAsSuccess(withObject: characteristic.value!)
             },
                 iff: {
                     let cview = CharacteristicView(transaction: $0)!
@@ -447,6 +446,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             if let wv = self.view {
                 wv.evaluateJavaScript(
                     "receiveCharacteristicValueNotification(" +
+                    "\(self.deviceId.uuidString.jsonify()), " +
                     "\(characteristic.uuid.uuidString.lowercased().jsonify()), " +
                     "\(characteristic.value!.jsonify())" +
                     ")")

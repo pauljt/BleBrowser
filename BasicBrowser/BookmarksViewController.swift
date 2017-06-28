@@ -52,7 +52,7 @@ class BookmarksViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookmark", for: indexPath)
 
         cell.textLabel?.text = self.bookmarksManager.bookmarks[indexPath.item].title
-        cell.detailTextLabel?.text = self.bookmarksManager.bookmarks[indexPath.item].url.absoluteString
+        cell.detailTextLabel?.text = self.bookmarksManager.bookmarks[indexPath.item].assumedHTTPSURLPath
 
         return cell
     }

@@ -92,18 +92,23 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 
 1. bookmarks
 
-## Version 1.1.1
+### Version 1.1.1
 
 1. save last location and restore on relaunch, rather than just going to the same place all the time.
 2. fix open in a new window link bug
 3. fix base 64 decoding error
 4. add window.alert.
 
-## Version 1.1.2
+### Version 1.1.2
 
 1. Fix allowing selection of any devices using acceptAllDevices flag.
 2. Fix allowing selection of devices using the "name" filter flag.
 2. display address and name of device in picker view.
+
+### Version 1.1.3
+
+1. Address multiple pucks without conflicts
+2. assume https url scheme in bookmarks window
 
 ## Version 1.2
 
