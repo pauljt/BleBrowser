@@ -52,6 +52,7 @@
 		5AC47CA51E2BE57000BCAE82 /* Tick@480.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tick@480.png"; sourceTree = "<group>"; };
 		5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
+		5AFACFEE1F03FB0B00A310D1 /* Info-allowing-http.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-allowing-http.plist"; sourceTree = "<group>"; };
 		BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = WBPolyfill.js; sourceTree = "<group>"; tabWidth = 2; };
 		BB303DF21C42070C00FCAF24 /* WBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBManager.swift; sourceTree = "<group>"; };
 		BB4DBE641C97F577000D2C35 /* WBTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBTransaction.swift; sourceTree = "<group>"; };
@@ -130,6 +131,7 @@
 				E44C185F1A36203E00734F8B /* Main.storyboard */,
 				5AC47CA51E2BE57000BCAE82 /* Tick@480.png */,
 				E44C185A1A36203E00734F8B /* Info.plist */,
+				5AFACFEE1F03FB0B00A310D1 /* Info-allowing-http.plist */,
 				E44C18621A36203E00734F8B /* Images.xcassets */,
 			);
 			name = BleBrowser;

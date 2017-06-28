@@ -778,7 +778,7 @@
             }
             native.characteristicsBeingNotified[deviceId] = undefined;
         },
-        // {deviceUUID: {characteristicUUID: BluetoothRemoteGATTCharacteristic}}
+        // {deviceUUID: {characteristicUUID: [BluetoothRemoteGATTCharacteristic]}}
         characteristicsBeingNotified: {},
         registerCharacteristicForNotifications: function (characteristic) {
 
@@ -790,18 +790,21 @@
                 native.characteristicsBeingNotified[did] = {};
             }
             let chars = native.characteristicsBeingNotified[did];
-            chars[cid] = characteristic;
+            if (chars[cid] === undefined) {
+                chars[cid] = [];
+            }
+            chars[cid].push(characteristic);
         },
         receiveCharacteristicValueNotification: function (
             deviceId,
             characteristicId,
             d64
         ) {
-            let chars = native.characteristicsBeingNotified[deviceId];
-            let char = chars !== undefined
-                ? chars[characteristicId]
+            let devChars = native.characteristicsBeingNotified[deviceId];
+            let chars = devChars !== undefined
+                ? devChars[characteristicId]
                 : undefined;
-            if (char === undefined) {
+            if (chars === undefined) {
                 console.log(
                     'Unexpected characteristic value notification for device ' +
                     deviceId + ' and characteristic ' + characteristicId
@@ -809,9 +812,11 @@
                 return;
             }
             console.log("<-- char val notification", characteristicId, d64);
-            let dataView = str64todv(d64);
-            char.value = dataView;
-            char.dispatchEvent(new BluetoothEvent("characteristicvaluechanged", char));
+            chars.forEach(function (char) {
+                let dataView = str64todv(d64);
+                char.value = dataView;
+                char.dispatchEvent(new BluetoothEvent("characteristicvaluechanged", char));
+            });
         },
         // defeat the linter's "out of scope" warnings for not yet defined functions
         BluetoothRemoteGATTCharacteristic: BluetoothRemoteGATTCharacteristic,
