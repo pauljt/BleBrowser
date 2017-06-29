@@ -121,6 +121,8 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     }
 
     public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        // dummy response for making screen shots from the simulator
+        // return row == 0 ? "Puck.js 69c5 (82DF60A5-3C0B..." : "Puck.js c728 (9AB342DA-4C27..."
         return self._pv(pickerView, titleForRow: row, forComponent: component)
     }
     
@@ -153,6 +155,8 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     }
 
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        // dummy response for making screen shots from the simulator
+        // return 2
         return self.pickerDevices.count
     }
     
