@@ -2,7 +2,7 @@
         browser
 */
 /*global
-        atob, Event, window
+        atob, Event, uk, window
 */
 //  Copyright 2016-2017 Paul Theriault and David Park. All rights reserved.
 //
@@ -21,6 +21,8 @@
 
 (function () {
     "use strict";
+
+    let wbutils = uk.co.greenparksoftware.wbutils;
 
     function nslog(message) {
         window.webkit.messageHandlers.logger.postMessage(message);
@@ -616,13 +618,13 @@
     let bluetooth = {};
     bluetooth.requestDevice = function (requestDeviceOptions) {
         if (!requestDeviceOptions) {
-            throw new TypeError("requestDeviceOptions not provided");
+            return Promise.reject(new TypeError("requestDeviceOptions not provided"));
         }
         let acceptAllDevices = requestDeviceOptions.acceptAllDevices;
         let filters = requestDeviceOptions.filters;
         if (acceptAllDevices) {
             if (filters && filters.length > 0) {
-                throw new TypeError("acceptAllDevices was true but filters was not empty");
+                return Promise.reject(new TypeError("acceptAllDevices was true but filters was not empty"));
             }
             return native.sendMessage("requestDevice", {data: {acceptAllDevices: true}})
                 .then(function (device) {
@@ -630,24 +632,13 @@
                 });
         }
 
-        let hasAtLeastOneFilter = false;
-        filters = Array.prototype.map.call(filters, function (filter) {
-            if (!filter.services) {
-                filter.services = [];
-            }
-            if (filter.services.length > 0 ||
-                    (filter.namePrefix !== undefined && filter.namePrefix.length > 0) ||
-                    (filter.name !== undefined && filter.name.length > 0)) {
-                hasAtLeastOneFilter = true;
-            }
-            return {
-                services: filter.services.map(window.BluetoothUUID.getService),
-                namePrefix: filter.namePrefix,
-                name: filter.name
-            };
-        });
-        if (!hasAtLeastOneFilter) {
-            throw new TypeError("Must specify at least one thing to filter on");
+        if (!filters || filters.length === 0) {
+            return Promise.reject(new TypeError('No filters provided and acceptAllDevices not set'));
+        }
+        try {
+            filters = Array.prototype.map.call(filters, wbutils.canonicaliseFilter);
+        } catch (e) {
+            return Promise.reject(e);
         }
         let validatedDeviceOptions = {};
         validatedDeviceOptions.filters = filters;

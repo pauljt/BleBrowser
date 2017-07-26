@@ -83,22 +83,24 @@ open class WBWebView: WKWebView {
         // Add logging script
         userController.add(self.wkLogger, name: "logger")
 
-        // Load polyfill
-        guard let filePath = Bundle(for: WBWebView.self).path(forResource: "WBPolyfill", ofType:"js") else {
-            NSLog("Failed to find polyfill.")
-            return
+        // Load js
+        for jsfilename in ["WBUtils", "WBPolyfill"] {
+            guard let filePath = Bundle(for: WBWebView.self).path(forResource: jsfilename, ofType:"js") else {
+                NSLog("Failed to find polyfill \(jsfilename)")
+                return
+            }
+            var polyfillScriptContent: String
+            do {
+                polyfillScriptContent = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
+            } catch _ {
+                NSLog("Error loading polyfil")
+                return
+            }
+            let userScript = WKUserScript(
+                source: polyfillScriptContent, injectionTime: .atDocumentStart,
+                forMainFrameOnly: false)
+            userController.addUserScript(userScript)
         }
-        var polyfillScriptContent: String
-        do {
-            polyfillScriptContent = try NSString(contentsOfFile: filePath, encoding: String.Encoding.utf8.rawValue) as String
-        } catch _ {
-            NSLog("Error loading polyfil")
-            return
-        }
-        let userScript = WKUserScript(
-            source: polyfillScriptContent, injectionTime: .atDocumentStart,
-            forMainFrameOnly: false)
-        userController.addUserScript(userScript)
 
         // WKWebView static config
         self.translatesAutoresizingMaskIntoConstraints = false
