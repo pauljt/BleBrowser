@@ -147,8 +147,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     public func pickerViewCancelled(_ pickerView: UIPickerView) {
         NSLog("User cancelled device selection.")
         self.requestDeviceTransaction?.resolveAsFailure(withMessage: "User cancelled")
-        self.pickerDevices = []
-        self.updatePickerData()
+        self._clearPickerView()
     }
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -241,7 +240,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
             }
             devMap.removeAll()
         }
-        self.pickerDevices = []
+        self._clearPickerView()
     }
 
     private func deviceWasSelected(_ device: WBDevice) {
@@ -251,7 +250,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     }
 
     func scanForAllPeripherals() {
-        self.pickerDevices.removeAll()
+        self._clearPickerView()
         self.filters = nil
         centralManager.scanForPeripherals(withServices: nil, options: nil)
     }
@@ -272,7 +271,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
             NSLog("Scanning for peripherals... (services: \(servicesCBUUID))")
         }
         
-        self.pickerDevices = [];
+        self._clearPickerView();
         self.filters = filters
         centralManager.scanForPeripherals(withServices: servicesCBUUID, options: nil)
     }
@@ -280,7 +279,8 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         if self.centralManager.state == .poweredOn {
             self.centralManager.stopScan()
         }
-        self.pickerDevices.removeAll()
+        self._clearPickerView()
+
     }
     
     func updatePickerData(){
@@ -344,5 +344,9 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
                 return "(\(id))"
         }
         return "\(name) (\(id))"
+    }
+    private func _clearPickerView() {
+        self.pickerDevices = []
+        self.updatePickerData()
     }
 }
