@@ -110,6 +110,11 @@ a. disable / enable forward / back buttons depending on whether there is somethi
 1. Address multiple pucks without conflicts
 2. assume https url scheme in bookmarks window
 
+### Version 1.1.4
+
+1. Filters with no names or namePrefixes should work.
+2. ?? Throw requestDevice failure exceptions in the promise not directly.
+
 ## Version 1.2
 
 1. native logging window

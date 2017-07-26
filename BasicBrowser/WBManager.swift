@@ -315,14 +315,22 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
 
     private func _peripheral(_ peripheral: CBPeripheral, isIncludedBy filters: [[String: AnyObject]]) -> Bool {
         for filter in filters {
-            if let pname = peripheral.name {
-                if let namePrefix = filter["namePrefix"] as? String {
-                    if pname.hasPrefix(namePrefix) { return true }
-                }
-                if let name = filter["name"] as? String {
-                    if pname == name { return true }
+
+            if let name = filter["name"] as? String {
+                guard peripheral.name == name else {
+                    continue
                 }
             }
+            if let namePrefix = filter["namePrefix"] as? String {
+                guard
+                    let pname = peripheral.name,
+                    pname.hasPrefix(namePrefix)
+                else {
+                    continue
+                }
+            }
+            // All the checks passed, don't need to check another filter.
+            return true
         }
         return false
     }
