@@ -53,6 +53,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    func getQueryStringParameter(url: String?, param: String) -> String? {
+        if let url = url, let urlComponents = URLComponents(string: url), let queryItems = (urlComponents.queryItems) {
+            return queryItems.filter({ (item) in item.name == param }).first?.value!
+        }
+        return nil
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        // Called from external link
+        // Expected format webble://?page=<url to open>
+        
+        let pageToOpen = getQueryStringParameter(url: url.absoluteString, param: "page")
+        if(pageToOpen != nil) {
+            let root : UINavigationController = self.window!.rootViewController! as! UINavigationController
+            let master : ViewController = root.topViewController as! ViewController
+            master.loadLocation(pageToOpen!)
+            
+            return true
+        }
+        return false;
+    }
 
 }
 
