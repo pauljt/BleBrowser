@@ -58,12 +58,12 @@ class PopUpPickerView: UIView {
         self.bottomConstraint.constant = 0
         self._animateIntoPlace()
     }
-    func cancelPicker() {
+    @objc func cancelPicker() {
         self.hidePicker()
         self.restoreSelectedRows()
         self.delegate?.pickerViewCancelled?(self.pickerView)
     }
-    func endPicker() {
+    @objc func endPicker() {
         self.hidePicker()
         self.delegate?.pickerView?(self.pickerView, didSelect: self.getSelectedRows())
     }
