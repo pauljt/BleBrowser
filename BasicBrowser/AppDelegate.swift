@@ -63,11 +63,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return nil
     }
     
-    
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
         // Called from external link
         // Expected format webble://?page=<url to open>
-        
+
         let pageToOpen = getQueryStringParameter(url: url.absoluteString, param: "page")
         if(pageToOpen != nil) {
             if(mainViewLoaded == true) {

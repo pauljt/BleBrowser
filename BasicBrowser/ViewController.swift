@@ -149,8 +149,15 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             location = "https://" + location
         }
         locationTextField.text = location
-        self.webView.load(URLRequest(url: URL(string: location)!))
-        
+        guard let url = URL(string: location) else {
+            NSLog("Failed to convert location \(location) into a URL")
+            return
+        }
+        loadURL(url)
+    }
+
+    func loadURL(_ url: URL) {
+        self.webView.load(URLRequest(url: url))
     }
 
     // MARK: - WKNavigationDelegate
