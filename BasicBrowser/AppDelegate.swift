@@ -20,14 +20,20 @@
 
 import UIKit
 
-var launchLocationUrlString = ""
-var mainViewLoaded = false;
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    var viewController: ViewController? {
+        get {
+            guard let nc = self.window?.rootViewController as? UINavigationController,
+                let vc = nc.topViewController as? ViewController else {
+                    return nil
+            }
+            return vc
+        }
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -55,33 +61,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-    func getQueryStringParameter(url: String?, param: String) -> String? {
-        if let url = url, let urlComponents = URLComponents(string: url), let queryItems = (urlComponents.queryItems) {
-            return queryItems.filter({ (item) in item.name == param }).first?.value!
-        }
-        return nil
-    }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
-        // Called from external link
-        // Expected format webble://?page=<url to open>
-
-        let pageToOpen = getQueryStringParameter(url: url.absoluteString, param: "page")
-        if(pageToOpen != nil) {
-            if(mainViewLoaded == true) {
-                //safe to use main view's loadLocation function
-                let root : UINavigationController = self.window!.rootViewController! as! UINavigationController
-                let master : ViewController = root.topViewController as! ViewController
-                master.loadLocation(pageToOpen!)
-            }
-            else {
-                //Set global variable that will be checked and used in maing view controlller
-                launchLocationUrlString = pageToOpen!
-            }
-            return true
+        // Called from external link with scheme webble
+        guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+                NSLog("System not able to open url \(url) (may be able to try again)")
+                return false
         }
-        return false;
+
+        urlComponents.scheme = "https"
+        guard let httpsURL = urlComponents.url else {
+            NSLog("URL \(url) not convertible into https url")
+            return false
+        }
+
+        guard let vc = viewController else {
+            NSLog("Error opening URL \(url): viewController not instantiated")
+            return false
+        }
+        vc.loadURL(httpsURL)
+        return true
     }
 }
 

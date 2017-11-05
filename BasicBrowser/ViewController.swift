@@ -35,6 +35,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var goForwardButton: UIBarButtonItem!
     @IBOutlet var refreshButton: UIBarButtonItem!
 
+    var initialURL: URL?
+
     var bookmarksManager = BookmarksManager(
         userDefaults: UserDefaults.standard, key: prefKeys.bookmarks.rawValue)
     @IBOutlet var webView: WBWebView!
@@ -110,18 +112,19 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.loadPreferences()
 
         // Load last location
-        var lastLocation: String
-        if(!launchLocationUrlString.isEmpty) {
-            lastLocation = launchLocationUrlString
-            launchLocationUrlString = ""
+        if let url = initialURL {
+            loadURL(url)
         }
-        else if let prefLoc = UserDefaults.standard.value(forKey: ViewController.prefKeys.lastLocation.rawValue) as? String {
+        else {
+            var lastLocation: String
+            if let prefLoc = UserDefaults.standard.value(forKey: ViewController.prefKeys.lastLocation.rawValue) as? String {
             lastLocation = prefLoc
-        } else {
-            let svers = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-            lastLocation = "https://www.greenparksoftware.co.uk/projects/webble/\(svers)"
+            } else {
+                let svers = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+                lastLocation = "https://www.greenparksoftware.co.uk/projects/webble/\(svers)"
+            }
+            self.loadLocation(lastLocation)
         }
-        self.loadLocation(lastLocation)
 
         self.goBackButton.target = self.webView
         self.goBackButton.action = #selector(self.webView.goBack)
@@ -129,7 +132,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.goForwardButton.action = #selector(self.webView.goForward)
         self.refreshButton.target = self
         self.refreshButton.action = #selector(self.reload)
-        mainViewLoaded = true;
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -148,7 +150,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         if !location.hasPrefix("http://") && !location.hasPrefix("https://") {
             location = "https://" + location
         }
-        locationTextField.text = location
         guard let url = URL(string: location) else {
             NSLog("Failed to convert location \(location) into a URL")
             return
@@ -157,6 +158,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
 
     func loadURL(_ url: URL) {
+        guard self.isViewLoaded else {
+            self.initialURL = url
+            return
+        }
+        locationTextField.text = url.absoluteString
         self.webView.load(URLRequest(url: url))
     }
 
