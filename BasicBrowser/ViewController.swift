@@ -168,6 +168,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        NSLog("Did start provisional nav")
         if let man = self.wbManager {
             man.clearState()
         }
@@ -175,6 +176,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        NSLog("Navigation didFinish")
+        self.webView.enableBluetoothInView()
         if let urlString = webView.url?.absoluteString,
             urlString != "about:blank" {
             self.locationTextField.text = urlString

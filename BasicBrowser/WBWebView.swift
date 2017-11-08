@@ -106,4 +106,15 @@ open class WBWebView: WKWebView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.allowsBackForwardNavigationGestures = true
     }
+
+    open func enableBluetoothInView() {
+        self.evaluateJavaScript(
+            "window.iOSNativeAPI.enableBluetooth()",
+            completionHandler: { _, error in
+                if let error_ = error {
+                    NSLog("Error enabling bluetooth in view: \(error_)")
+                }
+            }
+        )
+    }
 }

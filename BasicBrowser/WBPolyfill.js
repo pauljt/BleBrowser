@@ -555,6 +555,10 @@
                 char.dispatchEvent(new BluetoothEvent("characteristicvaluechanged", char));
             });
         },
+        enableBluetooth: function () {
+            // weirdly this can get overwritten, so add a way to enable it.
+            navigator.bluetooth = bluetooth;
+        },
         // defeat the linter's "out of scope" warnings for not yet defined functions
         BluetoothRemoteGATTCharacteristic: BluetoothRemoteGATTCharacteristic,
         BluetoothRemoteGATTServer: BluetoothRemoteGATTServer,
@@ -565,6 +569,7 @@
     // Exposed interfaces
     window.BluetoothDevice = BluetoothDevice;
     window.BluetoothUUID = BluetoothUUID;
+    window.iOSNativeAPI = native;
     window.receiveDeviceDisconnectEvent = native.receiveDeviceDisconnectEvent;
     window.receiveMessageResponse = native.receiveMessageResponse;
     window.receiveCharacteristicValueNotification = native.receiveCharacteristicValueNotification;
