@@ -399,6 +399,13 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
 
+        if let error_ = error {
+            // speculative avoid crash judging by potential bug
+            // in error as per https://forums.developer.apple.com/thread/84866
+            NSLog("Error discovering characteristics: \(error_)")
+            return
+        }
+
         self.getCharacteristicTM.apply(
             {
                 let cview = CharacteristicView(transaction: $0)!
