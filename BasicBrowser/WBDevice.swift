@@ -179,13 +179,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 /* Don't lower case the deviceId string because we rely on the web page not to touch it. */
                 let commandString = "window.receiveDeviceDisconnectEvent(\(self.deviceId.uuidString.jsonify()));\n"
                 NSLog("--> device disconnect execute js: \"\(commandString)\"")
-                if let wv = self.view {
-                    wv.evaluateJavaScript(commandString, completionHandler: {
-                        _, error in
-                        if let err = error {
-                            NSLog("Error evaluating \(commandString): \(err)")
-                        }})
-                }
+                self.evaluateJavaScript(commandString)
             }
             return
         }
@@ -443,15 +437,12 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
         // If we're doing notifications on the characteristic send them up.
         if characteristic.isNotifying {
-            if let wv = self.view {
-                wv.evaluateJavaScript(
-                    "receiveCharacteristicValueNotification(" +
-                    "\(self.deviceId.uuidString.jsonify()), " +
-                    "\(characteristic.uuid.uuidString.lowercased().jsonify()), " +
-                    "\(characteristic.value!.jsonify())" +
-                    ")")
-
-            }
+            self.evaluateJavaScript(
+                "receiveCharacteristicValueNotification(" +
+                "\(self.deviceId.uuidString.jsonify()), " +
+                "\(characteristic.uuid.uuidString.lowercased().jsonify()), " +
+                "\(characteristic.value!.jsonify())" +
+                ")")
         }
     }
 
@@ -491,6 +482,22 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             }
         }
         return nil
+    }
+
+    private func evaluateJavaScript(_ script: String) {
+        guard let wv = self.view else {
+            NSLog("Can't evaluate javascript as have no webview")
+            return
+        }
+        wv.evaluateJavaScript(
+            script,
+            completionHandler: {
+                _, error in
+                if let err = error {
+                    NSLog("Error evaluating \(script): \(err)")
+                }
+            }
+        )
     }
 }
 

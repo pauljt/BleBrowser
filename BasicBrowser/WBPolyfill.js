@@ -26,12 +26,16 @@
 
     function nslog(message) {
         window.webkit.messageHandlers.logger.postMessage(message);
+        if (window.copyNSLogToConsole) {
+            console.log(message);
+        }
     }
+    window.nslog = nslog;
     nslog("Initialize web bluetooth runtime");
 
     if (navigator.bluetooth) {
         // already exists, don't polyfill
-        console.log('navigator.bluetooth already exists, skipping polyfill');
+        nslog('navigator.bluetooth already exists, skipping polyfill');
         return;
     }
 
@@ -98,7 +102,7 @@
             try {
                 cb.call(this, event);
             } catch (e) {
-                console.log("Exception dispatching to callback " + cb, e);
+                nslog(`Exception dispatching to callback ${cb}: ${e}`);
             }
         });
     };
@@ -148,7 +152,7 @@
 
     BluetoothDevice.prototype = {
         toString: function () {
-            return "BluetoothDevice(" + this.id.slice(0, 10) + ")";
+            return `BluetoothDevice(${this.id.slice(0, 10)})`;
         },
         handleSpontaneousDisconnectEvent: function () {
             // Code references as per
@@ -268,7 +272,7 @@
                 "getCharacteristic",
                 {data: {characteristicUUID: canonicalUUID}}
             ).then(function (CharacteristicJSON) {
-                console.log('Got characteristic', uuid);
+                nslog(`Got characteristic ${uuid}`);
                 return new native.BluetoothRemoteGATTCharacteristic(
                     service,
                     canonicalUUID,
@@ -298,6 +302,7 @@
 
     nslog("Create BluetoothRemoteGATTCharacteristic");
     function BluetoothRemoteGATTCharacteristic(service, uuid, properties) {
+        nslog(`New BluetoothRemoteGATTCharacteristic ${uuid}`);
         let roProps = {
             service: service,
             properties: properties,
@@ -368,13 +373,15 @@
     };
 
     function canonicalUUID(uuidAlias) {
+        // https://www.bluetooth.com/specifications/assigned-numbers/service-discovery
         uuidAlias >>>= 0;  // Make sure the number is positive and 32 bits.
         let strAlias = "0000000" + uuidAlias.toString(16);
         strAlias = strAlias.substr(-8);
         return strAlias + "-0000-1000-8000-00805f9b34fb";
     }
 
-    let uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const shortUUIDRegex = /^[0-9a-f]{4}([0-9a-f]{4})?$/i;
 
     nslog("Create BluetoothUUID");
     let BluetoothUUID = {};
@@ -599,14 +606,21 @@
         return function (name) {
             if (typeof name === "number") {
                 return canonicalUUID(name);
-            } else if (uuidRegex.test(name.toLowerCase())) {
+            }
+            if (uuidRegex.test(name)) {
                 //note native IOS bridges converts to uppercase since IOS seems to demand this.
                 return name.toLowerCase();
-            } else if (table.hasOwnProperty(name)) {
-                return table[name];
-            } else {
-                throw new Error('SyntaxError: "' + name + '" is not a known ' + tableName + ' name.');
             }
+            if (table.hasOwnProperty(name)) {
+                return table[name];
+            }
+            if (shortUUIDRegex.test(name)) {
+                // this is not in the spec,
+                // https://webbluetoothcg.github.io/web-bluetooth/#resolveuuidname
+                // but iOS sends us short UUIDs and so we need to handle it.
+                return canonicalUUID(parseInt(name, 16));
+            }
+            throw new TypeError(`${name} is not a known ${tableName} name.`);
         };
     }
 
@@ -674,7 +688,7 @@
         cancelTransaction: function (tid) {
             let trans = this.callbacks[tid];
             if (!trans) {
-                console.log("No transaction " + tid + " outstanding to fail.");
+                nslog(`No transaction ${tid} outstanding to fail.`);
                 return;
             }
             delete this.callbacks[tid];
@@ -704,7 +718,7 @@
                 callbackID: callbackID
             };
 
-            console.log("--> sending " + type, JSON.stringify(data));
+            nslog(`--> sending ${type} ${JSON.stringify(data)}`);
             window.webkit.messageHandlers.bluetooth.postMessage(message);
 
             this.messageCount += 1;
@@ -720,15 +734,15 @@
             });
         },
         receiveMessageResponse: function (success, resultString, callbackID) {
-            console.log("<-- receiving response", success, resultString, callbackID);
+            nslog(`<-- receiving response ${success} ${resultString} ${callbackID}`);
 
             if (callbackID !== undefined && native.callbacks[callbackID]) {
                 native.callbacks[callbackID](success, resultString);
             } else {
-                console.log("Response for unknown callbackID", callbackID);
+                nslog(`Response for unknown callbackID ${callbackID}`);
             }
         },
-        // {deviceId: BluetoothDevice}
+        // of shape {deviceId: BluetoothDevice}
         devicesBeingNotified: {},
         registerDeviceForNotifications: function (device) {
             let did = device.id;
@@ -741,7 +755,7 @@
                     throw new Error("Device already registered for notifications");
                 }
             });
-            console.log("Register device " + did + " for notifications");
+            nslog(`Register device ${did} for notifications`);
             devs.push(device);
         },
         unregisterDeviceForNotifications: function (device) {
@@ -759,23 +773,23 @@
             }
         },
         receiveDeviceDisconnectEvent: function (deviceId) {
-            console.log("<-- device disconnect event", deviceId);
+            nslog(`<-- device disconnect event ${deviceId}`);
             let devices = native.devicesBeingNotified[deviceId];
             if (devices !== undefined) {
-                console.log("Device not registered for notifications");
+                nslog(`Device not registered for notifications`);
                 devices.forEach(function (device) {
                     device.handleSpontaneousDisconnectEvent();
                 });
             }
             native.characteristicsBeingNotified[deviceId] = undefined;
         },
-        // {deviceUUID: {characteristicUUID: [BluetoothRemoteGATTCharacteristic]}}
+        // shape: {deviceUUID: {characteristicUUID: [BluetoothRemoteGATTCharacteristic]}}
         characteristicsBeingNotified: {},
         registerCharacteristicForNotifications: function (characteristic) {
 
             let did = characteristic.service.device.id;
             let cid = characteristic.uuid;
-            console.log("Registering char UUID " + cid + " on device " + did);
+            nslog(`Registering char UUID ${cid} on device ${did}`);
 
             if (native.characteristicsBeingNotified[did] === undefined) {
                 native.characteristicsBeingNotified[did] = {};
@@ -786,23 +800,19 @@
             }
             chars[cid].push(characteristic);
         },
-        receiveCharacteristicValueNotification: function (
-            deviceId,
-            characteristicId,
-            d64
-        ) {
+        receiveCharacteristicValueNotification: function (deviceId, cname, d64) {
+            nslog("receiveCharacteristicValueNotification");
+            const cid = BluetoothUUID.getCharacteristic(cname);
             let devChars = native.characteristicsBeingNotified[deviceId];
-            let chars = devChars !== undefined
-                ? devChars[characteristicId]
-                : undefined;
+            let chars = devChars && devChars[cid];
             if (chars === undefined) {
-                console.log(
-                    'Unexpected characteristic value notification for device ' +
-                    deviceId + ' and characteristic ' + characteristicId
+                nslog(
+                    `Unexpected characteristic value notification for device ` +
+                    `${deviceId} and characteristic ${cid}`,
                 );
                 return;
             }
-            console.log("<-- char val notification", characteristicId, d64);
+            nslog("<-- char val notification", cid, d64);
             chars.forEach(function (char) {
                 let dataView = str64todv(d64);
                 char.value = dataView;

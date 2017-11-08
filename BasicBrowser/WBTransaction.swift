@@ -45,9 +45,10 @@ class WBTransactionManager<K> where K: Hashable {
     func apply(_ function: (WBTransaction) -> Void, iff: ((WBTransaction) -> Bool)? = nil) {
         for (_, vals) in self.transactions {
             for val in vals {
-                if iff == nil || iff!(val) {
-                    function(val)
+                if let iff_ = iff, !iff_(val) {
+                    continue
                 }
+                function(val)
             }
         }
     }
