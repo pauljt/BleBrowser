@@ -158,6 +158,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             }
             ta.removeAll()
         }
+        self.sendDisconnectEvent()
         self.getPrimaryServiceTM.abandonAll()
         self.getCharacteristicTM.abandonAll()
         self.readCharacteristicTM.abandonAll()
@@ -176,10 +177,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 self.disconnectTransactions.forEach {$0.resolveAsFailure(withMessage: "\(err)")}
             }
             else {
-                /* Don't lower case the deviceId string because we rely on the web page not to touch it. */
-                let commandString = "window.receiveDeviceDisconnectEvent(\(self.deviceId.uuidString.jsonify()));\n"
-                NSLog("--> device disconnect execute js: \"\(commandString)\"")
-                self.evaluateJavaScript(commandString)
+                self.sendDisconnectEvent()
             }
             return
         }
@@ -505,6 +503,13 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 }
             }
         )
+    }
+
+    private func sendDisconnectEvent() {
+        /* Don't lower case the deviceId string because we rely on the web page not to touch it. */
+        let commandString = "window.receiveDeviceDisconnectEvent(\(self.deviceId.uuidString.jsonify()));\n"
+        NSLog("--> device disconnect execute js: \"\(commandString)\"")
+        self.evaluateJavaScript(commandString)
     }
 }
 

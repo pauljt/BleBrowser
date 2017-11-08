@@ -230,6 +230,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     }
 
     func clearState() {
+        NSLog("WBManager clearState()")
         self.stopScanForPeripherals()
         self.requestDeviceTransaction?.abandon()
         self.requestDeviceTransaction = nil
