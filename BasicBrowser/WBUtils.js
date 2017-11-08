@@ -37,3 +37,14 @@ uk.co.greenparksoftware.wbutils = {
 
     }
 };
+
+(function () {
+    function nslog(message) {
+        window.webkit.messageHandlers.logger.postMessage(message);
+        if (window.copyNSLogToConsole) {
+            console.log(message);
+        }
+    }
+    window.nslog = nslog;
+})();
+nslog('WBUtils imported');

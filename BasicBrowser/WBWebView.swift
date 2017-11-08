@@ -84,7 +84,7 @@ open class WBWebView: WKWebView {
         userController.add(self.wkLogger, name: "logger")
 
         // Load js
-        for jsfilename in ["WBUtils", "WBPolyfill"] {
+        for jsfilename in ["WBUtils", "WBBluetoothUUID", "WBPolyfill"] {
             guard let filePath = Bundle(for: WBWebView.self).path(forResource: jsfilename, ofType:"js") else {
                 NSLog("Failed to find polyfill \(jsfilename)")
                 return
