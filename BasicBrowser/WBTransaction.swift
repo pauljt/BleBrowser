@@ -34,6 +34,7 @@ class WBTransactionManager<K> where K: Hashable {
         self.transactions.removeAll()
     }
     func addTransaction(_ transaction: WBTransaction, atPath path: K) {
+        // note that adding a transaction automatically registers a completion handler that will remove the transaction from the manager
         var ts = self.transactions[path] ?? []
         ts.append(transaction)
         self.transactions[path] = ts
@@ -43,6 +44,7 @@ class WBTransactionManager<K> where K: Hashable {
         }
     }
     func apply(_ function: (WBTransaction) -> Void, iff: ((WBTransaction) -> Bool)? = nil) {
+        // Rather than using this everywhere with an iff we should in many places probably do tm.transaction[key].forEach(function)
         for (_, vals) in self.transactions {
             for val in vals {
                 if let iff_ = iff, !iff_(val) {
