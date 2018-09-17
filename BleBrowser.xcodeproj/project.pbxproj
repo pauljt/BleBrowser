@@ -10,6 +10,7 @@
 		5A0F91CC1E01546200CB2C64 /* Jsonifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */; };
 		5A2BAC2A1E44C70C00ED9FA8 /* BookmarksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2BAC291E44C70C00ED9FA8 /* BookmarksManager.swift */; };
 		5A660B001F0FB174004EC11D /* WBUtils.js in Resources */ = {isa = PBXBuildFile; fileRef = 5A660AFF1F0FB174004EC11D /* WBUtils.js */; };
+		5A7579E6214F7965003F0CEA /* stringview.js in Resources */ = {isa = PBXBuildFile; fileRef = 5A7579E5214F7965003F0CEA /* stringview.js */; };
 		5A85B9F51E2946DE00E0B718 /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A85B9F41E2946DE00E0B718 /* BookmarksViewController.swift */; };
 		5A85B9F71E294B2900E0B718 /* WBBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A85B9F61E294B2900E0B718 /* WBBookmark.swift */; };
 		5A85B9F91E29582400E0B718 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5A85B9F81E29582400E0B718 /* Defaults.plist */; };
@@ -45,6 +46,7 @@
 		5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Jsonifiable.swift; sourceTree = "<group>"; };
 		5A2BAC291E44C70C00ED9FA8 /* BookmarksManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksManager.swift; sourceTree = "<group>"; };
 		5A660AFF1F0FB174004EC11D /* WBUtils.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBUtils.js; sourceTree = "<group>"; };
+		5A7579E5214F7965003F0CEA /* stringview.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = stringview.js; sourceTree = "<group>"; };
 		5A85B9F41E2946DE00E0B718 /* BookmarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
 		5A85B9F61E294B2900E0B718 /* WBBookmark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBBookmark.swift; sourceTree = "<group>"; };
 		5A85B9F81E29582400E0B718 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Defaults.plist; path = BasicBrowser/Defaults.plist; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 		E44C18581A36203E00734F8B /* BleBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				5A7579E5214F7965003F0CEA /* stringview.js */,
 				5A660AFF1F0FB174004EC11D /* WBUtils.js */,
 				5A2BAC291E44C70C00ED9FA8 /* BookmarksManager.swift */,
 				5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */,
@@ -251,6 +254,7 @@
 				5A660B001F0FB174004EC11D /* WBUtils.js in Resources */,
 				5AA79DDD1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js in Resources */,
 				BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */,
+				5A7579E6214F7965003F0CEA /* stringview.js in Resources */,
 				5A85B9F91E29582400E0B718 /* Defaults.plist in Resources */,
 				E44C18661A36203E00734F8B /* LaunchScreen.xib in Resources */,
 				E44C18631A36203E00734F8B /* Images.xcassets in Resources */,
