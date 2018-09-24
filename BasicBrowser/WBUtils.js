@@ -24,13 +24,15 @@ uk.co.greenparksoftware.wbutils = {
         const services = filter.services;
         const name = filter.name;
         const wbutils = uk.co.greenparksoftware.wbutils;
-        if (!wbutils.btDeviceNameIsOk(name)) {
+        if (name !== undefined && !wbutils.btDeviceNameIsOk(name)) {
             throw new TypeError(`Invalid filter name ${name}`);
         }
         const namePrefix = filter.namePrefix;
         if (
-            !wbutils.btDeviceNameIsOk(namePrefix) ||
-            (new StringView(namePrefix).buffer.byteLength) === 0
+            namePrefix !== undefined && (
+                !wbutils.btDeviceNameIsOk(namePrefix) ||
+                (new StringView(namePrefix).buffer.byteLength) === 0
+            )
         ) {
             throw new TypeError(`Invalid filter namePrefix ${namePrefix}`);
         }

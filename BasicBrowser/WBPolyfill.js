@@ -574,6 +574,8 @@
     window.receiveMessageResponse = native.receiveMessageResponse;
     window.receiveCharacteristicValueNotification = native.receiveCharacteristicValueNotification;
 
+    native.enableBluetooth();
+
     // Patches
     // Patch window.open so it doesn't attempt to open in a separate window or tab ever.
     function open(location) {
