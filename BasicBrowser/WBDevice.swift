@@ -78,6 +78,9 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.characteristicUUID = CBUUID(nsuuid: charUUID)
             super.init(transaction: transaction)
         }
+        func matchesCharacteristic(_ characteristic: CBCharacteristic) -> Bool {
+            return self.serviceUUID == characteristic.service.uuid && self.characteristicUUID == characteristic.uuid
+        }
         func resolveUnknownCharacteristic() {
             self.transaction.resolveAsFailure(withMessage: "Characteristic \(self.characteristicUUID.uuidString) not known for service \(self.serviceUUID.uuidString) on device")
         }
@@ -136,6 +139,8 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     var getPrimaryServiceTM = WBTransactionManager<CBUUID>()
     var getCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
     var readCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
+    /*! @abstract Outstanding transactions for characteristic write requests */
+    var writeCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
 
     // MARK: - Constructor and equality
     init(peripheral: CBPeripheral, advertisementData: [String: Any] = [:], RSSI: NSNumber = 0, manager: WBManager) {
@@ -324,9 +329,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 break
             }
 
-            NSLog("Writing value \(String(data: view.data, encoding: String.Encoding.utf8) ?? "<bad data>") to peripheral")
-            self.peripheral.writeValue(view.data, for: char, type: CBCharacteristicWriteType.withoutResponse)
-            transaction.resolveAsSuccess()
+            self.writeCharacteristicValue(char, view)
 
         case .startNotifications:
 
@@ -435,10 +438,12 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 }
                 $0.resolveAsSuccess(withObject: characteristic.value!)
             },
-                iff: {
-                    let cview = CharacteristicView(transaction: $0)!
-                    return cview.serviceUUID == characteristic.service.uuid && cview.characteristicUUID == characteristic.uuid
-            })
+                iff: {CharacteristicView(
+                    transaction: $0
+                )!.matchesCharacteristic(
+                    characteristic
+                )}
+            )
         }
         // If we're doing notifications on the characteristic send them up.
         if characteristic.isNotifying {
@@ -449,6 +454,22 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 "\(characteristic.value!.jsonify())" +
                 ")")
         }
+    }
+
+    open func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        self.writeCharacteristicTM.apply({
+            if let err = error {
+                $0.resolveAsFailure(withMessage: "Error writing characteristic: \(err.localizedDescription)")
+                return
+            }
+            $0.resolveAsSuccess()
+        },
+            iff: {CharacteristicView(
+                transaction: $0
+                )!.matchesCharacteristic(
+                    characteristic
+                )}
+        )
     }
 
     // MARK: - Private
@@ -510,6 +531,19 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         let commandString = "window.receiveDeviceDisconnectEvent(\(self.deviceId.uuidString.jsonify()));\n"
         NSLog("--> device disconnect execute js: \"\(commandString)\"")
         self.evaluateJavaScript(commandString)
+    }
+
+    private func writeCharacteristicValue(_ char: CBCharacteristic, _ view: WriteCharacteristicView) {
+        if char.properties.contains(CBCharacteristicProperties.write) {
+            self.peripheral.writeValue(view.data, for: char, type: CBCharacteristicWriteType.withResponse)
+            self.writeCharacteristicTM.addTransaction(view.transaction, atPath: CharacteristicTransactionKey(serviceUUID: view.serviceUUID, characteristicUUID: view.characteristicUUID))
+        } else if char.properties.contains(CBCharacteristicProperties.writeWithoutResponse) {
+            self.peripheral.writeValue(view.data, for: char, type: CBCharacteristicWriteType.withoutResponse)
+            view.transaction.resolveAsSuccess()
+        } else {
+            view.transaction.resolveAsFailure(withMessage: "Characteristic does not support writing")
+            return
+        }
     }
 }
 
