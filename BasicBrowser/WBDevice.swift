@@ -534,7 +534,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
 
     private func writeCharacteristicValue(_ char: CBCharacteristic, _ view: WriteCharacteristicView) {
-        NSLog("Writing value \(String(data: view.data, encoding: String.Encoding.utf8) ?? "<bad data>") to peripheral")
         if char.properties.contains(CBCharacteristicProperties.write) {
             self.peripheral.writeValue(view.data, for: char, type: CBCharacteristicWriteType.withResponse)
             self.writeCharacteristicTM.addTransaction(view.transaction, atPath: CharacteristicTransactionKey(serviceUUID: view.serviceUUID, characteristicUUID: view.characteristicUUID))

@@ -192,12 +192,11 @@ class WBTransaction: Equatable, CustomStringConvertible {
      * ========== Private methods ==========
      */
     private func complete(success: Bool, object: Jsonifiable) {
-        if(self.resolved){
+        if self.resolved {
             NSLog("Attempt to re-resolve transaction \(self.id) ignored")
             return
         }
 
-        NSLog("json: \(object.jsonify())")
         let commandString = "window.receiveMessageResponse(\(success ? "true" : "false"), \(object.jsonify()), \(self.id));\n"
         NSLog("--> execute js: \"\(commandString)\"")
 
