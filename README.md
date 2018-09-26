@@ -15,6 +15,7 @@ through to the CoreBluetooth iOS API via a thin transaction management layer.
 - `.requestDevice(options)`
   - `options.acceptAllDevices = true` to ask for any device
   - `options.filters` is a list of filters (mutually exclusive with `acceptAllDevices`) with properties
+    - `name`: devices with the given name will be included
     - `namePrefix`: devices with names with this prefix will be included
     - `services`: list of service aliases or uuids.
 
