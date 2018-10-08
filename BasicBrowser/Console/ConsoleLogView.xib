@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConsoleLogViewController" customModule="WebBLE" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="2zq-ZI-hib" id="DwU-fk-lNQ"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="2zq-ZI-hib" customClass="ConsoleLogView" customModule="WebBLE" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="399" height="74"/>
+            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Primary console message" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Md1-sx-yDf">
+                    <rect key="frame" x="8" y="8" width="166" height="58"/>
+                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="12"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="2eE-08-XOz" firstAttribute="bottom" secondItem="Md1-sx-yDf" secondAttribute="bottom" constant="8" id="P3X-pI-4Yf"/>
+                <constraint firstItem="Md1-sx-yDf" firstAttribute="top" secondItem="2eE-08-XOz" secondAttribute="top" constant="8" id="QVl-PH-Kpx"/>
+                <constraint firstItem="Md1-sx-yDf" firstAttribute="leading" secondItem="2eE-08-XOz" secondAttribute="leading" constant="8" id="xJM-ME-pc6"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="2eE-08-XOz"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="boolean" keyPath="translatesAutoresizingMaskIntoConstraints" value="NO"/>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="messageTextField" destination="Md1-sx-yDf" id="YeS-fE-sFf"/>
+            </connections>
+            <point key="canvasLocation" x="82.5" y="85"/>
+        </view>
+    </objects>
+</document>
