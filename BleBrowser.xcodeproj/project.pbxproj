@@ -9,10 +9,12 @@
 /* Begin PBXBuildFile section */
 		5A0F91CC1E01546200CB2C64 /* Jsonifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */; };
 		5A10929B2168D599002CC973 /* ConsoleViewContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A10929A2168D599002CC973 /* ConsoleViewContainerController.swift */; };
+		5A1D3256216FC96500F3391C /* WBLogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1D3255216FC96500F3391C /* WBLogManager.swift */; };
 		5A2BAC2A1E44C70C00ED9FA8 /* BookmarksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2BAC291E44C70C00ED9FA8 /* BookmarksManager.swift */; };
 		5A4B8E1B2157A34800C7C858 /* ConsoleLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4B8E1A2157A34800C7C858 /* ConsoleLogView.swift */; };
 		5A4B8E1D2157A66C00C7C858 /* ConsoleLogView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A4B8E1C2157A66C00C7C858 /* ConsoleLogView.xib */; };
 		5A4B8E1F2157ABC500C7C858 /* ConsoleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4B8E1E2157ABC500C7C858 /* ConsoleLogViewController.swift */; };
+		5A5D6404216C9F9300BCD722 /* WBLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5D6403216C9F9300BCD722 /* WBLog.swift */; };
 		5A660B001F0FB174004EC11D /* WBUtils.js in Resources */ = {isa = PBXBuildFile; fileRef = 5A660AFF1F0FB174004EC11D /* WBUtils.js */; };
 		5A7579E6214F7965003F0CEA /* stringview.js in Resources */ = {isa = PBXBuildFile; fileRef = 5A7579E5214F7965003F0CEA /* stringview.js */; };
 		5A7579EA2151588B003F0CEA /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7579E92151588B003F0CEA /* ConsoleViewController.swift */; };
@@ -52,10 +54,12 @@
 /* Begin PBXFileReference section */
 		5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Jsonifiable.swift; sourceTree = "<group>"; };
 		5A10929A2168D599002CC973 /* ConsoleViewContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleViewContainerController.swift; sourceTree = "<group>"; };
+		5A1D3255216FC96500F3391C /* WBLogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBLogManager.swift; sourceTree = "<group>"; };
 		5A2BAC291E44C70C00ED9FA8 /* BookmarksManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksManager.swift; sourceTree = "<group>"; };
 		5A4B8E1A2157A34800C7C858 /* ConsoleLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleLogView.swift; sourceTree = "<group>"; };
 		5A4B8E1C2157A66C00C7C858 /* ConsoleLogView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConsoleLogView.xib; sourceTree = "<group>"; };
 		5A4B8E1E2157ABC500C7C858 /* ConsoleLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleLogViewController.swift; sourceTree = "<group>"; };
+		5A5D6403216C9F9300BCD722 /* WBLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBLog.swift; sourceTree = "<group>"; };
 		5A660AFF1F0FB174004EC11D /* WBUtils.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBUtils.js; sourceTree = "<group>"; };
 		5A7579E5214F7965003F0CEA /* stringview.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = stringview.js; sourceTree = "<group>"; };
 		5A7579E92151588B003F0CEA /* ConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleViewController.swift; sourceTree = "<group>"; };
@@ -119,6 +123,8 @@
 				5A7579E92151588B003F0CEA /* ConsoleViewController.swift */,
 				5A10929A2168D599002CC973 /* ConsoleViewContainerController.swift */,
 				5AC8067C21655B5E00AA5176 /* DividerView.swift */,
+				5A5D6403216C9F9300BCD722 /* WBLog.swift */,
+				5A1D3255216FC96500F3391C /* WBLogManager.swift */,
 			);
 			path = Console;
 			sourceTree = "<group>";
@@ -318,6 +324,7 @@
 				5AC47CA81E2CCF2F00BCAE82 /* Animations.swift in Sources */,
 				5AC8067D21655B5E00AA5176 /* DividerView.swift in Sources */,
 				5A7579EA2151588B003F0CEA /* ConsoleViewController.swift in Sources */,
+				5A5D6404216C9F9300BCD722 /* WBLog.swift in Sources */,
 				E44C185E1A36203E00734F8B /* ViewController.swift in Sources */,
 				BBA6730E1C535B8C00076CBA /* PopUpPickerView.swift in Sources */,
 				5A85B9F71E294B2900E0B718 /* WBBookmark.swift in Sources */,
@@ -328,6 +335,7 @@
 				5A7579EF21579E0E003F0CEA /* ConsoleView.swift in Sources */,
 				5A7579ED2157907D003F0CEA /* ConsoleScrollView.swift in Sources */,
 				BB303DF31C42070C00FCAF24 /* WBManager.swift in Sources */,
+				5A1D3256216FC96500F3391C /* WBLogManager.swift in Sources */,
 				5A0F91CC1E01546200CB2C64 /* Jsonifiable.swift in Sources */,
 				5A2BAC2A1E44C70C00ED9FA8 /* BookmarksManager.swift in Sources */,
 				BB4DE1F41C8D0A44003151BF /* WBDevice.swift in Sources */,

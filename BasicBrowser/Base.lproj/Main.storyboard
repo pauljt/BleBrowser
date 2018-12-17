@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bXw-Ly-snu">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bXw-Ly-snu">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -62,6 +62,7 @@
                                         </constraints>
                                         <connections>
                                             <outlet property="devicePicker" destination="sbN-21-YtK" id="TvY-wa-llN"/>
+                                            <outlet property="logManager" destination="eym-9B-1fd" id="rnd-bl-vLr"/>
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sbN-21-YtK" customClass="PopUpPickerView" customModule="WebBLE" customModuleProvider="target">
@@ -114,24 +115,23 @@
                                 <items>
                                     <barButtonItem enabled="NO" title="&lt;" style="plain" id="NaX-Y9-Gfj"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="sXn-kx-dSX"/>
-                                    <barButtonItem title="Console" style="plain" id="uNi-2X-YpW">
-                                        <connections>
-                                            <action selector="toggleConsole" destination="BYZ-38-t0r" id="gvJ-pj-8It"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="22" style="plain" systemItem="fixedSpace" id="7Cu-2k-f8R"/>
                                     <barButtonItem systemItem="add" id="r6k-jv-IC4">
                                         <connections>
                                             <action selector="addBookmark" destination="BYZ-38-t0r" id="SvN-L1-pFS"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="9q6-Tp-JwJ"/>
                                     <barButtonItem systemItem="bookmarks" id="jSv-KT-nTS">
                                         <connections>
                                             <segue destination="bL6-a5-4h5" kind="show" id="tde-jn-QQH"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="SWJ-63-0dX"/>
+                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="vNO-d3-Qzl"/>
+                                    <barButtonItem image="Console Button" width="28" id="uNi-2X-YpW">
+                                        <connections>
+                                            <action selector="toggleConsole" destination="BYZ-38-t0r" id="gvJ-pj-8It"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="dS0-fO-69k"/>
                                     <barButtonItem style="plain" systemItem="refresh" id="LXB-CH-4RT"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="pN2-Zw-LM0"/>
                                     <barButtonItem enabled="NO" title="&gt;" id="qhG-nx-nEQ"/>
@@ -166,6 +166,7 @@
                         <outlet property="goBackButton" destination="NaX-Y9-Gfj" id="0Xc-k5-kMK"/>
                         <outlet property="goForwardButton" destination="qhG-nx-nEQ" id="1GO-aY-9L7"/>
                         <outlet property="locationTextField" destination="O1l-7F-uXL" id="i8M-pT-n46"/>
+                        <outlet property="logManager" destination="eym-9B-1fd" id="Fec-Lj-MbA"/>
                         <outlet property="refreshButton" destination="LXB-CH-4RT" id="350-AZ-rBZ"/>
                         <outlet property="showConsoleButton" destination="uNi-2X-YpW" id="CTt-pC-CFQ"/>
                         <outlet property="tick" destination="6wE-az-iDp" id="aNh-gM-jXz"/>
@@ -176,6 +177,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <customObject id="eym-9B-1fd" customClass="WBLogManager" customModule="WebBLE" customModuleProvider="target"/>
             </objects>
             <point key="canvasLocation" x="-346.39999999999998" y="366.56671664167919"/>
         </scene>
@@ -325,7 +327,6 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="UBS-tO-R2b" secondAttribute="bottom" id="CMw-pf-zMg"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="QhI-bG-PVs"/>
                                     <constraint firstAttribute="trailing" secondItem="UBS-tO-R2b" secondAttribute="trailing" id="aMg-HC-jjn"/>
                                     <constraint firstItem="UBS-tO-R2b" firstAttribute="top" secondItem="d4Z-A0-wnn" secondAttribute="top" id="iTI-iF-wYi"/>
                                     <constraint firstItem="UBS-tO-R2b" firstAttribute="leading" secondItem="d4Z-A0-wnn" secondAttribute="leading" id="nHn-OR-00P"/>
@@ -390,18 +391,67 @@
                                     <outletCollection property="gestureRecognizers" destination="WQ4-TM-U0r" appends="YES" id="CkZ-g8-3sp"/>
                                 </connections>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hNb-nt-KGx" userLabel="Extra Buttons View">
+                                <rect key="frame" x="287" y="84" width="80" height="44"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k00-fV-Cw2">
+                                        <rect key="frame" x="0.0" y="0.0" width="80" height="1"/>
+                                        <color key="backgroundColor" red="0.65482908487319946" green="0.65494394302368164" blue="0.65482187271118164" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="urR-xb-IIl"/>
+                                        </constraints>
+                                    </view>
+                                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Copy button" translatesAutoresizingMaskIntoConstraints="NO" id="G9c-Se-caq">
+                                        <rect key="frame" x="44" y="8" width="28" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="28" id="2C1-dU-6RE"/>
+                                            <constraint firstAttribute="width" constant="28" id="EfR-sG-ptN"/>
+                                        </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="fRl-nx-3ar" appends="YES" id="zAO-t9-MXL"/>
+                                        </connections>
+                                    </imageView>
+                                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Clear selection button" translatesAutoresizingMaskIntoConstraints="NO" id="ev3-e4-Sem">
+                                        <rect key="frame" x="13" y="13" width="18" height="18"/>
+                                        <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="18" id="DVB-7K-mWg"/>
+                                            <constraint firstAttribute="width" constant="18" id="SCw-YU-YP6"/>
+                                        </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="4su-JT-pIZ" appends="YES" id="hRR-LS-Pi1"/>
+                                        </connections>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.97636479139328003" green="0.97653168439865112" blue="0.97635418176651001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="G9c-Se-caq" firstAttribute="leading" secondItem="ev3-e4-Sem" secondAttribute="trailing" constant="13" id="1QQ-9n-XG7"/>
+                                    <constraint firstAttribute="trailing" secondItem="G9c-Se-caq" secondAttribute="trailing" constant="8" id="9Wr-IZ-WQR"/>
+                                    <constraint firstAttribute="trailing" secondItem="k00-fV-Cw2" secondAttribute="trailing" id="9gq-qF-FJG"/>
+                                    <constraint firstItem="G9c-Se-caq" firstAttribute="top" secondItem="hNb-nt-KGx" secondAttribute="top" constant="8" id="Afj-oL-NcP"/>
+                                    <constraint firstAttribute="height" constant="44" id="TNO-gV-SKB"/>
+                                    <constraint firstItem="k00-fV-Cw2" firstAttribute="leading" secondItem="hNb-nt-KGx" secondAttribute="leading" id="bKi-P4-llk"/>
+                                    <constraint firstAttribute="bottom" secondItem="G9c-Se-caq" secondAttribute="bottom" constant="8" id="ozz-C2-H1L"/>
+                                    <constraint firstItem="ev3-e4-Sem" firstAttribute="centerY" secondItem="hNb-nt-KGx" secondAttribute="centerY" id="rPI-Fv-mJE"/>
+                                    <constraint firstItem="k00-fV-Cw2" firstAttribute="top" secondItem="hNb-nt-KGx" secondAttribute="top" id="wvL-cP-F7E"/>
+                                    <constraint firstItem="ev3-e4-Sem" firstAttribute="leading" secondItem="hNb-nt-KGx" secondAttribute="leading" constant="13" id="yPU-aF-I46"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="d4Z-A0-wnn" secondAttribute="trailing" id="2Yb-1t-3te"/>
                             <constraint firstAttribute="trailing" secondItem="tMT-LP-zxR" secondAttribute="trailing" id="7kY-xe-9uH"/>
                             <constraint firstAttribute="bottom" secondItem="d4Z-A0-wnn" secondAttribute="bottom" id="AK5-Du-JHR"/>
                             <constraint firstItem="dHa-vU-WEZ" firstAttribute="top" secondItem="tMT-LP-zxR" secondAttribute="bottom" id="CMB-1K-MWE"/>
                             <constraint firstItem="tMT-LP-zxR" firstAttribute="leading" secondItem="iTO-H0-3GP" secondAttribute="leading" id="Hlr-Ib-ozp"/>
                             <constraint firstItem="d4Z-A0-wnn" firstAttribute="top" secondItem="tMT-LP-zxR" secondAttribute="bottom" id="IVp-nj-3bD"/>
                             <constraint firstItem="dHa-vU-WEZ" firstAttribute="width" secondItem="iTO-H0-3GP" secondAttribute="width" multiplier="0.5" id="QQC-R5-i9O"/>
+                            <constraint firstAttribute="trailing" secondItem="hNb-nt-KGx" secondAttribute="trailing" constant="8" id="S0y-Ek-r8G"/>
                             <constraint firstItem="d4Z-A0-wnn" firstAttribute="leading" secondItem="iTO-H0-3GP" secondAttribute="leading" id="Tte-Am-tAi"/>
-                            <constraint firstAttribute="trailing" secondItem="d4Z-A0-wnn" secondAttribute="trailing" id="bVT-xx-wz2"/>
-                            <constraint firstAttribute="trailing" secondItem="dHa-vU-WEZ" secondAttribute="trailing" id="p5w-NO-VNc"/>
+                            <constraint firstAttribute="bottom" secondItem="hNb-nt-KGx" secondAttribute="bottom" id="Ye7-AR-QOo"/>
+                            <constraint firstAttribute="trailing" secondItem="dHa-vU-WEZ" secondAttribute="trailing" id="YxE-dJ-xxN"/>
+                            <constraint firstItem="hNb-nt-KGx" firstAttribute="top" relation="greaterThanOrEqual" secondItem="dHa-vU-WEZ" secondAttribute="bottom" id="kkC-0o-Icv"/>
                             <constraint firstItem="tMT-LP-zxR" firstAttribute="top" secondItem="iTO-H0-3GP" secondAttribute="top" id="y4s-OS-Bc1"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
@@ -413,6 +463,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="128"/>
                     <connections>
+                        <outlet property="clearSelectionImageView" destination="ev3-e4-Sem" id="qsh-Os-zM6"/>
                         <outlet property="consoleScrollViewHeightConstraint" destination="vyx-Ci-Bxy" id="G17-ao-NVC"/>
                         <outlet property="scrollView" destination="d4Z-A0-wnn" id="prJ-fZ-LOJ"/>
                     </connections>
@@ -428,11 +479,24 @@
                         <action selector="dividerDrag:" destination="4od-iT-hb1" id="G4M-jI-bu0"/>
                     </connections>
                 </panGestureRecognizer>
+                <tapGestureRecognizer id="fRl-nx-3ar">
+                    <connections>
+                        <action selector="copyLogsToClipboard:" destination="4od-iT-hb1" id="cqU-g7-zGj"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="4su-JT-pIZ">
+                    <connections>
+                        <action selector="clearSelection:" destination="4od-iT-hb1" id="073-Hk-Oea"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-346.39999999999998" y="946.32683658170924"/>
         </scene>
     </scenes>
     <resources>
+        <image name="Clear selection button" width="5.7600002288818359" height="5.7600002288818359"/>
+        <image name="Console Button" width="12" height="11.279999732971191"/>
+        <image name="Copy button" width="13.439999580383301" height="13.439999580383301"/>
         <image name="Tick@480.png" width="480" height="480"/>
     </resources>
 </document>

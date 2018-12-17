@@ -10,36 +10,90 @@ import UIKit
 
 class ConsoleViewController: UIViewController {
 
+    var logManager: WBLogManager! {
+        willSet {
+            self._unobserveLM()
+            self._unobserveAllLogs()
+        }
+        didSet {
+            self._observeLM()
+        }
+    }
+
+    deinit {
+        self._unobserveLM()
+        self._unobserveAllLogs()
+    }
+
+    // MARK: - Methods
+    func insertLog(log: WBLog, at index: Int) {
+        self._observeLog(log)
+
+        let clvc: ConsoleLogViewController = ConsoleLogViewController(nibName: "ConsoleLogView", bundle: nil)
+        self.addChildViewController(clvc)
+        clvc.log = log
+        let clv = clvc.view as! ConsoleLogView
+        clv.configureWithLog(log)
+        self.view.insertSubview(clv, at: index)
+    }
+
+    // MARK: - KVO
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        let changeKind = NSKeyValueChange(rawValue: change![.kindKey] as! UInt)!
+
+        if object as? WBLogManager === self.logManager {
+            switch changeKind {
+            case .setting:
+                let logs = change![.newKey] as! [WBLog]
+                self.view.subviews.forEach{$0.removeFromSuperview()}
+                assert(self.view.subviews.count == 0)
+                for (index, log) in logs.enumerated() {
+                    self.insertLog(log: log, at: index)
+                }
+            case .insertion:
+                let insertIndexes = change![.indexesKey] as! NSIndexSet
+                for index in insertIndexes {
+                    self.insertLog(log: self.logManager.logs[index], at: index)
+                }
+            default:
+                NSLog("Unexpected change type \(changeKind)")
+            }
+        }
+    }
+
+    // MARK: - UIViewController overrides
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        let vcs = self.view.constraintsAffectingLayout(for: .vertical)
-//        NSLayoutConstraint.deactivate(vcs)
 
         for sv in self.view.subviews {
             sv.removeFromSuperview()
         }
-        self.addLog(message: "Hello world")
-        self.addLog(message: "How's it hanging?")
-        self.addLog(message: "Sounds great!")
-        self.addLog(message: "How about one more...")
-        self.addLog(message: "for luck!")
-        self.addLog(message: "Also interesting to know what happens when we put a long one in that will clearly run off the edge of the screen")
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
     }
 
-    func addLog(message: String) {
-        NSLog("addLog \(message)")
-        let clvc: ConsoleLogViewController = ConsoleLogViewController(nibName: "ConsoleLogView", bundle: nil)
-        NSLog("nib loaded: \(clvc) \(clvc.view ?? nil)")
-        let clv = clvc.view as! ConsoleLogView
-        clv.messageTextField?.text = message
-        self.view.addSubview(clv)
-        
+    // MARK: - Internal
+    private func _observeLM() {
+        guard let lm = self.logManager else {
+            return
+        }
+        lm.addObserver(self, forKeyPath: "logs", options: [.initial, .new], context: nil)
     }
-
-    // MARK: - Event handling
-    @IBAction
-    @objc public func showConsole() {
-        NSLog("Showing console")
+    private func _observeLog(_ log: WBLog) {
+        log.addObserver(self, forKeyPath: "isSelected", options: [.initial, .new], context: nil)
+    }
+    private func _unobserveAllLogs() {
+        guard let lm = self.logManager else { return }
+        for log in lm.logs {
+            self._unobserveLog(log)
+        }
+    }
+    private func _unobserveLM() {
+        guard let lm = self.logManager else { return }
+        lm.removeObserver(self, forKeyPath: "logs")
+    }
+    private func _unobserveLog(_ log: WBLog) {
+        log.removeObserver(self, forKeyPath: "isSelected")
     }
 }

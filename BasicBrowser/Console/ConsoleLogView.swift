@@ -9,5 +9,17 @@ import UIKit
 
 class ConsoleLogView: UIView {
     @IBOutlet
-    var messageTextField: UILabel?
+    var messageTextField: UILabel!
+
+    func configureWithLog(_ log: WBLog) {
+        self.messageTextField.text = log.message
+        switch log.level {
+        case .log:
+            break
+        case .warn:
+            self.messageTextField.textColor = UIColor(displayP3Red: 1.0, green: 0.5, blue: 0.0, alpha: 1.0)
+        case .error:
+            self.messageTextField.textColor = UIColor(displayP3Red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        }
+    }
 }

@@ -16,31 +16,54 @@ class ConsoleView: UIView {
         super.layoutSubviews()
     }
 
-    override func addSubview(_ view: UIView) {
-        super.addSubview(view)
-        guard let logView = view as? ConsoleLogView else {
-            return
-        }
-        if self.topLayoutConstraint == nil {
-            let tlc = NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: logView, attribute: .top, multiplier: 1.0, constant: 0.0)
-            self.topLayoutConstraint = tlc
-            NSLayoutConstraint.activate([tlc])
+    override func insertSubview(_ view: UIView, at index: Int) {
+        super.insertSubview(view, at: index)
+        for (anch1, anch2) in [
+            (self.leftAnchor, view.leftAnchor),
+            (self.rightAnchor, view.rightAnchor)
+        ] {
+            anch1.constraint(equalTo: anch2).isActive = true
         }
 
-        if self.subviews.count > 1 {
-            let lastSV = self.subviews[self.subviews.count - 2]
-            let lastLC = NSLayoutConstraint(item: lastSV, attribute: .bottom, relatedBy: .equal, toItem: logView, attribute: .top, multiplier: 1.0, constant: 0.0)
-            NSLayoutConstraint.activate([lastLC])
+        let svCount = self.subviews.count
+        let lastIndex = svCount - 1
+        switch index {
+        case 0:
+            if svCount == 1 {
+                self.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            } else {
+                let viewBelow = self.subviews[1]
+                let prevConstraints = self.constraints.filter({
+                    $0.secondAttribute == .top &&
+                    $0.secondItem ?? nil === viewBelow
+                })
+                assert(prevConstraints.count > 0)
+                NSLayoutConstraint.deactivate(prevConstraints)
+            }
+            self.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        case 1..<lastIndex:
+            let viewAbove = self.subviews[index - 1]
+            let viewBelow = self.subviews[index + 1]
+            let prevConstraints = viewAbove.constraints.filter({
+                $0.secondItem ?? nil === viewBelow &&
+                $0.secondAttribute == .bottom
+            })
+            assert(prevConstraints.count > 0)
+            NSLayoutConstraint.deactivate(prevConstraints)
+            viewAbove.bottomAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            view.bottomAnchor.constraint(equalTo: viewBelow.topAnchor).isActive = true
+        case lastIndex:
+            let viewAbove = self.subviews[index - 1]
+            let prevConstraints = self.constraints.filter({
+                $0.secondItem === viewAbove &&
+                $0.secondAttribute == .bottom
+            })
+            assert(prevConstraints.count > 0)
+            NSLayoutConstraint.deactivate(prevConstraints)
+            self.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            viewAbove.bottomAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        default:
+            assert(false, "Invalid index \(index)")
         }
-
-        if let blc = self.bottomLayoutConstraint {
-            NSLayoutConstraint.deactivate([blc])
-        }
-        let blc = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: logView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
-        NSLayoutConstraint.activate([blc])
-        self.bottomLayoutConstraint = blc
-        NSLayoutConstraint.activate([
-            NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: logView, attribute: .width, multiplier: 1.0, constant: 0.0)
-            ])
     }
 }

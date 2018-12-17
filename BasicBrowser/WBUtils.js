@@ -54,12 +54,27 @@ uk.co.greenparksoftware.wbutils = {
     }
 };
 
+
+(function () {
+    let levelHandlers = {
+        log: console.log,
+        warn: console.warn,
+        error: console.error,
+    };
+    function consoleLog(level, message, ...args) {
+        window.webkit.messageHandlers.logger.postMessage({level, message: `${message}`});
+        levelHandlers[level].call(window.console, message, ...args);
+    }
+    window.console = {
+        log: (...args) => consoleLog('log', ...args),
+        warn: (...args) => consoleLog('warn', ...args),
+        error: (...args) => consoleLog('error', ...args),
+    };
+ })();
+
 (function () {
     function nslog(message) {
-        window.webkit.messageHandlers.logger.postMessage(message);
-        if (window.copyNSLogToConsole) {
-            console.log(message);
-        }
+        console.log(message);
     }
     window.nslog = nslog;
 })();

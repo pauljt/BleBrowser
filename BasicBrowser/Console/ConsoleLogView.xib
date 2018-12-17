@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,17 +20,31 @@
             <rect key="frame" x="0.0" y="0.0" width="399" height="74"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Primary console message" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Md1-sx-yDf">
-                    <rect key="frame" x="8" y="8" width="166" height="58"/>
+                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Primary console message" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Md1-sx-yDf">
+                    <rect key="frame" x="8" y="4" width="383" height="66"/>
+                    <gestureRecognizers/>
                     <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="12"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tUN-yZ-LKc">
+                    <rect key="frame" x="0.0" y="73" width="399" height="1"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="pWG-cP-TTE"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <gestureRecognizers/>
             <constraints>
-                <constraint firstItem="2eE-08-XOz" firstAttribute="bottom" secondItem="Md1-sx-yDf" secondAttribute="bottom" constant="8" id="P3X-pI-4Yf"/>
-                <constraint firstItem="Md1-sx-yDf" firstAttribute="top" secondItem="2eE-08-XOz" secondAttribute="top" constant="8" id="QVl-PH-Kpx"/>
+                <constraint firstItem="tUN-yZ-LKc" firstAttribute="leading" secondItem="2eE-08-XOz" secondAttribute="leading" id="HwT-yV-6e3"/>
+                <constraint firstItem="2eE-08-XOz" firstAttribute="trailing" secondItem="Md1-sx-yDf" secondAttribute="trailing" constant="8" id="NLa-jK-g0P"/>
+                <constraint firstItem="2eE-08-XOz" firstAttribute="bottom" secondItem="Md1-sx-yDf" secondAttribute="bottom" constant="4" id="P3X-pI-4Yf"/>
+                <constraint firstItem="Md1-sx-yDf" firstAttribute="top" secondItem="2eE-08-XOz" secondAttribute="top" constant="4" id="QVl-PH-Kpx"/>
+                <constraint firstItem="tUN-yZ-LKc" firstAttribute="trailing" secondItem="2eE-08-XOz" secondAttribute="trailing" id="huk-Yf-NPg"/>
+                <constraint firstItem="tUN-yZ-LKc" firstAttribute="bottom" secondItem="2eE-08-XOz" secondAttribute="bottom" id="v79-Rc-kPN"/>
                 <constraint firstItem="Md1-sx-yDf" firstAttribute="leading" secondItem="2eE-08-XOz" secondAttribute="leading" constant="8" id="xJM-ME-pc6"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
@@ -41,8 +56,14 @@
             </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="messageTextField" destination="Md1-sx-yDf" id="YeS-fE-sFf"/>
+                <outletCollection property="gestureRecognizers" destination="AiS-Oz-jQS" appends="YES" id="RM4-v5-c3E"/>
             </connections>
-            <point key="canvasLocation" x="82.5" y="85"/>
+            <point key="canvasLocation" x="82.400000000000006" y="84.557721139430285"/>
         </view>
+        <tapGestureRecognizer id="AiS-Oz-jQS">
+            <connections>
+                <action selector="toggleSelected:" destination="-1" id="g5d-Xe-jZV"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
 </document>
