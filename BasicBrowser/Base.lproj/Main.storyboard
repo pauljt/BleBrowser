@@ -333,6 +333,13 @@
                                     <constraint firstAttribute="height" priority="990" constant="120" id="vyx-Ci-Bxy"/>
                                 </constraints>
                             </scrollView>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" image="Copy@480.png" translatesAutoresizingMaskIntoConstraints="NO" id="t9x-xW-P1g">
+                                <rect key="frame" x="157.5" y="40" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="tCu-ng-caO"/>
+                                    <constraint firstAttribute="width" secondItem="t9x-xW-P1g" secondAttribute="height" multiplier="1:1" id="xcD-dB-HjH"/>
+                                </constraints>
+                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dHa-vU-WEZ" userLabel="Extra Drag Area View">
                                 <rect key="frame" x="187.5" y="8" width="187.5" height="24"/>
                                 <subviews>
@@ -392,7 +399,7 @@
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hNb-nt-KGx" userLabel="Extra Buttons View">
-                                <rect key="frame" x="287" y="84" width="80" height="44"/>
+                                <rect key="frame" x="295" y="84" width="80" height="44"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k00-fV-Cw2">
                                         <rect key="frame" x="0.0" y="0.0" width="80" height="1"/>
@@ -441,18 +448,22 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="d4Z-A0-wnn" secondAttribute="trailing" id="2Yb-1t-3te"/>
+                            <constraint firstItem="eB8-I1-rLS" firstAttribute="top" relation="greaterThanOrEqual" secondItem="t9x-xW-P1g" secondAttribute="bottom" priority="900" constant="10" id="3SY-9p-yO5"/>
                             <constraint firstAttribute="trailing" secondItem="tMT-LP-zxR" secondAttribute="trailing" id="7kY-xe-9uH"/>
+                            <constraint firstItem="t9x-xW-P1g" firstAttribute="centerX" secondItem="iTO-H0-3GP" secondAttribute="centerX" id="9LA-PX-p11"/>
                             <constraint firstAttribute="bottom" secondItem="d4Z-A0-wnn" secondAttribute="bottom" id="AK5-Du-JHR"/>
                             <constraint firstItem="dHa-vU-WEZ" firstAttribute="top" secondItem="tMT-LP-zxR" secondAttribute="bottom" id="CMB-1K-MWE"/>
                             <constraint firstItem="tMT-LP-zxR" firstAttribute="leading" secondItem="iTO-H0-3GP" secondAttribute="leading" id="Hlr-Ib-ozp"/>
                             <constraint firstItem="d4Z-A0-wnn" firstAttribute="top" secondItem="tMT-LP-zxR" secondAttribute="bottom" id="IVp-nj-3bD"/>
+                            <constraint firstItem="t9x-xW-P1g" firstAttribute="top" relation="greaterThanOrEqual" secondItem="iTO-H0-3GP" secondAttribute="top" constant="40" id="JqF-GW-wOZ"/>
                             <constraint firstItem="dHa-vU-WEZ" firstAttribute="width" secondItem="iTO-H0-3GP" secondAttribute="width" multiplier="0.5" id="QQC-R5-i9O"/>
-                            <constraint firstAttribute="trailing" secondItem="hNb-nt-KGx" secondAttribute="trailing" constant="8" id="S0y-Ek-r8G"/>
+                            <constraint firstAttribute="trailing" secondItem="hNb-nt-KGx" secondAttribute="trailing" id="S0y-Ek-r8G"/>
                             <constraint firstItem="d4Z-A0-wnn" firstAttribute="leading" secondItem="iTO-H0-3GP" secondAttribute="leading" id="Tte-Am-tAi"/>
                             <constraint firstAttribute="bottom" secondItem="hNb-nt-KGx" secondAttribute="bottom" id="Ye7-AR-QOo"/>
                             <constraint firstAttribute="trailing" secondItem="dHa-vU-WEZ" secondAttribute="trailing" id="YxE-dJ-xxN"/>
                             <constraint firstItem="hNb-nt-KGx" firstAttribute="top" relation="greaterThanOrEqual" secondItem="dHa-vU-WEZ" secondAttribute="bottom" id="kkC-0o-Icv"/>
                             <constraint firstItem="tMT-LP-zxR" firstAttribute="top" secondItem="iTO-H0-3GP" secondAttribute="top" id="y4s-OS-Bc1"/>
+                            <constraint firstItem="t9x-xW-P1g" firstAttribute="centerY" secondItem="iTO-H0-3GP" secondAttribute="centerY" priority="980" id="yfy-WQ-Hu9"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="translatesAutoresizingMaskIntoConstraints" value="NO"/>
@@ -465,6 +476,7 @@
                     <connections>
                         <outlet property="clearSelectionImageView" destination="ev3-e4-Sem" id="qsh-Os-zM6"/>
                         <outlet property="consoleScrollViewHeightConstraint" destination="vyx-Ci-Bxy" id="G17-ao-NVC"/>
+                        <outlet property="copySuccessIndication" destination="t9x-xW-P1g" id="nDW-LS-v9X"/>
                         <outlet property="scrollView" destination="d4Z-A0-wnn" id="prJ-fZ-LOJ"/>
                     </connections>
                 </viewController>
@@ -497,6 +509,7 @@
         <image name="Clear selection button" width="5.7600002288818359" height="5.7600002288818359"/>
         <image name="Console Button" width="12" height="11.279999732971191"/>
         <image name="Copy button" width="13.439999580383301" height="13.439999580383301"/>
+        <image name="Copy@480.png" width="480" height="480"/>
         <image name="Tick@480.png" width="480" height="480"/>
     </resources>
 </document>

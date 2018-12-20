@@ -12,8 +12,15 @@ class ConsoleViewContainerController: UIViewController {
     @IBOutlet var scrollView: UIView!
     @IBOutlet var consoleScrollViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet var clearSelectionImageView: UIImageView!
+    @IBOutlet var copySuccessIndication: UIImageView!
 
     private var _wbLogManager: WBLogManager?
+
+    deinit {
+        if let lm = self._wbLogManager {
+            lm.removeObserver(self, forKeyPath: "aLogIsSelected")
+        }
+    }
 
     var consoleScrollViewHeightAtStartOfGesture: CGFloat? = nil
     var wbLogManager: WBLogManager! {
@@ -44,6 +51,7 @@ class ConsoleViewContainerController: UIViewController {
         let gpb = UIPasteboard.general
         let text = self.wbLogManager.selectedLogText()
         gpb.string = text
+        FlashAnimation(withView: self.copySuccessIndication).go()
     }
     @IBAction func dividerDrag(_ sender: UIPanGestureRecognizer) {
         let yTranslation = sender.translation(in: sender.view).y

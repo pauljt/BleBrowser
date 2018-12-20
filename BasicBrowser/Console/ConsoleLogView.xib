@@ -23,6 +23,9 @@
                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Primary console message" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Md1-sx-yDf">
                     <rect key="frame" x="8" y="4" width="383" height="66"/>
                     <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="24" id="Im3-38-Gg9"/>
+                    </constraints>
                     <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="12"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
