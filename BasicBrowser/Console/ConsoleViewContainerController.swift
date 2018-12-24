@@ -9,7 +9,7 @@ import UIKit
 
 class ConsoleViewContainerController: UIViewController {
 
-    @IBOutlet var scrollView: UIView!
+    @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var consoleScrollViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet var clearSelectionImageView: UIImageView!
     @IBOutlet var copySuccessIndication: UIImageView!
@@ -76,8 +76,22 @@ class ConsoleViewContainerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let prevHeight = CGFloat(UserDefaults.standard.float(forKey: "lastConsoleHeight"))
-
         self.consoleScrollViewHeightConstraint.constant = prevHeight > 0.0 ? prevHeight : 100.0
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let prevOffset = CGFloat(UserDefaults.standard.float(forKey: "lastYScrollOffset"))
+        let contentHeight = self.scrollView.contentSize.height
+        if contentHeight > prevOffset {
+            self.scrollView.contentOffset.y = prevOffset
+        }
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        UserDefaults.standard.setValue(
+            self.scrollView.contentOffset.y,
+            forKey: "lastYScrollOffset"
+        )
     }
 
     // MARK: - KVO

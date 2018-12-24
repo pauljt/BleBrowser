@@ -241,7 +241,6 @@
                     <view key="view" contentMode="scaleToFill" id="djT-1T-lMr" customClass="ConsoleView" customModule="WebBLE" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="800"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                         <gestureRecognizers/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="translatesAutoresizingMaskIntoConstraints" value="NO"/>
@@ -445,7 +444,6 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="d4Z-A0-wnn" secondAttribute="trailing" id="2Yb-1t-3te"/>
                             <constraint firstItem="eB8-I1-rLS" firstAttribute="top" relation="greaterThanOrEqual" secondItem="t9x-xW-P1g" secondAttribute="bottom" priority="900" constant="10" id="3SY-9p-yO5"/>
