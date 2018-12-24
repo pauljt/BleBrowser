@@ -74,7 +74,8 @@ uk.co.greenparksoftware.wbutils = {
 
 (function () {
     function nslog(message) {
-        console.log(message);
+        // nslog is called in the various JS polyfills
+        // console.log(message);
     }
     window.nslog = nslog;
 })();
