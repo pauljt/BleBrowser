@@ -45,26 +45,22 @@
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DRU-nU-zz3" customClass="WBWebView" customModule="WebBLE" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="521"/>
-                                        <subviews>
-                                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick@480.png" translatesAutoresizingMaskIntoConstraints="NO" id="6wE-az-iDp">
-                                                <rect key="frame" x="67.5" y="140.5" width="240" height="240"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="240" id="em1-ft-ljS"/>
-                                                    <constraint firstAttribute="height" constant="240" id="qSE-Sl-Qc3"/>
-                                                </constraints>
-                                            </imageView>
-                                        </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="6wE-az-iDp" firstAttribute="centerY" secondItem="DRU-nU-zz3" secondAttribute="centerY" id="Lzu-QA-biR"/>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="jg0-uu-J9P"/>
-                                            <constraint firstItem="6wE-az-iDp" firstAttribute="centerX" secondItem="DRU-nU-zz3" secondAttribute="centerX" id="rhw-4M-vsD"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="devicePicker" destination="sbN-21-YtK" id="TvY-wa-llN"/>
                                             <outlet property="logManager" destination="eym-9B-1fd" id="rnd-bl-vLr"/>
                                         </connections>
                                     </view>
+                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick@480.png" translatesAutoresizingMaskIntoConstraints="NO" id="6wE-az-iDp">
+                                        <rect key="frame" x="67.5" y="140.5" width="240" height="240"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="240" id="em1-ft-ljS"/>
+                                            <constraint firstAttribute="height" constant="240" id="qSE-Sl-Qc3"/>
+                                        </constraints>
+                                    </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sbN-21-YtK" customClass="PopUpPickerView" customModule="WebBLE" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="521" width="375" height="290"/>
                                         <subviews>
@@ -106,6 +102,8 @@
                                     <constraint firstAttribute="trailing" secondItem="DRU-nU-zz3" secondAttribute="trailing" id="PRs-pW-gqt"/>
                                     <constraint firstAttribute="bottom" secondItem="DRU-nU-zz3" secondAttribute="bottom" id="YLd-Gx-jgu"/>
                                     <constraint firstItem="DRU-nU-zz3" firstAttribute="top" secondItem="FR6-sF-hFE" secondAttribute="top" id="bzf-J1-gyz"/>
+                                    <constraint firstItem="6wE-az-iDp" firstAttribute="centerX" secondItem="FR6-sF-hFE" secondAttribute="centerX" id="hSb-cx-L8i"/>
+                                    <constraint firstItem="6wE-az-iDp" firstAttribute="centerY" secondItem="FR6-sF-hFE" secondAttribute="centerY" id="kar-IP-cdM"/>
                                     <constraint firstItem="DRU-nU-zz3" firstAttribute="leading" secondItem="FR6-sF-hFE" secondAttribute="leading" id="llV-7P-wNu"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="zpX-iF-0LJ"/>
                                 </constraints>

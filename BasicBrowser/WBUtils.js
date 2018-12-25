@@ -70,6 +70,9 @@ uk.co.greenparksoftware.wbutils = {
         warn: (...args) => consoleLog('warn', ...args),
         error: (...args) => consoleLog('error', ...args),
     };
+    window.addEventListener('error', function (error) {
+        consoleLog('error', `Uncaught error: ${error.message}`);
+    });
  })();
 
 (function () {
