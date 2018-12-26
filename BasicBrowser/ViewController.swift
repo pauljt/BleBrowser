@@ -20,6 +20,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     enum prefKeys: String {
         case bookmarks
+        case consoleOpen
         case lastLocation
         case version
     }
@@ -30,21 +31,27 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     // MARK: IBOutlets
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet var tick: UIImageView!
-
+    @IBOutlet var webViewContainer: UIView!
+    @IBOutlet var toolbar: UIToolbar!
     @IBOutlet var goBackButton: UIBarButtonItem!
     @IBOutlet var goForwardButton: UIBarButtonItem!
     @IBOutlet var refreshButton: UIBarButtonItem!
+    @IBOutlet var showConsoleButton: UIBarButtonItem!
+    @IBOutlet var webViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet var webView: WBWebView!
+    @IBOutlet var logManager: WBLogManager!
 
     var initialURL: URL?
 
     var bookmarksManager = BookmarksManager(
         userDefaults: UserDefaults.standard, key: prefKeys.bookmarks.rawValue)
-    @IBOutlet var webView: WBWebView!
     var wbManager: WBManager? {
         didSet {
             self.webView.wbManager = wbManager
         }
     }
+
+    var consoleViewContainerController: ConsoleViewContainerController? = nil
 
     // MARK: - API
     // MARK: IBActions
@@ -74,6 +81,13 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.webView.reload()
         }
     }
+    @IBAction func toggleConsole() {
+        if self.consoleViewContainerController != nil {
+            self.hideConsole()
+        } else {
+            self.showConsole()
+        }
+    }
 
     // MARK: - Segue handling
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -99,6 +113,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
        
         super.viewDidLoad()
 
+        let ud = UserDefaults.standard
+
         // connect view to other objects
         self.locationTextField.delegate = self
         self.webView.wbManager = self.wbManager
@@ -117,7 +133,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
         else {
             var lastLocation: String
-            if let prefLoc = UserDefaults.standard.value(forKey: ViewController.prefKeys.lastLocation.rawValue) as? String {
+            if let prefLoc = ud.value(forKey: ViewController.prefKeys.lastLocation.rawValue) as? String {
             lastLocation = prefLoc
             } else {
                 let svers = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
@@ -130,8 +146,12 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.goBackButton.action = #selector(self.webView.goBack)
         self.goForwardButton.target = self.webView
         self.goForwardButton.action = #selector(self.webView.goForward)
-        self.refreshButton.target = self
-        self.refreshButton.action = #selector(self.reload)
+        self.refreshButton.target = self.webView
+        self.refreshButton.action = #selector(self.webView.reload)
+
+        if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {
+            self.showConsole()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -168,15 +188,14 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+
         NSLog("Did start provisional nav")
-        if let man = self.wbManager {
-            man.clearState()
-        }
+        self.wbManager?.clearState()
         self.wbManager = WBManager()
+        self.logManager.clearLogs()
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        NSLog("Navigation didFinish")
         self.webView.enableBluetoothInView()
         if let urlString = webView.url?.absoluteString,
             urlString != "about:blank" {
@@ -275,5 +294,39 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         // Set the preferences version to be up to date.
         ud.set(self.currentPrefVersion, forKey: ViewController.prefKeys.version.rawValue)
+    }
+    func showConsole() {
+        guard let cvcont =  self.storyboard?.instantiateViewController(withIdentifier: "ConsoleViewContainer") as? ConsoleViewContainerController else {
+            NSLog("Unable to load ConsoleViewContainer from the storyboard")
+            return
+        }
+        NSLayoutConstraint.deactivate(
+            [self.webViewBottomConstraint]
+        )
+        self.addChildViewController(cvcont)
+        self.view.addSubview(cvcont.view)
+
+        // after adding the subview the IB outlets will be joined up,
+        // so we can add the logger direct to the console view controller
+        cvcont.wbLogManager = self.webView.logManager
+
+        NSLayoutConstraint.activate([
+            NSLayoutConstraint(item: cvcont.view, attribute: .top, relatedBy: .equal, toItem: self.webViewContainer, attribute: .bottom, multiplier: 1.0, constant: 0.0),
+            NSLayoutConstraint(item: cvcont.view, attribute: .bottom, relatedBy: .equal, toItem: self.toolbar, attribute: .top, multiplier: 1.0, constant: -1.0),
+            NSLayoutConstraint(item: cvcont.view, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1.0, constant: 0.0),
+            NSLayoutConstraint(item: cvcont.view, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1.0, constant: 0.0),
+            ])
+
+        self.consoleViewContainerController = cvcont
+        UserDefaults.standard.setValue(true, forKey: prefKeys.consoleOpen.rawValue)
+    }
+    func hideConsole() {
+        let cvcont = self.consoleViewContainerController!
+        NSLayoutConstraint.deactivate(cvcont.view.constraints)
+        cvcont.view.removeFromSuperview()
+        cvcont.removeFromParentViewController()
+        self.consoleViewContainerController = nil;
+        NSLayoutConstraint.activate([self.webViewBottomConstraint])
+        UserDefaults.standard.setValue(false, forKey: prefKeys.consoleOpen.rawValue)
     }
 }

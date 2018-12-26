@@ -24,17 +24,41 @@ import WebKit
 
 open class WBWebView: WKWebView {
 
-    class WKLogger: NSObject, WKScriptMessageHandler {
-
-        let debug = false
-
-        open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            if self.debug {
-                NSLog("WKLog: \(message.body)")
-            }
+    @IBOutlet var logManager: WBLogManager! {
+        didSet(lm) {
+            self.wbLogger.manager = self.logManager
         }
     }
-    let wkLogger = WKLogger()
+
+    class WBLogger: NSObject, WKScriptMessageHandler {
+
+        var manager: WBLogManager!
+
+        open func userContentController(
+            _ userContentController: WKUserContentController,
+            didReceive message: WKScriptMessage
+        ) {
+            var log: WBLog
+            switch (message.body) {
+            case let bodyDict as [String: Any]:
+                guard
+                    let levelString = bodyDict["level"] as? String,
+                    let level = WBLog.Level(rawValue: levelString),
+                    let message = bodyDict["message"] as? String
+                else {
+                    NSLog("Badly formed dictionary \(bodyDict.description) passed to the logger")
+                    return
+                }
+                log = WBLog(level: level, message: message, args: [])
+            case let bodyString as String:
+                log = WBLog(level: .log, message: bodyString, args: [])
+            default:
+                log = WBLog(level: .warn, message: "Unexpected message type from console log: \(message.body)", args: [])
+            }
+            self.manager.addLog(log)
+        }
+    }
+    let wbLogger = WBLogger()
     @IBOutlet var devicePicker: PopUpPickerView!
 
     let webBluetoothHandlerName = "bluetooth"
@@ -81,7 +105,7 @@ open class WBWebView: WKWebView {
             completionHandler:{})
 
         // Add logging script
-        userController.add(self.wkLogger, name: "logger")
+        userController.add(self.wbLogger, name: "logger")
 
         // Load js
         for jsfilename in ["stringview", "WBUtils", "WBBluetoothUUID", "WBPolyfill"] {
