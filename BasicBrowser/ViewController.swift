@@ -16,7 +16,7 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate,WKUIDelegate {
+class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate {
 
     enum prefKeys: String {
         case bookmarks

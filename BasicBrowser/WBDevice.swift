@@ -370,7 +370,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             return ""
         }
     }
-    
 
     // MARK: - CBPeripheralDelegate
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -565,7 +564,7 @@ class BluetoothAdvertisingData{
         self.rssi = String(describing: RSSI)
         let data = advertisementData[CBAdvertisementDataManufacturerDataKey]
         self.manufacturerData = ""
-        if data != nil{
+        if data != nil {
             if let dataString = NSString(data: data as! Data, encoding: String.Encoding.utf8.rawValue) as String? {
                 self.manufacturerData = dataString
             } else {

@@ -154,7 +154,7 @@
                             <constraint firstItem="1f6-zQ-2YY" firstAttribute="top" secondItem="FR6-sF-hFE" secondAttribute="bottom" id="aOF-Pv-RcW"/>
                             <constraint firstAttribute="trailing" secondItem="FR6-sF-hFE" secondAttribute="trailing" id="fQw-bi-VQq"/>
                             <constraint firstItem="O1l-7F-uXL" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="gid-BO-hHD"/>
-                            <constraint firstItem="1f6-zQ-2YY" firstAttribute="top" secondItem="sbN-21-YtK" secondAttribute="bottom" constant="-290" id="lVb-v6-Lgk"/>
+                            <constraint firstItem="FR6-sF-hFE" firstAttribute="bottom" secondItem="sbN-21-YtK" secondAttribute="bottom" constant="-290" id="lVb-v6-Lgk"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="5bm-lP-CUV"/>
