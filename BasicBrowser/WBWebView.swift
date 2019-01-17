@@ -99,7 +99,8 @@ open class WBWebView: WKWebView {
         // it seems a bit arbitrary when this happens otherwise.
         // This from http://stackoverflow.com/a/34376943/5920499
         let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache]) as! Set<String>
-        WKWebsiteDataStore.default().removeData(
+        let ds = WKWebsiteDataStore.default()
+        ds.removeData(
             ofTypes: websiteDataTypes,
             modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
             completionHandler:{})

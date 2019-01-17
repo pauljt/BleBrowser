@@ -310,9 +310,9 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         // so we can add the logger direct to the console view controller
         cvcont.wbLogManager = self.webView.logManager
 
+        cvcont.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         NSLayoutConstraint.activate([
             NSLayoutConstraint(item: cvcont.view, attribute: .top, relatedBy: .equal, toItem: self.webViewContainer, attribute: .bottom, multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: cvcont.view, attribute: .bottom, relatedBy: .equal, toItem: self.toolbar, attribute: .top, multiplier: 1.0, constant: -1.0),
             NSLayoutConstraint(item: cvcont.view, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1.0, constant: 0.0),
             NSLayoutConstraint(item: cvcont.view, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1.0, constant: 0.0),
             ])
