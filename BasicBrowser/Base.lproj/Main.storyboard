@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
+        <!--Navigation View Controller-->
         <scene sceneID="lV6-vP-8ff">
             <objects>
-                <navigationController id="bXw-Ly-snu" sceneMemberID="viewController">
+                <navigationController hidesBarsOnSwipe="YES" hidesBarsOnTap="YES" id="bXw-Ly-snu" customClass="NavigationViewController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="izC-eW-IMa">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -41,10 +41,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FR6-sF-hFE" userLabel="WebViewContainer">
-                                <rect key="frame" x="0.0" y="102" width="375" height="521"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DRU-nU-zz3" customClass="WBWebView" customModule="WebBLE" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="521"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="559"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="jg0-uu-J9P"/>
@@ -55,7 +55,7 @@
                                         </connections>
                                     </view>
                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick@480.png" translatesAutoresizingMaskIntoConstraints="NO" id="6wE-az-iDp">
-                                        <rect key="frame" x="67.5" y="140.5" width="240" height="240"/>
+                                        <rect key="frame" x="67.5" y="159.5" width="240" height="240"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="240" id="em1-ft-ljS"/>
                                             <constraint firstAttribute="height" constant="240" id="qSE-Sl-Qc3"/>
@@ -108,59 +108,69 @@
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="zpX-iF-0LJ"/>
                                 </constraints>
                             </view>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="1f6-zQ-2YY">
-                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
-                                <items>
-                                    <barButtonItem enabled="NO" title="&lt;" style="plain" id="NaX-Y9-Gfj"/>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="sXn-kx-dSX"/>
-                                    <barButtonItem systemItem="add" id="r6k-jv-IC4">
-                                        <connections>
-                                            <action selector="addBookmark" destination="BYZ-38-t0r" id="SvN-L1-pFS"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem systemItem="bookmarks" id="jSv-KT-nTS">
-                                        <connections>
-                                            <segue destination="bL6-a5-4h5" kind="show" id="tde-jn-QQH"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="vNO-d3-Qzl"/>
-                                    <barButtonItem image="Console Button" width="28" id="uNi-2X-YpW">
-                                        <connections>
-                                            <action selector="toggleConsole" destination="BYZ-38-t0r" id="gvJ-pj-8It"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="dS0-fO-69k"/>
-                                    <barButtonItem style="plain" systemItem="refresh" id="LXB-CH-4RT"/>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="pN2-Zw-LM0"/>
-                                    <barButtonItem enabled="NO" title="&gt;" id="qhG-nx-nEQ"/>
-                                </items>
-                            </toolbar>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="O1l-7F-uXL">
-                                <rect key="frame" x="16" y="72" width="343" height="30"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="URL" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
-                            </textField>
+                            <view alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NgV-mf-Lto">
+                                <rect key="frame" x="0.0" y="591" width="375" height="32"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="csH-dg-HaH"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="822-ja-NHK" appends="YES" id="Fhm-uo-H6s"/>
+                                </connections>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="O1l-7F-uXL" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="1xl-vn-g1F"/>
                             <constraint firstItem="FR6-sF-hFE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="BrV-eG-Hn5"/>
-                            <constraint firstItem="O1l-7F-uXL" firstAttribute="centerX" secondItem="FR6-sF-hFE" secondAttribute="centerX" id="M6y-jD-dK8"/>
-                            <constraint firstItem="FR6-sF-hFE" firstAttribute="trailing" secondItem="1f6-zQ-2YY" secondAttribute="trailing" id="Q1D-WB-zOb"/>
-                            <constraint firstItem="FR6-sF-hFE" firstAttribute="top" secondItem="O1l-7F-uXL" secondAttribute="bottom" id="QOW-zY-fK0"/>
-                            <constraint firstItem="FR6-sF-hFE" firstAttribute="leading" secondItem="1f6-zQ-2YY" secondAttribute="leading" id="Xsm-ZL-EdN"/>
-                            <constraint firstItem="1f6-zQ-2YY" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="YEE-rZ-tSf"/>
-                            <constraint firstItem="1f6-zQ-2YY" firstAttribute="top" secondItem="FR6-sF-hFE" secondAttribute="bottom" id="aOF-Pv-RcW"/>
+                            <constraint firstAttribute="trailing" secondItem="NgV-mf-Lto" secondAttribute="trailing" id="Gf8-bX-1Mj"/>
+                            <constraint firstItem="FR6-sF-hFE" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Wnn-9Y-Ay8"/>
+                            <constraint firstItem="NgV-mf-Lto" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ceZ-8R-SPH"/>
                             <constraint firstAttribute="trailing" secondItem="FR6-sF-hFE" secondAttribute="trailing" id="fQw-bi-VQq"/>
-                            <constraint firstItem="O1l-7F-uXL" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="gid-BO-hHD"/>
-                            <constraint firstItem="FR6-sF-hFE" firstAttribute="bottom" secondItem="sbN-21-YtK" secondAttribute="bottom" constant="-290" id="lVb-v6-Lgk"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="NgV-mf-Lto" secondAttribute="bottom" id="gC0-D0-aU8"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="FR6-sF-hFE" secondAttribute="bottom" id="pMS-1Q-A60"/>
                         </constraints>
+                        <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="20"/>
                     </view>
-                    <navigationItem key="navigationItem" id="5bm-lP-CUV"/>
+                    <toolbarItems>
+                        <barButtonItem enabled="NO" title="&lt;" style="plain" id="NaX-Y9-Gfj"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="sXn-kx-dSX"/>
+                        <barButtonItem systemItem="add" id="r6k-jv-IC4">
+                            <connections>
+                                <action selector="addBookmark" destination="BYZ-38-t0r" id="SvN-L1-pFS"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem systemItem="bookmarks" id="jSv-KT-nTS">
+                            <connections>
+                                <segue destination="bL6-a5-4h5" kind="show" id="tde-jn-QQH"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="vNO-d3-Qzl"/>
+                        <barButtonItem image="Console Button" width="28" id="uNi-2X-YpW">
+                            <connections>
+                                <action selector="toggleConsole" destination="BYZ-38-t0r" id="gvJ-pj-8It"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="dS0-fO-69k"/>
+                        <barButtonItem style="plain" systemItem="refresh" id="LXB-CH-4RT"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="pN2-Zw-LM0"/>
+                        <barButtonItem enabled="NO" title="&gt;" id="qhG-nx-nEQ"/>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" id="5bm-lP-CUV">
+                        <nil key="title"/>
+                        <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="fill" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="O1l-7F-uXL">
+                            <rect key="frame" x="137.5" y="7" width="100" height="30"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="URL" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
+                        </textField>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="consoleScrollView" destination="d4Z-A0-wnn" id="pQB-Yp-mfx"/>
                         <outlet property="dividerViewHeightConstraint" destination="YCa-zO-D9t" id="x15-Qb-Jxl"/>
+                        <outlet property="extraShowBarsView" destination="NgV-mf-Lto" id="bDg-v6-M0u"/>
                         <outlet property="goBackButton" destination="NaX-Y9-Gfj" id="0Xc-k5-kMK"/>
                         <outlet property="goForwardButton" destination="qhG-nx-nEQ" id="1GO-aY-9L7"/>
                         <outlet property="locationTextField" destination="O1l-7F-uXL" id="i8M-pT-n46"/>
@@ -168,14 +178,18 @@
                         <outlet property="refreshButton" destination="LXB-CH-4RT" id="350-AZ-rBZ"/>
                         <outlet property="showConsoleButton" destination="uNi-2X-YpW" id="CTt-pC-CFQ"/>
                         <outlet property="tick" destination="6wE-az-iDp" id="aNh-gM-jXz"/>
-                        <outlet property="toolbar" destination="1f6-zQ-2YY" id="wt0-1B-LQv"/>
                         <outlet property="webView" destination="DRU-nU-zz3" id="6mC-k5-D1b"/>
-                        <outlet property="webViewBottomConstraint" destination="aOF-Pv-RcW" id="jcD-6I-vpg"/>
+                        <outlet property="webViewBottomConstraint" destination="pMS-1Q-A60" id="UzU-1r-AFv"/>
                         <outlet property="webViewContainer" destination="FR6-sF-hFE" id="ve0-tR-IgP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <customObject id="eym-9B-1fd" customClass="WBLogManager" customModule="WebBLE" customModuleProvider="target"/>
+                <tapGestureRecognizer id="822-ja-NHK">
+                    <connections>
+                        <action selector="showBars" destination="BYZ-38-t0r" id="hEA-bb-nhe"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-346.39999999999998" y="366.56671664167919"/>
         </scene>

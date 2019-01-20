@@ -16,7 +16,7 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate {
+class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WBNavigationBarDelegate {
 
     enum prefKeys: String {
         case bookmarks
@@ -32,7 +32,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet var tick: UIImageView!
     @IBOutlet var webViewContainer: UIView!
-    @IBOutlet var toolbar: UIToolbar!
     @IBOutlet var goBackButton: UIBarButtonItem!
     @IBOutlet var goForwardButton: UIBarButtonItem!
     @IBOutlet var refreshButton: UIBarButtonItem!
@@ -40,6 +39,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var webViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet var webView: WBWebView!
     @IBOutlet var logManager: WBLogManager!
+    @IBOutlet var extraShowBarsView: UIView!
 
     var initialURL: URL?
 
@@ -52,6 +52,19 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
 
     var consoleViewContainerController: ConsoleViewContainerController? = nil
+
+    var scrollingFromTop = false
+    var scrollingFromBottom = false
+    let showBarsOnFlickUpDown = false
+
+    override func prefersHomeIndicatorAutoHidden() -> Bool {
+        return self.navigationController?.isNavigationBarHidden ?? false
+    }
+    override var prefersStatusBarHidden: Bool {
+        get {
+            return true
+        }
+    }
 
     // MARK: - API
     // MARK: IBActions
@@ -71,7 +84,12 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.bookmarksManager.addBookmarks([WBBookmark(title: title, url: url)])
         FlashAnimation(withView: self.tick).go()
     }
-
+    @IBAction func showBars() {
+        let nc = self.navigationController!
+        nc.setToolbarHidden(false, animated: true)
+        nc.setNavigationBarHidden(false, animated: true)
+        self.setHidesOnSwipesFromScrollView(self.webView.scrollView)
+    }
     @IBAction func reload() {
         if (self.webView?.url?.absoluteString ?? "about:blank") == "about:blank",
             let text = self.locationTextField.text,
@@ -110,7 +128,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     // MARK: - Event handling
     override func viewDidLoad() {
-       
         super.viewDidLoad()
 
         let ud = UserDefaults.standard
@@ -120,9 +137,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.webView.wbManager = self.wbManager
         self.webView.navigationDelegate = self
         self.webView.uiDelegate = self
+        self.webView.scrollView.delegate = self
+        self.webView.scrollView.clipsToBounds = false
 
         for path in ["canGoBack", "canGoForward"] {
-            self.webView.addObserver(self, forKeyPath: path, options: NSKeyValueObservingOptions.new, context: nil)
+            self.webView.addObserver(self, forKeyPath: path, options: .new, context: nil)
         }
 
         self.loadPreferences()
@@ -156,7 +175,15 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+
+        let nc = self.navigationController as! NavigationViewController
+        nc.navigationBarDelegate = self
+        self.showBars()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        let nc = self.navigationController as! NavigationViewController
+        nc.navigationBarDelegate = nil
+        super.viewWillDisappear(animated)
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -182,8 +209,12 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.initialURL = url
             return
         }
-        locationTextField.text = url.absoluteString
+        self.setLocationText(url.absoluteString)
         self.webView.load(URLRequest(url: url))
+    }
+    func setLocationText(_ text: String) {
+        self.locationTextField.text = text
+        self.locationTextField.sizeToFit()
     }
 
     // MARK: - WKNavigationDelegate
@@ -199,7 +230,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.webView.enableBluetoothInView()
         if let urlString = webView.url?.absoluteString,
             urlString != "about:blank" {
-            self.locationTextField.text = urlString
+            self.setLocationText(urlString)
             UserDefaults.standard.setValue(urlString, forKey: ViewController.prefKeys.lastLocation.rawValue)
         }
     }
@@ -220,6 +251,55 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         alertController.addAction(UIAlertAction(
             title: "OK", style: .default, handler: {_ in completionHandler()}))
         self.present(alertController, animated: true, completion: nil)
+    }
+
+    // MARK: - UIScrollViewDelegate
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        let yOffset = scrollView.contentOffset.y
+        let frameHeight = scrollView.frame.size.height
+        let contentHeight = scrollView.contentSize.height
+
+        if yOffset < 5.0 {
+            self.scrollingFromTop = true
+            self.scrollingFromBottom = false
+        } else if contentHeight - (yOffset + frameHeight) < 5.0 {
+            self.scrollingFromTop = false
+            self.scrollingFromBottom = true
+        } else {
+            self.scrollingFromTop = false
+            self.scrollingFromBottom = false
+        }
+    }
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let yOffset = scrollView.contentOffset.y
+        let frameHeight = scrollView.frame.size.height
+        let contentHeight = scrollView.contentSize.height
+
+        if !decelerate {
+            self.setHidesOnSwipesFromScrollView(scrollView)
+        }
+
+        if self.showBarsOnFlickUpDown && self.scrollingFromTop && yOffset < 0.0 {
+            self.showBars()
+        }
+        if self.showBarsOnFlickUpDown && self.scrollingFromBottom && yOffset + frameHeight > contentHeight {
+            self.showBars()
+        }
+        self.scrollingFromTop = false
+        self.scrollingFromBottom = false
+    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.setHidesOnSwipesFromScrollView(scrollView)
+    }
+
+    // MARK: - WBNavigationBarDelegate
+    func navBarIsHiddenDidChange(_ hidden: Bool) {
+        self.setNeedsUpdateOfHomeIndicatorAutoHidden()
+        if hidden {
+            self.extraShowBarsView.isHidden = false
+        } else {
+            self.extraShowBarsView.isHidden = true
+        }
     }
 
     // MARK: - Observe protocol
@@ -304,7 +384,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             [self.webViewBottomConstraint]
         )
         self.addChildViewController(cvcont)
-        self.view.addSubview(cvcont.view)
+
+        self.view.insertSubview(cvcont.view, at: self.view.subviews.firstIndex(of: self.extraShowBarsView)!)
 
         // after adding the subview the IB outlets will be joined up,
         // so we can add the logger direct to the console view controller
@@ -328,5 +409,28 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.consoleViewContainerController = nil;
         NSLayoutConstraint.activate([self.webViewBottomConstraint])
         UserDefaults.standard.setValue(false, forKey: prefKeys.consoleOpen.rawValue)
+    }
+    func setHidesOnSwipesFromScrollView(_ scrollView: UIScrollView) {
+        // Due to an apparent bug this should not be called when the toolbar / navbar are animating up or down as far as possible as that seems to cause a crash
+        let yOffset = scrollView.contentOffset.y
+        let frameHeight = scrollView.frame.size.height
+        let contentHeight = scrollView.contentSize.height
+        let nc = self.navigationController!
+
+        let bottomMarginNotToHideSwipesIn: CGFloat = 100.0
+
+        if yOffset + frameHeight > (
+            contentHeight > bottomMarginNotToHideSwipesIn
+                ? contentHeight - bottomMarginNotToHideSwipesIn
+                : 0
+        ) {
+            if nc.hidesBarsOnSwipe {
+                nc.hidesBarsOnSwipe = false
+            }
+        } else {
+            if !nc.hidesBarsOnSwipe {
+                nc.hidesBarsOnSwipe = true
+            }
+        }
     }
 }
