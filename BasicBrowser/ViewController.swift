@@ -16,7 +16,7 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WBNavigationBarDelegate {
+class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate {
 
     enum prefKeys: String {
         case bookmarks
@@ -40,31 +40,18 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var webView: WBWebView!
     @IBOutlet var logManager: WBLogManager!
     @IBOutlet var extraShowBarsView: UIView!
+    @IBOutlet var pickerContainer: UIView!
 
     var initialURL: URL?
 
     var bookmarksManager = BookmarksManager(
         userDefaults: UserDefaults.standard, key: prefKeys.bookmarks.rawValue)
-    var wbManager: WBManager? {
-        didSet {
-            self.webView.wbManager = wbManager
-        }
-    }
 
     var consoleViewContainerController: ConsoleViewContainerController? = nil
 
     var scrollingFromTop = false
     var scrollingFromBottom = false
     let showBarsOnFlickUpDown = false
-
-    override func prefersHomeIndicatorAutoHidden() -> Bool {
-        return self.navigationController?.isNavigationBarHidden ?? false
-    }
-    override var prefersStatusBarHidden: Bool {
-        get {
-            return true
-        }
-    }
 
     // MARK: - API
     // MARK: IBActions
@@ -84,12 +71,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.bookmarksManager.addBookmarks([WBBookmark(title: title, url: url)])
         FlashAnimation(withView: self.tick).go()
     }
-    @IBAction func showBars() {
-        let nc = self.navigationController!
-        nc.setToolbarHidden(false, animated: true)
-        nc.setNavigationBarHidden(false, animated: true)
-        self.setHidesOnSwipesFromScrollView(self.webView.scrollView)
-    }
     @IBAction func reload() {
         if (self.webView?.url?.absoluteString ?? "about:blank") == "about:blank",
             let text = self.locationTextField.text,
@@ -99,11 +80,27 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.webView.reload()
         }
     }
+    @IBAction func showBars() {
+        let nc = self.navigationController!
+        nc.setToolbarHidden(false, animated: true)
+        nc.setNavigationBarHidden(false, animated: true)
+        self.setHidesOnSwipesFromScrollView(self.webView.scrollView)
+    }
     @IBAction func toggleConsole() {
         if self.consoleViewContainerController != nil {
             self.hideConsole()
         } else {
             self.showConsole()
+        }
+    }
+
+    // MARK: - Home bar indicator control
+    override func prefersHomeIndicatorAutoHidden() -> Bool {
+        return (self.navigationController as! NavigationViewController).navBarIsHidden
+    }
+    override var prefersStatusBarHidden: Bool {
+        get {
+            return (self.navigationController as! NavigationViewController).navBarIsHidden
         }
     }
 
@@ -134,7 +131,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         // connect view to other objects
         self.locationTextField.delegate = self
-        self.webView.wbManager = self.wbManager
         self.webView.navigationDelegate = self
         self.webView.uiDelegate = self
         self.webView.scrollView.delegate = self
@@ -177,12 +173,12 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         super.viewWillAppear(animated)
 
         let nc = self.navigationController as! NavigationViewController
-        nc.navigationBarDelegate = self
+        nc.addObserver(self, forKeyPath: "navBarIsHidden", options: [.initial, .new], context: nil)
         self.showBars()
     }
     override func viewWillDisappear(_ animated: Bool) {
         let nc = self.navigationController as! NavigationViewController
-        nc.navigationBarDelegate = nil
+        nc.removeObserver(self, forKeyPath: "navBarIsHidden")
         super.viewWillDisappear(animated)
     }
 
@@ -220,9 +216,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
 
-        NSLog("Did start provisional nav")
-        self.wbManager?.clearState()
-        self.wbManager = WBManager()
+        NSLog("Did start provisional navigation to \(webView.url?.absoluteString ?? "unknown url")")
+        self.configureNewManager()
         self.logManager.clearLogs()
     }
     
@@ -292,16 +287,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.setHidesOnSwipesFromScrollView(scrollView)
     }
 
-    // MARK: - WBNavigationBarDelegate
-    func navBarIsHiddenDidChange(_ hidden: Bool) {
-        self.setNeedsUpdateOfHomeIndicatorAutoHidden()
-        if hidden {
-            self.extraShowBarsView.isHidden = false
-        } else {
-            self.extraShowBarsView.isHidden = true
-        }
-    }
-
     // MARK: - Observe protocol
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard
@@ -317,6 +302,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.goBackButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
         case "canGoForward":
             self.goForwardButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
+        case "navBarIsHidden":
+            let navBarIsHidden = defChange[NSKeyValueChangeKey.newKey] as! Bool
+            self.extraShowBarsView.isHidden = !navBarIsHidden
+            self.setNeedsUpdateOfHomeIndicatorAutoHidden()
         default:
             NSLog("Unexpected change observed by ViewController: \(defKeyPath)")
         }
@@ -432,5 +421,14 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
                 nc.hidesBarsOnSwipe = true
             }
         }
+    }
+    func configureNewManager() {
+        self.webView.wbManager?.clearState()
+        let picker = self.childViewControllers.first(
+            where: {$0 as? PopUpPickerController != nil}
+            ) as! PopUpPickerController
+        let manager = WBManager(devicePicker: picker)
+        picker.delegate = manager
+        self.webView.wbManager = manager
     }
 }

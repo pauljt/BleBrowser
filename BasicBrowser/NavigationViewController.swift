@@ -7,25 +7,18 @@
 
 import UIKit
 
-protocol WBNavigationBarDelegate {
-    func navBarIsHiddenDidChange(_ hidden: Bool)
-}
 
 class NavigationViewController: UINavigationController {
 
-    var navigationBarDelegate: WBNavigationBarDelegate?
+    @objc dynamic var navBarIsHidden: Bool = false
 
-    override var isNavigationBarHidden: Bool {
-        set (isHidden) {
-            super.isNavigationBarHidden = isHidden
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // watch for nav bar hidden changes and alert the delegate, this allows it to e.g. show extra transparent views to bring them back
+        let newIsHidden = self.navigationBar.isHidden
+        if newIsHidden == self.navBarIsHidden {
+            return
         }
-        get {
-            return super.isNavigationBarHidden
-        }
-    }
-
-    override func setNavigationBarHidden(_ hidden: Bool, animated: Bool) {
-        super.setNavigationBarHidden(hidden, animated: animated)
-        self.navigationBarDelegate?.navBarIsHiddenDidChange(hidden)
+        self.navBarIsHidden = newIsHidden
     }
 }

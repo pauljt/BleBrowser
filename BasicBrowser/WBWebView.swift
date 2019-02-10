@@ -59,7 +59,6 @@ open class WBWebView: WKWebView {
         }
     }
     let wbLogger = WBLogger()
-    @IBOutlet var devicePicker: PopUpPickerView!
 
     let webBluetoothHandlerName = "bluetooth"
     private var _wbManager: WBManager?
@@ -72,10 +71,8 @@ open class WBWebView: WKWebView {
                 self.configuration.userContentController.removeScriptMessageHandler(forName: self.webBluetoothHandlerName)
             }
             self._wbManager = newWBManager
-            self.devicePicker.delegate = newWBManager
             if let newMan = newWBManager {
                 self.configuration.userContentController.add(newMan, name: self.webBluetoothHandlerName)
-                newMan.devicePicker = self.devicePicker
             }
         }
     }

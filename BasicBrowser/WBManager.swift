@@ -20,6 +20,11 @@ import Foundation
 import CoreBluetooth
 import WebKit
 
+protocol WBPicker {
+    func showPicker()
+    func updatePicker()
+}
+
 open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler, PopUpPickerViewDelegate {
 
     // MARK: - Embedded types
@@ -30,7 +35,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     // MARK: - Properties
     let debug = true
     let centralManager = CBCentralManager(delegate: nil, queue: nil)
-    var devicePicker: PopUpPickerView!
+    var devicePicker: WBPicker
 
     /*! @abstract The devices selected by the user for use by this manager. Keyed by the UUID provided by the system. */
     var devicesByInternalUUID = [UUID: WBDevice]()
@@ -48,13 +53,10 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
     var pickerDevices = [WBDevice]()
 
     // MARK: - Constructors / destructors
-    override init() {
+    init(devicePicker: WBPicker) {
+        self.devicePicker = devicePicker
         super.init()
         self.centralManager.delegate = self
-    }
-    deinit {
-        NSLog("WBManager deinit")
-        self.clearState()
     }
 
     // MARK: - WKScriptMessageHandler
