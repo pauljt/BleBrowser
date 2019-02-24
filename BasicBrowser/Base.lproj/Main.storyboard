@@ -73,9 +73,8 @@
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="zpX-iF-0LJ"/>
                                 </constraints>
                             </view>
-                            <view hidden="YES" alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NgV-mf-Lto">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NgV-mf-Lto">
                                 <rect key="frame" x="0.0" y="635" width="375" height="32"/>
-                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="32" id="csH-dg-HaH"/>
                                 </constraints>
@@ -597,6 +596,10 @@
         <scene sceneID="FQf-Te-HNC">
             <objects>
                 <viewController modalPresentationStyle="overCurrentContext" id="PQo-oV-Kiq" customClass="ErrorViewController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4oq-hg-3rP"/>
+                        <viewControllerLayoutGuide type="bottom" id="puD-8Q-pIp"/>
+                    </layoutGuides>
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="pko-4S-8Vm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

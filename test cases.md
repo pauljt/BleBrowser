@@ -52,6 +52,15 @@
 8. ensure all default bookmarks load
     - ok 1.1-2
 
+# 1.2 test cases
+
+1. quit app after failed navigation. Ensure return to last non-failed navigation.
+        - ok 1.2.1
+2. scroll to bottom of longish page, tap to bring up bars, scroll to bottom again and bars should not disappear.
+        - ok 1.2.1
+3. tapping top of page scrolls to top, then shows bars
+        - ok 1.2.1
+
 # future test cases
 
 1. requestDevice, see popup come up, then navigate to a different page. popup should go away.

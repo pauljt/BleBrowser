@@ -16,6 +16,8 @@
 import UIKit
 import WebKit
 
+let statusBarTappedNotification = Notification(name: Notification.Name(rawValue: "statusBarTappedNotification"))
+
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate {
 
     enum prefKeys: String {
@@ -86,7 +88,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.webView!.goBack()
     }
     @IBAction func reload() {
-        self.webView.reload()
+        if self.webView.url != nil {
+            self.webView.reload()
+        } else if let textLocation = self.locationTextField?.text {
+            self.loadLocation(textLocation)
+        }
     }
     @IBAction func showBars() {
         self.shouldShowBars = true
@@ -171,6 +177,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         let nc = self.navigationController as! NavigationViewController
         nc.addObserver(self, forKeyPath: "navBarIsHidden", options: [.initial, .new], context: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.statusBarTouchAction), name: statusBarTappedNotification.name, object: nil)
         if self.shouldShowBars {
             self.showBars()
         }
@@ -179,6 +186,12 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         let nc = self.navigationController as! NavigationViewController
         nc.removeObserver(self, forKeyPath: "navBarIsHidden")
         super.viewWillDisappear(animated)
+    }
+
+    @objc func statusBarTouchAction(_ notification: Notification) {
+        if self.webView.scrollView.contentOffset.y == 0.0 {
+            self.showBars()
+        }
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
