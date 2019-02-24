@@ -633,13 +633,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S7L-Wl-Kba">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="666"/>
-                                            <gestureRecognizers/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="PGz-Vu-8Ol" appends="YES" id="ZBa-EU-M4f"/>
-                                            </connections>
-                                        </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4U2-DS-BmS">
                                             <rect key="frame" x="122" y="310.5" width="131" height="46"/>
                                             <subviews>
@@ -675,14 +668,12 @@
                                         </view>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="S7L-Wl-Kba" firstAttribute="top" secondItem="eMF-OR-w3U" secondAttribute="top" id="0qo-RB-QTY"/>
-                                        <constraint firstItem="S7L-Wl-Kba" firstAttribute="leading" secondItem="eMF-OR-w3U" secondAttribute="leading" id="LAA-mm-7wD"/>
                                         <constraint firstItem="4U2-DS-BmS" firstAttribute="centerY" secondItem="eMF-OR-w3U" secondAttribute="centerY" id="MMo-m8-sN6"/>
-                                        <constraint firstAttribute="trailing" secondItem="S7L-Wl-Kba" secondAttribute="trailing" id="gVa-Vz-iqe"/>
-                                        <constraint firstItem="hHx-XD-5E5" firstAttribute="width" relation="lessThanOrEqual" secondItem="S7L-Wl-Kba" secondAttribute="width" constant="-32" id="jSd-aR-AAQ"/>
-                                        <constraint firstAttribute="bottom" secondItem="S7L-Wl-Kba" secondAttribute="bottom" constant="1" id="r8k-4C-sCy"/>
                                         <constraint firstItem="4U2-DS-BmS" firstAttribute="centerX" secondItem="eMF-OR-w3U" secondAttribute="centerX" id="rlI-Cn-wde"/>
                                     </constraints>
+                                    <connections>
+                                        <outletCollection property="gestureRecognizers" destination="PGz-Vu-8Ol" appends="YES" id="WWG-za-Vw1"/>
+                                    </connections>
                                 </view>
                                 <blurEffect style="light"/>
                             </visualEffectView>
