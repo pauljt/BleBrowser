@@ -299,9 +299,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="246" id="FCz-s6-X5x"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isExclusiveTouch" value="YES"/>
-                                </userDefinedRuntimeAttributes>
                             </pickerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4DB-Aj-yoD" userLabel="Picker Toolbar">
                                 <rect key="frame" x="0.0" y="246" width="375" height="50"/>
@@ -666,9 +663,20 @@
                                                 <constraint firstAttribute="bottom" secondItem="hHx-XD-5E5" secondAttribute="bottom" id="xOd-fM-lcY"/>
                                             </constraints>
                                         </view>
+                                        <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Swipe down" translatesAutoresizingMaskIntoConstraints="NO" id="4WE-dA-fdQ">
+                                            <rect key="frame" x="171.5" y="388.5" width="32" height="36"/>
+                                            <gestureRecognizers/>
+                                            <connections>
+                                                <outletCollection property="gestureRecognizers" destination="Wc6-I5-L5A" appends="YES" id="zqk-6e-yL0"/>
+                                            </connections>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="4WE-dA-fdQ" firstAttribute="top" secondItem="4U2-DS-BmS" secondAttribute="bottom" constant="32" id="JyF-HF-oNG"/>
                                         <constraint firstItem="4U2-DS-BmS" firstAttribute="centerY" secondItem="eMF-OR-w3U" secondAttribute="centerY" id="MMo-m8-sN6"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="4U2-DS-BmS" secondAttribute="trailing" id="bRT-Hk-abR"/>
+                                        <constraint firstItem="4U2-DS-BmS" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="eMF-OR-w3U" secondAttribute="leading" id="edP-pB-a8O"/>
+                                        <constraint firstItem="4WE-dA-fdQ" firstAttribute="centerX" secondItem="eMF-OR-w3U" secondAttribute="centerX" id="mVv-Dd-Xgh"/>
                                         <constraint firstItem="4U2-DS-BmS" firstAttribute="centerX" secondItem="eMF-OR-w3U" secondAttribute="centerX" id="rlI-Cn-wde"/>
                                     </constraints>
                                     <connections>
@@ -697,6 +705,11 @@
                         <segue destination="JXW-T5-dUW" kind="unwind" unwindAction="unwindToWBControllerWithSender:" id="b6p-E1-0vl"/>
                     </connections>
                 </swipeGestureRecognizer>
+                <tapGestureRecognizer id="Wc6-I5-L5A">
+                    <connections>
+                        <segue destination="JXW-T5-dUW" kind="unwind" unwindAction="unwindToWBControllerWithSender:" id="HBB-bx-aaD"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-930.39999999999998" y="1118.5907046476761"/>
         </scene>
@@ -706,6 +719,7 @@
         <image name="Console Button" width="12" height="11.279999732971191"/>
         <image name="Copy button" width="13.439999580383301" height="13.439999580383301"/>
         <image name="Copy@480.png" width="480" height="480"/>
+        <image name="Swipe down" width="32.159999847412109" height="36.479999542236328"/>
         <image name="Tick@480.png" width="480" height="480"/>
     </resources>
 </document>
