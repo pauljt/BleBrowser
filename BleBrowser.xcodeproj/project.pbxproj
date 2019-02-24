@@ -30,6 +30,7 @@
 		5AA79DDD1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AA79DDC1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js */; };
 		5AC47CA61E2BE57000BCAE82 /* Tick@480.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC47CA51E2BE57000BCAE82 /* Tick@480.png */; };
 		5AC47CA81E2CCF2F00BCAE82 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */; };
+		5AC676FC221CA557007B1562 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC676FB221CA557007B1562 /* ErrorViewController.swift */; };
 		5AC8067D21655B5E00AA5176 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8067C21655B5E00AA5176 /* DividerView.swift */; };
 		BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */ = {isa = PBXBuildFile; fileRef = BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */; };
 		BB303DF31C42070C00FCAF24 /* WBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB303DF21C42070C00FCAF24 /* WBManager.swift */; };
@@ -79,6 +80,7 @@
 		5AA79DDC1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = WBBluetoothUUID.js; sourceTree = "<group>"; };
 		5AC47CA51E2BE57000BCAE82 /* Tick@480.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tick@480.png"; sourceTree = "<group>"; };
 		5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
+		5AC676FB221CA557007B1562 /* ErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
 		5AC8067C21655B5E00AA5176 /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
 		5AFACFEE1F03FB0B00A310D1 /* Info-allowing-http.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-allowing-http.plist"; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 		E44C18581A36203E00734F8B /* BleBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				5AC676FB221CA557007B1562 /* ErrorViewController.swift */,
 				5A6BF67921F503DF0051EC98 /* PopUpPickerController.swift */,
 				5A5D621521EBA83D00E417DC /* NavigationViewController.swift */,
 				5A10929D2168D5F4002CC973 /* Bookmarks */,
@@ -340,6 +343,7 @@
 				5A10929B2168D599002CC973 /* ConsoleViewContainerController.swift in Sources */,
 				5A95DDF81E0C080C00DFE26B /* WBWebView.swift in Sources */,
 				5A7579EF21579E0E003F0CEA /* ConsoleView.swift in Sources */,
+				5AC676FC221CA557007B1562 /* ErrorViewController.swift in Sources */,
 				5A7579ED2157907D003F0CEA /* ConsoleScrollView.swift in Sources */,
 				BB303DF31C42070C00FCAF24 /* WBManager.swift in Sources */,
 				5A6BF67A21F503DF0051EC98 /* PopUpPickerController.swift in Sources */,

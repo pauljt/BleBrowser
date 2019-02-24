@@ -49,9 +49,17 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     var consoleViewContainerController: ConsoleViewContainerController? = nil
 
-    var scrollingFromTop = false
-    var scrollingFromBottom = false
-    let showBarsOnFlickUpDown = false
+    var shouldShowBars = true {
+        didSet {
+            let nc = self.navigationController!
+            nc.setToolbarHidden(!self.shouldShowBars, animated: true)
+            nc.setNavigationBarHidden(!self.shouldShowBars, animated: true)
+            self.setNeedsUpdateOfHomeIndicatorAutoHidden()
+            self.extraShowBarsView.isHidden = self.shouldShowBars
+            self.setHidesOnSwipesFromScrollView(self.webView.scrollView)
+        }
+    }
+    let bottomMarginNotToHideBarsIn: CGFloat = 100.0
 
     // MARK: - API
     // MARK: IBActions
@@ -71,20 +79,17 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.bookmarksManager.addBookmarks([WBBookmark(title: title, url: url)])
         FlashAnimation(withView: self.tick).go()
     }
+    @IBAction func goForward() {
+        self.webView!.goForward()
+    }
+    @IBAction func goBackward() {
+        self.webView!.goBack()
+    }
     @IBAction func reload() {
-        if (self.webView?.url?.absoluteString ?? "about:blank") == "about:blank",
-            let text = self.locationTextField.text,
-            !text.isEmpty {
-            self.loadLocation(text)
-        } else {
-            self.webView.reload()
-        }
+        self.webView.reload()
     }
     @IBAction func showBars() {
-        let nc = self.navigationController!
-        nc.setToolbarHidden(false, animated: true)
-        nc.setNavigationBarHidden(false, animated: true)
-        self.setHidesOnSwipesFromScrollView(self.webView.scrollView)
+        self.shouldShowBars = true
     }
     @IBAction func toggleConsole() {
         if self.consoleViewContainerController != nil {
@@ -96,18 +101,17 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     // MARK: - Home bar indicator control
     override func prefersHomeIndicatorAutoHidden() -> Bool {
-        return (self.navigationController as! NavigationViewController).navBarIsHidden
-    }
-    override var prefersStatusBarHidden: Bool {
-        get {
-            return (self.navigationController as! NavigationViewController).navBarIsHidden
-        }
+        return self.shouldShowBars
     }
 
     // MARK: - Segue handling
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let bvc = segue.destination as? BookmarksViewController {
             bvc.bookmarksManager = self.bookmarksManager
+        }
+        if let evc = segue.destination as? ErrorViewController {
+            let error = sender as! Error
+            evc.errorMessage = error.localizedDescription
         }
     }
     @IBAction func unwindToWBController(sender: UIStoryboardSegue) {
@@ -157,13 +161,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.loadLocation(lastLocation)
         }
 
-        self.goBackButton.target = self.webView
-        self.goBackButton.action = #selector(self.webView.goBack)
-        self.goForwardButton.target = self.webView
-        self.goForwardButton.action = #selector(self.webView.goForward)
-        self.refreshButton.target = self.webView
-        self.refreshButton.action = #selector(self.webView.reload)
-
         if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {
             self.showConsole()
         }
@@ -174,7 +171,9 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         let nc = self.navigationController as! NavigationViewController
         nc.addObserver(self, forKeyPath: "navBarIsHidden", options: [.initial, .new], context: nil)
-        self.showBars()
+        if self.shouldShowBars {
+            self.showBars()
+        }
     }
     override func viewWillDisappear(_ animated: Bool) {
         let nc = self.navigationController as! NavigationViewController
@@ -216,26 +215,27 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
 
-        NSLog("Did start provisional navigation to \(webView.url?.absoluteString ?? "unknown url")")
+        if let urlString = webView.url?.absoluteString {
+            self.setLocationText(urlString)
+        }
         self.configureNewManager()
         self.logManager.clearLogs()
     }
-    
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.webView.enableBluetoothInView()
+
         if let urlString = webView.url?.absoluteString,
             urlString != "about:blank" {
-            self.setLocationText(urlString)
             UserDefaults.standard.setValue(urlString, forKey: ViewController.prefKeys.lastLocation.rawValue)
         }
     }
-    
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        webView.loadHTMLString("<p>Fail Navigation: \(error.localizedDescription)</p>", baseURL: nil)
+        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
     }
-    
+
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        webView.loadHTMLString("<p>Fail Provisional Navigation: \(error.localizedDescription)</p>", baseURL: nil)
+        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
     }
 
     // MARK: - WKUIDelegate
@@ -249,39 +249,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
 
     // MARK: - UIScrollViewDelegate
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        let yOffset = scrollView.contentOffset.y
-        let frameHeight = scrollView.frame.size.height
-        let contentHeight = scrollView.contentSize.height
-
-        if yOffset < 5.0 {
-            self.scrollingFromTop = true
-            self.scrollingFromBottom = false
-        } else if contentHeight - (yOffset + frameHeight) < 5.0 {
-            self.scrollingFromTop = false
-            self.scrollingFromBottom = true
-        } else {
-            self.scrollingFromTop = false
-            self.scrollingFromBottom = false
-        }
-    }
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        let yOffset = scrollView.contentOffset.y
-        let frameHeight = scrollView.frame.size.height
-        let contentHeight = scrollView.contentSize.height
-
         if !decelerate {
             self.setHidesOnSwipesFromScrollView(scrollView)
         }
-
-        if self.showBarsOnFlickUpDown && self.scrollingFromTop && yOffset < 0.0 {
-            self.showBars()
-        }
-        if self.showBarsOnFlickUpDown && self.scrollingFromBottom && yOffset + frameHeight > contentHeight {
-            self.showBars()
-        }
-        self.scrollingFromTop = false
-        self.scrollingFromBottom = false
     }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         self.setHidesOnSwipesFromScrollView(scrollView)
@@ -304,8 +275,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.goForwardButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
         case "navBarIsHidden":
             let navBarIsHidden = defChange[NSKeyValueChangeKey.newKey] as! Bool
-            self.extraShowBarsView.isHidden = !navBarIsHidden
-            self.setNeedsUpdateOfHomeIndicatorAutoHidden()
+            self.shouldShowBars = !navBarIsHidden
         default:
             NSLog("Unexpected change observed by ViewController: \(defKeyPath)")
         }
@@ -406,11 +376,9 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         let contentHeight = scrollView.contentSize.height
         let nc = self.navigationController!
 
-        let bottomMarginNotToHideSwipesIn: CGFloat = 100.0
-
         if yOffset + frameHeight > (
-            contentHeight > bottomMarginNotToHideSwipesIn
-                ? contentHeight - bottomMarginNotToHideSwipesIn
+            contentHeight > self.bottomMarginNotToHideBarsIn
+                ? contentHeight - self.bottomMarginNotToHideBarsIn
                 : 0
         ) {
             if nc.hidesBarsOnSwipe {
