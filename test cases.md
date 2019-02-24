@@ -60,6 +60,8 @@
         - ok 1.2.1
 3. tapping top of page scrolls to top, then shows bars
         - ok 1.2.1
+4. home bar indicator disappears when bars disappear, reappears when bars reappear
+        - ok 1.2.1
 
 # future test cases
 

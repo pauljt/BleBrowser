@@ -75,11 +75,12 @@
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NgV-mf-Lto">
                                 <rect key="frame" x="0.0" y="635" width="375" height="32"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="32" id="csH-dg-HaH"/>
                                 </constraints>
                                 <connections>
-                                    <outletCollection property="gestureRecognizers" destination="822-ja-NHK" appends="YES" id="Fhm-uo-H6s"/>
+                                    <outletCollection property="gestureRecognizers" destination="QVE-VE-sVj" appends="YES" id="J2j-S7-lR0"/>
                                 </connections>
                             </view>
                             <containerView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="afH-KC-ljD">
@@ -175,9 +176,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <customObject id="eym-9B-1fd" customClass="WBLogManager" customModule="WebBLE" customModuleProvider="target"/>
-                <tapGestureRecognizer id="822-ja-NHK">
+                <tapGestureRecognizer id="QVE-VE-sVj">
                     <connections>
-                        <action selector="showBars" destination="BYZ-38-t0r" id="hEA-bb-nhe"/>
+                        <action selector="showBars" destination="BYZ-38-t0r" id="1KG-dv-0jM"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

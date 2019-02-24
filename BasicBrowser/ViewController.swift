@@ -107,7 +107,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     // MARK: - Home bar indicator control
     override func prefersHomeIndicatorAutoHidden() -> Bool {
-        return self.shouldShowBars
+        return !self.shouldShowBars
     }
 
     // MARK: - Segue handling
@@ -190,7 +190,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     @objc func statusBarTouchAction(_ notification: Notification) {
         if self.webView.scrollView.contentOffset.y == 0.0 {
-            self.showBars()
+            self.shouldShowBars = !self.shouldShowBars
         }
     }
 
