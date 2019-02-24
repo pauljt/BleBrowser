@@ -43,6 +43,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var logManager: WBLogManager!
     @IBOutlet var extraShowBarsView: UIView!
     @IBOutlet var pickerContainer: UIView!
+    @IBOutlet var loadingProgressContainer: UIView!
+    @IBOutlet var loadingProgressView: UIView!
 
     var initialURL: URL?
 
@@ -146,7 +148,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.webView.scrollView.delegate = self
         self.webView.scrollView.clipsToBounds = false
 
-        for path in ["canGoBack", "canGoForward"] {
+        for path in ["canGoBack", "canGoForward", "estimatedProgress"] {
             self.webView.addObserver(self, forKeyPath: path, options: .new, context: nil)
         }
 
@@ -233,6 +235,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
         self.configureNewManager()
         self.logManager.clearLogs()
+        self.loadingProgressContainer.isHidden = false
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -242,6 +245,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             urlString != "about:blank" {
             UserDefaults.standard.setValue(urlString, forKey: ViewController.prefKeys.lastLocation.rawValue)
         }
+        self.loadingProgressContainer.isHidden = true
     }
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         self.performSegue(withIdentifier: "nav-error-segue", sender: error)
@@ -249,6 +253,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         self.performSegue(withIdentifier: "nav-error-segue", sender: error)
+        self.loadingProgressContainer.isHidden = true
     }
 
     // MARK: - WKUIDelegate
@@ -289,6 +294,17 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         case "navBarIsHidden":
             let navBarIsHidden = defChange[NSKeyValueChangeKey.newKey] as! Bool
             self.shouldShowBars = !navBarIsHidden
+        case "estimatedProgress":
+            let estimatedProgress = defChange[NSKeyValueChangeKey.newKey] as! Double
+            let fwidth = self.loadingProgressContainer.frame.size.width
+            let newWidth: CGFloat = CGFloat(estimatedProgress) * fwidth
+            if newWidth < self.loadingProgressView.frame.size.width {
+                self.loadingProgressView.frame.size.width = newWidth
+            } else {
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.loadingProgressView.frame.size.width = newWidth
+                })
+            }
         default:
             NSLog("Unexpected change observed by ViewController: \(defKeyPath)")
         }

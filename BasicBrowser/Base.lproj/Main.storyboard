@@ -54,6 +54,23 @@
                                             <outlet property="logManager" destination="eym-9B-1fd" id="rnd-bl-vLr"/>
                                         </connections>
                                     </view>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vFy-zw-Ue6">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="5"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b6e-61-g93">
+                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="5"/>
+                                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="b6e-61-g93" firstAttribute="leading" secondItem="vFy-zw-Ue6" secondAttribute="leading" id="SbQ-qt-FIn"/>
+                                            <constraint firstAttribute="bottom" secondItem="b6e-61-g93" secondAttribute="bottom" id="afT-TJ-ePp"/>
+                                            <constraint firstItem="b6e-61-g93" firstAttribute="width" secondItem="vFy-zw-Ue6" secondAttribute="width" multiplier="0.5" id="jMs-X4-Eqd"/>
+                                            <constraint firstAttribute="height" constant="5" id="reD-2e-ShU"/>
+                                            <constraint firstItem="b6e-61-g93" firstAttribute="top" secondItem="vFy-zw-Ue6" secondAttribute="top" id="zDs-Yn-152"/>
+                                        </constraints>
+                                    </view>
                                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick@480.png" translatesAutoresizingMaskIntoConstraints="NO" id="6wE-az-iDp">
                                         <rect key="frame" x="67.5" y="159.5" width="240" height="240"/>
                                         <constraints>
@@ -64,12 +81,15 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="vFy-zw-Ue6" secondAttribute="trailing" id="E97-g6-rq9"/>
+                                    <constraint firstItem="vFy-zw-Ue6" firstAttribute="leading" secondItem="FR6-sF-hFE" secondAttribute="leading" id="Fci-Ix-OAK"/>
                                     <constraint firstAttribute="trailing" secondItem="DRU-nU-zz3" secondAttribute="trailing" id="PRs-pW-gqt"/>
                                     <constraint firstAttribute="bottom" secondItem="DRU-nU-zz3" secondAttribute="bottom" id="YLd-Gx-jgu"/>
                                     <constraint firstItem="DRU-nU-zz3" firstAttribute="top" secondItem="FR6-sF-hFE" secondAttribute="top" id="bzf-J1-gyz"/>
                                     <constraint firstItem="6wE-az-iDp" firstAttribute="centerX" secondItem="FR6-sF-hFE" secondAttribute="centerX" id="hSb-cx-L8i"/>
                                     <constraint firstItem="6wE-az-iDp" firstAttribute="centerY" secondItem="FR6-sF-hFE" secondAttribute="centerY" id="kar-IP-cdM"/>
                                     <constraint firstItem="DRU-nU-zz3" firstAttribute="leading" secondItem="FR6-sF-hFE" secondAttribute="leading" id="llV-7P-wNu"/>
+                                    <constraint firstItem="vFy-zw-Ue6" firstAttribute="top" secondItem="FR6-sF-hFE" secondAttribute="top" id="siF-ew-QAl"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="zpX-iF-0LJ"/>
                                 </constraints>
                             </view>
@@ -162,6 +182,8 @@
                         <outlet property="extraShowBarsView" destination="NgV-mf-Lto" id="bDg-v6-M0u"/>
                         <outlet property="goBackButton" destination="NaX-Y9-Gfj" id="0Xc-k5-kMK"/>
                         <outlet property="goForwardButton" destination="qhG-nx-nEQ" id="1GO-aY-9L7"/>
+                        <outlet property="loadingProgressContainer" destination="vFy-zw-Ue6" id="Eg3-2q-EPL"/>
+                        <outlet property="loadingProgressView" destination="b6e-61-g93" id="nkM-90-baO"/>
                         <outlet property="locationTextField" destination="O1l-7F-uXL" id="i8M-pT-n46"/>
                         <outlet property="logManager" destination="eym-9B-1fd" id="Fec-Lj-MbA"/>
                         <outlet property="pickerContainer" destination="afH-KC-ljD" id="HCP-U3-g06"/>
