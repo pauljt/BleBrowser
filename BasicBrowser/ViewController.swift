@@ -187,6 +187,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     override func viewWillDisappear(_ animated: Bool) {
         let nc = self.navigationController as! NavigationViewController
         nc.removeObserver(self, forKeyPath: "navBarIsHidden")
+        NotificationCenter.default.removeObserver(self, name: statusBarTappedNotification.name, object: nil)
         super.viewWillDisappear(animated)
     }
 
