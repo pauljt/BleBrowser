@@ -80,7 +80,12 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
             !self._peripheral(peripheral, isIncludedBy: filters) {
             return
         }
-        
+
+        guard self.pickerDevices.first(where: {$0.peripheral == peripheral}) == nil else {
+            return
+        }
+
+        NSLog("New peripheral \(peripheral.name ?? "<no name>") discovered")
         let device = WBDevice(
             peripheral: peripheral, advertisementData: advertisementData,
             RSSI: RSSI, manager: self)
@@ -108,13 +113,14 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
                 return
         }
         device.didDisconnect(error: error)
+        self.devicesByInternalUUID[peripheral.identifier] = nil
+        self.devicesByExternalUUID[device.deviceId] = nil
     }
     
-    public func centralManager(_ central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral) {
-        NSLog("FAILED TO CONNECT PERIPHERAL UNHANDLED")
-        
+    public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        NSLog("FAILED TO CONNECT PERIPHERAL UNHANDLED \(error?.localizedDescription ?? "<no error>")")
     }
-    
+
     // MARK: - PopUpPickerViewDelegate
     public var numberOfItems: Int {
         get {
@@ -188,7 +194,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
                     transaction.resolveAsFailure(withMessage: "No known device for device transaction \(transaction)")
                     break
             }
-            device.triage(transaction: transaction)
+            device.triage(view)
         case .requestDevice:
             guard transaction.key.typeComponents.count == 1
             else {

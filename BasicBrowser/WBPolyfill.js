@@ -454,15 +454,17 @@
                 callbackID: callbackID
             };
 
-            nslog(`--> sending ${type} ${JSON.stringify(data)}`);
+            nslog(`${type} ${callbackID}`);
             window.webkit.messageHandlers.bluetooth.postMessage(message);
 
             this.messageCount += 1;
             return new Promise(function (resolve, reject) {
                 native.callbacks[callbackID] = function (success, result) {
                     if (success) {
+                        nslog(`${type} ${callbackID} success`);
                         resolve(result);
                     } else {
+                        nslog(`${type} ${callbackID} failure ${JSON.stringify(result)}`);
                         reject(result);
                     }
                     delete native.callbacks[callbackID];
@@ -470,8 +472,6 @@
             });
         },
         receiveMessageResponse: function (success, resultString, callbackID) {
-            nslog(`<-- receiving response ${success} ${resultString} ${callbackID}`);
-
             if (callbackID !== undefined && native.callbacks[callbackID]) {
                 native.callbacks[callbackID](success, resultString);
             } else {
