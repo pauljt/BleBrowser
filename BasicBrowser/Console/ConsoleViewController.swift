@@ -19,6 +19,11 @@ class ConsoleViewController: UIViewController {
             self._observeLM()
         }
     }
+    var consoleView: ConsoleView {
+        get {
+            return self.view as! ConsoleView
+        }
+    }
 
     deinit {
         self._unobserveLM()
@@ -34,7 +39,7 @@ class ConsoleViewController: UIViewController {
         clvc.log = log
         let clv = clvc.view as! ConsoleLogView
         clv.configureWithLog(log)
-        self.view.insertSubview(clv, at: index)
+        self.consoleView.insertLogView(clv, at: index)
     }
 
     // MARK: - KVO
@@ -45,8 +50,7 @@ class ConsoleViewController: UIViewController {
             switch changeKind {
             case .setting:
                 let logs = change![.newKey] as! [WBLog]
-                self.view.subviews.forEach{$0.removeFromSuperview()}
-                assert(self.view.subviews.count == 0)
+                self.consoleView.removeAllLogViews()
                 for (index, log) in logs.enumerated() {
                     self.insertLog(log: log, at: index)
                 }
@@ -64,10 +68,7 @@ class ConsoleViewController: UIViewController {
     // MARK: - UIViewController overrides
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        for sv in self.view.subviews {
-            sv.removeFromSuperview()
-        }
+        self.consoleView.removeAllLogViews()
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)

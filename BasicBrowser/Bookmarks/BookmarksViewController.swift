@@ -32,10 +32,11 @@ class BookmarksViewController: UITableViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+        let nc = self.navigationController!
+        nc.setToolbarHidden(true, animated: true)
+        nc.setNavigationBarHidden(false, animated: true)
+        nc.hidesBarsOnSwipe = false
     }
-
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.bookmarksManager.saveBookmarks()

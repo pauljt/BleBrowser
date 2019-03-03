@@ -135,7 +135,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
     /*! @abstract The current transactions to connect to this device. There can be multiple outstanding at any one time and they are all resolved together. */
     var connectTransactions = [WBTransaction]()
-    var disconnectTransactions = [WBTransaction]()
+    var disconnectTM = WBTransactionManager<UUID>()
     var getPrimaryServiceTM = WBTransactionManager<CBUUID>()
     var getCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
     var readCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
@@ -157,12 +157,13 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     // MARK: - API
     func clearState() {
         self.manager?.centralManager.cancelPeripheralConnection(self.peripheral)
-        for var ta in [self.connectTransactions, self.disconnectTransactions] {
+        for var ta in [self.connectTransactions] {
             for trans in ta {
                 trans.abandon()
             }
             ta.removeAll()
         }
+        self.disconnectTM.abandonAll()
         self.sendDisconnectEvent()
         self.getPrimaryServiceTM.abandonAll()
         self.getCharacteristicTM.abandonAll()
@@ -172,25 +173,34 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         self.connectTransactions.forEach{$0.resolveAsSuccess()}
     }
     func didFailToConnect() {
-        self.connectTransactions.forEach{$0.resolveAsFailure(withMessage: "Unable to connect to device")}
+        self.connectTransactions.forEach{
+            $0.resolveAsFailure(withMessage: "Unable to connect to device")
+        }
     }
     func didDisconnect(error: Error?) {
-        self.connectTransactions.forEach {$0.resolveAsFailure(withMessage: "Connection was cancelled or prematurely disconnected. Extra error info: \(error as? String ?? "<none>")")}
+        NSLog("\(self) did disconnect \(error?.localizedDescription ?? "<no error>")")
+        defer {
+            self.sendDisconnectEvent()
+        }
+
+        let failTrans: (WBTransaction) -> Void = {
+            $0.resolveAsFailure(withMessage: "Device disconnected\(error != nil ? ": \(error!.localizedDescription)" : "")")
+        }
+        self.writeCharacteristicTM.apply(failTrans)
+        self.readCharacteristicTM.apply(failTrans)
+        self.getCharacteristicTM.apply(failTrans)
+        self.getPrimaryServiceTM.apply(failTrans)
+        self.connectTransactions.forEach(failTrans)
         if let err = error {
             NSLog("Spontaneous device disconnect. \(err)")
-            if self.disconnectTransactions.count > 0 {
-                self.disconnectTransactions.forEach {$0.resolveAsFailure(withMessage: "\(err)")}
-            }
-            else {
-                self.sendDisconnectEvent()
-            }
+            self.disconnectTM.apply(failTrans)
             return
         }
-        self.disconnectTransactions.forEach {$0.resolveAsSuccess()}
+        self.disconnectTM.apply{$0.resolveAsSuccess()}
     }
 
-    func triage(transaction: WBTransaction) {
-
+    func triage(_ tview: DeviceTransactionView) {
+        let transaction = tview.transaction
         let tc = transaction.key.typeComponents
         guard
             tc.count > 1,
@@ -222,19 +232,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.connectTransactions.append(transaction)
 
         case .disconnectGATT:
-            guard let man = self.manager else {
-                transaction.resolveAsFailure(withMessage: "Failed due to internal inconsistency likely related to a recent page navigation (device's manager was released)")
-                return
-            }
-            man.centralManager.cancelPeripheralConnection(
-                self.peripheral)
-            transaction.addCompletionHandler({
-                transaction, _ in
-                if let ind = self.disconnectTransactions.index(of: transaction) {
-                    self.disconnectTransactions.remove(at: ind)
-                }
-            })
-            self.disconnectTransactions.append(transaction)
+            self.handleDisconnect(tview)
 
         case .getPrimaryService:
 
@@ -245,20 +243,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 return
             }
 
-            // check peripherals.services first to see if we already discovered services
-            if self.peripheral.services != nil {
-                if self.hasService(withUUID: tview.serviceUUID) {
-                    transaction.resolveAsSuccess()
-                }
-                else {
-                    tview.resolveUnknownService()
-                }
-                return
-            }
-
-            self.getPrimaryServiceTM.addTransaction(transaction, atPath: tview.serviceUUID)
-            NSLog("Starting discovering for service \(tview.serviceUUID)")
-            self.peripheral.discoverServices(nil)
+            self.handleGetPrimaryService(tview)
 
         case .getCharacteristic:
 
@@ -370,7 +355,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             return ""
         }
     }
-    
 
     // MARK: - CBPeripheralDelegate
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -382,6 +366,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             let cbServices = self.peripheral.services!
             let serviceUUIDs = cbServices.map{$0.uuid}
             let services = Set(serviceUUIDs)
+            NSLog("Did discover services \(services)")
 
             resolve = {
                 let tview = ServiceTransactionView(transaction: $0)!
@@ -473,6 +458,15 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
 
     // MARK: - Private
+    func handleDisconnect(_ tview: DeviceTransactionView) {
+        guard let man = self.manager else {
+            tview.transaction.resolveAsFailure(withMessage: "Failed due to internal inconsistency likely related to a recent page navigation (device's manager was released)")
+            return
+        }
+        self.disconnectTM.addTransaction(tview.transaction, atPath: self.deviceId)
+        man.centralManager.cancelPeripheralConnection(self.peripheral)
+    }
+
     private func getService(withUUID uuid: CBUUID) -> CBService?{
         guard
             let pservs = self.peripheral.services,
@@ -510,6 +504,25 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         return nil
     }
 
+    private func handleGetPrimaryService(_ tview: ServiceTransactionView) {
+        let transaction = tview.transaction
+
+        // check peripherals.services first to see if we already discovered services
+        if self.peripheral.services != nil {
+            if self.hasService(withUUID: tview.serviceUUID) {
+                transaction.resolveAsSuccess()
+            }
+            else {
+                tview.resolveUnknownService()
+            }
+            return
+        }
+
+        self.getPrimaryServiceTM.addTransaction(transaction, atPath: tview.serviceUUID)
+        NSLog("Starting discovering for service \(tview.serviceUUID) on peripheral \(self.peripheral.name ?? "<unknown name>")")
+        self.peripheral.discoverServices(nil)
+    }
+
     private func evaluateJavaScript(_ script: String) {
         guard let wv = self.view else {
             NSLog("Can't evaluate javascript as have no webview")
@@ -529,7 +542,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     private func sendDisconnectEvent() {
         /* Don't lower case the deviceId string because we rely on the web page not to touch it. */
         let commandString = "window.receiveDeviceDisconnectEvent(\(self.deviceId.uuidString.jsonify()));\n"
-        NSLog("--> device disconnect execute js: \"\(commandString)\"")
+        NSLog("Send disconnect event for \(self.deviceId.uuidString)")
         self.evaluateJavaScript(commandString)
     }
 
@@ -565,11 +578,11 @@ class BluetoothAdvertisingData{
         self.rssi = String(describing: RSSI)
         let data = advertisementData[CBAdvertisementDataManufacturerDataKey]
         self.manufacturerData = ""
-        if data != nil{
+        if data != nil {
             if let dataString = NSString(data: data as! Data, encoding: String.Encoding.utf8.rawValue) as String? {
                 self.manufacturerData = dataString
             } else {
-                print("Error parsing advertisement data: not a valid UTF-8 sequence")
+                NSLog("Error parsing advertisement data: not a valid UTF-8 sequence, was \(data as! Data)")
             }
         }
         

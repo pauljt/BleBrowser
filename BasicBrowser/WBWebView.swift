@@ -59,7 +59,6 @@ open class WBWebView: WKWebView {
         }
     }
     let wbLogger = WBLogger()
-    @IBOutlet var devicePicker: PopUpPickerView!
 
     let webBluetoothHandlerName = "bluetooth"
     private var _wbManager: WBManager?
@@ -72,10 +71,8 @@ open class WBWebView: WKWebView {
                 self.configuration.userContentController.removeScriptMessageHandler(forName: self.webBluetoothHandlerName)
             }
             self._wbManager = newWBManager
-            self.devicePicker.delegate = newWBManager
             if let newMan = newWBManager {
                 self.configuration.userContentController.add(newMan, name: self.webBluetoothHandlerName)
-                newMan.devicePicker = self.devicePicker
             }
         }
     }
@@ -99,7 +96,8 @@ open class WBWebView: WKWebView {
         // it seems a bit arbitrary when this happens otherwise.
         // This from http://stackoverflow.com/a/34376943/5920499
         let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache]) as! Set<String>
-        WKWebsiteDataStore.default().removeData(
+        let ds = WKWebsiteDataStore.default()
+        ds.removeData(
             ofTypes: websiteDataTypes,
             modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
             completionHandler:{})

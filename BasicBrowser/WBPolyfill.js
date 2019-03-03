@@ -94,7 +94,7 @@
             try {
                 cb.call(this, event);
             } catch (e) {
-                nslog(`Exception dispatching to callback ${cb}: ${e}`);
+                console.error(`Exception dispatching to callback ${cb}: ${e}`);
             }
         });
     };
@@ -192,12 +192,19 @@
         disconnect: function () {
             this.connectionTransactionIDs.forEach((tid) => native.cancelTransaction(tid));
             this.connectionTransactionIDs = [];
-            let self = this;
-            return this.sendMessage("disconnectGATT")
-                .then(function () {
-                    native.unregisterDeviceForNotifications(self.device);
-                    self.connected = false;
-                });
+            if (!this.connected) {
+                return;
+            }
+            this.connected = false;
+
+            // since we've set connected false this event won't be generated
+            // by the shortly to be dispatched disconnect event.
+            this.device.dispatchEvent(new native.BluetoothEvent('gattserverdisconnected', this.device));
+            native.unregisterDeviceForNotifications(this.device);
+            // If there were two devices pointing at the same underlying device
+            // this would break both connections, so not really what we want,
+            // but leave it like this till someone complains.
+            this.sendMessage("disconnectGATT");
         },
         getPrimaryService: function (UUID) {
             let canonicalUUID = window.BluetoothUUID.getService(UUID);
@@ -454,15 +461,17 @@
                 callbackID: callbackID
             };
 
-            nslog(`--> sending ${type} ${JSON.stringify(data)}`);
+            nslog(`${type} ${callbackID}`);
             window.webkit.messageHandlers.bluetooth.postMessage(message);
 
             this.messageCount += 1;
             return new Promise(function (resolve, reject) {
                 native.callbacks[callbackID] = function (success, result) {
                     if (success) {
+                        nslog(`${type} ${callbackID} success`);
                         resolve(result);
                     } else {
+                        nslog(`${type} ${callbackID} failure ${JSON.stringify(result)}`);
                         reject(result);
                     }
                     delete native.callbacks[callbackID];
@@ -470,8 +479,6 @@
             });
         },
         receiveMessageResponse: function (success, resultString, callbackID) {
-            nslog(`<-- receiving response ${success} ${resultString} ${callbackID}`);
-
             if (callbackID !== undefined && native.callbacks[callbackID]) {
                 native.callbacks[callbackID](success, resultString);
             } else {
@@ -509,12 +516,12 @@
             }
         },
         receiveDeviceDisconnectEvent: function (deviceId) {
-            nslog(`<-- device disconnect event ${deviceId}`);
+            nslog(`${deviceId} disconnected`);
             let devices = native.devicesBeingNotified[deviceId];
             if (devices !== undefined) {
-                nslog(`Device not registered for notifications`);
                 devices.forEach(function (device) {
                     device.handleSpontaneousDisconnectEvent();
+                    native.unregisterDeviceForNotifications(device);
                 });
             }
             native.characteristicsBeingNotified[deviceId] = undefined;

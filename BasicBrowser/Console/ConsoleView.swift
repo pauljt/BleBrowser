@@ -11,13 +11,11 @@ import UIKit
 class ConsoleView: UIView {
     var topLayoutConstraint: NSLayoutConstraint?
     var bottomLayoutConstraint: NSLayoutConstraint?
+    var logViews: [ConsoleLogView] = []
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-
-    override func insertSubview(_ view: UIView, at index: Int) {
-        super.insertSubview(view, at: index)
+    func insertLogView(_ view: ConsoleLogView, at index: Int) {
+        self.addSubview(view)
+        self.logViews.insert(view, at: index)
         for (anch1, anch2) in [
             (self.leftAnchor, view.leftAnchor),
             (self.rightAnchor, view.rightAnchor)
@@ -25,14 +23,14 @@ class ConsoleView: UIView {
             anch1.constraint(equalTo: anch2).isActive = true
         }
 
-        let svCount = self.subviews.count
+        let svCount = self.logViews.count
         let lastIndex = svCount - 1
         switch index {
         case 0:
             if svCount == 1 {
                 self.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
             } else {
-                let viewBelow = self.subviews[1]
+                let viewBelow = self.logViews[1]
                 let prevConstraints = self.constraints.filter({
                     $0.secondAttribute == .top &&
                     $0.secondItem ?? nil === viewBelow
@@ -42,8 +40,8 @@ class ConsoleView: UIView {
             }
             self.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         case 1..<lastIndex:
-            let viewAbove = self.subviews[index - 1]
-            let viewBelow = self.subviews[index + 1]
+            let viewAbove = self.logViews[index - 1]
+            let viewBelow = self.logViews[index + 1]
             let prevConstraints = viewAbove.constraints.filter({
                 $0.secondItem ?? nil === viewBelow &&
                 $0.secondAttribute == .bottom
@@ -53,7 +51,7 @@ class ConsoleView: UIView {
             viewAbove.bottomAnchor.constraint(equalTo: view.topAnchor).isActive = true
             view.bottomAnchor.constraint(equalTo: viewBelow.topAnchor).isActive = true
         case lastIndex:
-            let viewAbove = self.subviews[index - 1]
+            let viewAbove = self.logViews[index - 1]
             let prevConstraints = self.constraints.filter({
                 $0.secondItem === viewAbove &&
                 $0.secondAttribute == .bottom
@@ -65,5 +63,10 @@ class ConsoleView: UIView {
         default:
             assert(false, "Invalid index \(index)")
         }
+    }
+
+    func removeAllLogViews() {
+        self.logViews.forEach{$0.removeFromSuperview()}
+        self.logViews.removeAll()
     }
 }

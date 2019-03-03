@@ -16,7 +16,9 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate,WKUIDelegate {
+let statusBarTappedNotification = Notification(name: Notification.Name(rawValue: "statusBarTappedNotification"))
+
+class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate {
 
     enum prefKeys: String {
         case bookmarks
@@ -32,7 +34,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet var tick: UIImageView!
     @IBOutlet var webViewContainer: UIView!
-    @IBOutlet var toolbar: UIToolbar!
     @IBOutlet var goBackButton: UIBarButtonItem!
     @IBOutlet var goForwardButton: UIBarButtonItem!
     @IBOutlet var refreshButton: UIBarButtonItem!
@@ -40,18 +41,29 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var webViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet var webView: WBWebView!
     @IBOutlet var logManager: WBLogManager!
+    @IBOutlet var extraShowBarsView: UIView!
+    @IBOutlet var pickerContainer: UIView!
+    @IBOutlet var loadingProgressContainer: UIView!
+    @IBOutlet var loadingProgressView: UIView!
 
     var initialURL: URL?
 
     var bookmarksManager = BookmarksManager(
         userDefaults: UserDefaults.standard, key: prefKeys.bookmarks.rawValue)
-    var wbManager: WBManager? {
-        didSet {
-            self.webView.wbManager = wbManager
-        }
-    }
 
     var consoleViewContainerController: ConsoleViewContainerController? = nil
+
+    var shouldShowBars = true {
+        didSet {
+            let nc = self.navigationController!
+            nc.setToolbarHidden(!self.shouldShowBars, animated: true)
+            nc.setNavigationBarHidden(!self.shouldShowBars, animated: true)
+            self.setNeedsUpdateOfHomeIndicatorAutoHidden()
+            self.extraShowBarsView.isHidden = self.shouldShowBars
+            self.setHidesOnSwipesFromScrollView(self.webView.scrollView)
+        }
+    }
+    let bottomMarginNotToHideBarsIn: CGFloat = 100.0
 
     // MARK: - API
     // MARK: IBActions
@@ -71,15 +83,21 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.bookmarksManager.addBookmarks([WBBookmark(title: title, url: url)])
         FlashAnimation(withView: self.tick).go()
     }
-
+    @IBAction func goForward() {
+        self.webView!.goForward()
+    }
+    @IBAction func goBackward() {
+        self.webView!.goBack()
+    }
     @IBAction func reload() {
-        if (self.webView?.url?.absoluteString ?? "about:blank") == "about:blank",
-            let text = self.locationTextField.text,
-            !text.isEmpty {
-            self.loadLocation(text)
-        } else {
+        if self.webView.url != nil {
             self.webView.reload()
+        } else if let textLocation = self.locationTextField?.text {
+            self.loadLocation(textLocation)
         }
+    }
+    @IBAction func showBars() {
+        self.shouldShowBars = true
     }
     @IBAction func toggleConsole() {
         if self.consoleViewContainerController != nil {
@@ -89,10 +107,19 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
     }
 
+    // MARK: - Home bar indicator control
+    override func prefersHomeIndicatorAutoHidden() -> Bool {
+        return !self.shouldShowBars
+    }
+
     // MARK: - Segue handling
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let bvc = segue.destination as? BookmarksViewController {
             bvc.bookmarksManager = self.bookmarksManager
+        }
+        if let evc = segue.destination as? ErrorViewController {
+            let error = sender as! Error
+            evc.errorMessage = error.localizedDescription
         }
     }
     @IBAction func unwindToWBController(sender: UIStoryboardSegue) {
@@ -110,19 +137,19 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     // MARK: - Event handling
     override func viewDidLoad() {
-       
         super.viewDidLoad()
 
         let ud = UserDefaults.standard
 
         // connect view to other objects
         self.locationTextField.delegate = self
-        self.webView.wbManager = self.wbManager
         self.webView.navigationDelegate = self
         self.webView.uiDelegate = self
+        self.webView.scrollView.delegate = self
+        self.webView.scrollView.clipsToBounds = false
 
-        for path in ["canGoBack", "canGoForward"] {
-            self.webView.addObserver(self, forKeyPath: path, options: NSKeyValueObservingOptions.new, context: nil)
+        for path in ["canGoBack", "canGoForward", "estimatedProgress"] {
+            self.webView.addObserver(self, forKeyPath: path, options: .new, context: nil)
         }
 
         self.loadPreferences()
@@ -142,13 +169,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.loadLocation(lastLocation)
         }
 
-        self.goBackButton.target = self.webView
-        self.goBackButton.action = #selector(self.webView.goBack)
-        self.goForwardButton.target = self.webView
-        self.goForwardButton.action = #selector(self.webView.goForward)
-        self.refreshButton.target = self.webView
-        self.refreshButton.action = #selector(self.webView.reload)
-
         if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {
             self.showConsole()
         }
@@ -156,7 +176,25 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+
+        let nc = self.navigationController as! NavigationViewController
+        nc.addObserver(self, forKeyPath: "navBarIsHidden", options: [.initial, .new], context: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.statusBarTouchAction), name: statusBarTappedNotification.name, object: nil)
+        if self.shouldShowBars {
+            self.showBars()
+        }
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        let nc = self.navigationController as! NavigationViewController
+        nc.removeObserver(self, forKeyPath: "navBarIsHidden")
+        NotificationCenter.default.removeObserver(self, name: statusBarTappedNotification.name, object: nil)
+        super.viewWillDisappear(animated)
+    }
+
+    @objc func statusBarTouchAction(_ notification: Notification) {
+        if self.webView.scrollView.contentOffset.y == 0.0 {
+            self.shouldShowBars = !self.shouldShowBars
+        }
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -182,34 +220,41 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.initialURL = url
             return
         }
-        locationTextField.text = url.absoluteString
+        self.setLocationText(url.absoluteString)
         self.webView.load(URLRequest(url: url))
+    }
+    func setLocationText(_ text: String) {
+        self.locationTextField.text = text
+        self.locationTextField.sizeToFit()
     }
 
     // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
 
-        NSLog("Did start provisional nav")
-        self.wbManager?.clearState()
-        self.wbManager = WBManager()
+        if let urlString = webView.url?.absoluteString {
+            self.setLocationText(urlString)
+        }
+        self.configureNewManager()
         self.logManager.clearLogs()
+        self.loadingProgressContainer.isHidden = false
     }
-    
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.webView.enableBluetoothInView()
+
         if let urlString = webView.url?.absoluteString,
             urlString != "about:blank" {
-            self.locationTextField.text = urlString
             UserDefaults.standard.setValue(urlString, forKey: ViewController.prefKeys.lastLocation.rawValue)
         }
+        self.loadingProgressContainer.isHidden = true
     }
-    
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        webView.loadHTMLString("<p>Fail Navigation: \(error.localizedDescription)</p>", baseURL: nil)
+        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
     }
-    
+
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        webView.loadHTMLString("<p>Fail Provisional Navigation: \(error.localizedDescription)</p>", baseURL: nil)
+        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
+        self.loadingProgressContainer.isHidden = true
     }
 
     // MARK: - WKUIDelegate
@@ -220,6 +265,16 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         alertController.addAction(UIAlertAction(
             title: "OK", style: .default, handler: {_ in completionHandler()}))
         self.present(alertController, animated: true, completion: nil)
+    }
+
+    // MARK: - UIScrollViewDelegate
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            self.setHidesOnSwipesFromScrollView(scrollView)
+        }
+    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.setHidesOnSwipesFromScrollView(scrollView)
     }
 
     // MARK: - Observe protocol
@@ -237,6 +292,20 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.goBackButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
         case "canGoForward":
             self.goForwardButton.isEnabled = defChange[NSKeyValueChangeKey.newKey] as! Bool
+        case "navBarIsHidden":
+            let navBarIsHidden = defChange[NSKeyValueChangeKey.newKey] as! Bool
+            self.shouldShowBars = !navBarIsHidden
+        case "estimatedProgress":
+            let estimatedProgress = defChange[NSKeyValueChangeKey.newKey] as! Double
+            let fwidth = self.loadingProgressContainer.frame.size.width
+            let newWidth: CGFloat = CGFloat(estimatedProgress) * fwidth
+            if newWidth < self.loadingProgressView.frame.size.width {
+                self.loadingProgressView.frame.size.width = newWidth
+            } else {
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.loadingProgressView.frame.size.width = newWidth
+                })
+            }
         default:
             NSLog("Unexpected change observed by ViewController: \(defKeyPath)")
         }
@@ -304,15 +373,16 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             [self.webViewBottomConstraint]
         )
         self.addChildViewController(cvcont)
-        self.view.addSubview(cvcont.view)
+
+        self.view.insertSubview(cvcont.view, at: self.view.subviews.firstIndex(of: self.extraShowBarsView)!)
 
         // after adding the subview the IB outlets will be joined up,
         // so we can add the logger direct to the console view controller
         cvcont.wbLogManager = self.webView.logManager
 
+        cvcont.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         NSLayoutConstraint.activate([
             NSLayoutConstraint(item: cvcont.view, attribute: .top, relatedBy: .equal, toItem: self.webViewContainer, attribute: .bottom, multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: cvcont.view, attribute: .bottom, relatedBy: .equal, toItem: self.toolbar, attribute: .top, multiplier: 1.0, constant: -1.0),
             NSLayoutConstraint(item: cvcont.view, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1.0, constant: 0.0),
             NSLayoutConstraint(item: cvcont.view, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1.0, constant: 0.0),
             ])
@@ -328,5 +398,35 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.consoleViewContainerController = nil;
         NSLayoutConstraint.activate([self.webViewBottomConstraint])
         UserDefaults.standard.setValue(false, forKey: prefKeys.consoleOpen.rawValue)
+    }
+    func setHidesOnSwipesFromScrollView(_ scrollView: UIScrollView) {
+        // Due to an apparent bug this should not be called when the toolbar / navbar are animating up or down as far as possible as that seems to cause a crash
+        let yOffset = scrollView.contentOffset.y
+        let frameHeight = scrollView.frame.size.height
+        let contentHeight = scrollView.contentSize.height
+        let nc = self.navigationController!
+
+        if yOffset + frameHeight > (
+            contentHeight > self.bottomMarginNotToHideBarsIn
+                ? contentHeight - self.bottomMarginNotToHideBarsIn
+                : 0
+        ) {
+            if nc.hidesBarsOnSwipe {
+                nc.hidesBarsOnSwipe = false
+            }
+        } else {
+            if !nc.hidesBarsOnSwipe {
+                nc.hidesBarsOnSwipe = true
+            }
+        }
+    }
+    func configureNewManager() {
+        self.webView.wbManager?.clearState()
+        let picker = self.childViewControllers.first(
+            where: {$0 as? PopUpPickerController != nil}
+            ) as! PopUpPickerController
+        let manager = WBManager(devicePicker: picker)
+        picker.delegate = manager
+        self.webView.wbManager = manager
     }
 }

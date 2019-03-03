@@ -54,6 +54,9 @@ class WBTransactionManager<K> where K: Hashable {
             }
         }
     }
+    func apply(_ function: (WBTransaction) -> Void) {
+        self.apply(function, iff: nil)
+    }
     func removeTransaction(_ transaction: WBTransaction, atPath path: K) {
         if var ts = self.transactions[path] {
             if let ind = ts.index(of: transaction) {
@@ -198,7 +201,7 @@ class WBTransaction: Equatable, CustomStringConvertible {
         }
 
         let commandString = "window.receiveMessageResponse(\(success ? "true" : "false"), \(object.jsonify()), \(self.id));\n"
-        NSLog("--> execute js: \"\(commandString)\"")
+        NSLog("\(self.description) was \(success ? "successful" : "unsuccessful")")
 
         if let wv = self.webView {
             wv.evaluateJavaScript(commandString, completionHandler: {
