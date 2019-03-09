@@ -113,7 +113,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
 
     // MARK: - Properties
-    let debug = true
+    let debug = false
     var deviceId = UUID() // generated ID used instead of internal iOS name
     var peripheral: CBPeripheral
     var adData: BluetoothAdvertisingData
