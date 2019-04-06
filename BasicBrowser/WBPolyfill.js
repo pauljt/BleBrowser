@@ -37,9 +37,11 @@
         let binary = '';
         let bytes = new Uint8Array(buffer);
         bytes.forEach(function (byte) {
-            binary += String.fromCharCode(byte);
+            const char = String.fromCharCode(byte);
+            binary += char;
         });
-        return window.btoa(binary);
+        let b64 =  window.btoa(binary);
+        return b64;
     }
 
     function str64todv(str64) {
@@ -92,7 +94,11 @@
         event.currentTarget = this;
         stack.forEach(function (cb) {
             try {
-                cb.call(this, event);
+                if (cb.handleEvent) {
+                    cb.handleEvent(event);
+                } else {
+                    cb.call(this, event);
+                }
             } catch (e) {
                 console.error(`Exception dispatching to callback ${cb}: ${e}`);
             }
@@ -329,8 +335,19 @@
                 });
         },
         writeValue: function (value) {
+            let buffer;
+            if (value instanceof ArrayBuffer) {
+                buffer = value;
+            } else {
+                buffer = value.buffer;
+                if (!(buffer instanceof ArrayBuffer)) {
+                    throw new Error(
+                        `writeValue needs an ArrayBuffer or View, was passed ${value}`
+                    );
+                }
+            }
             // Can't send raw array bytes since we use JSON, so base64 encode.
-            let v64 = _arrayBufferToBase64(value);
+            let v64 = _arrayBufferToBase64(buffer);
             return this.sendMessage("writeCharacteristicValue", {data: {value: v64}});
         },
         startNotifications: function () {
@@ -414,7 +431,7 @@
     };
 
     function BluetoothEvent(type, target) {
-        defineROProperties(this, {type: type, target: target});
+        defineROProperties(this, {type, target, srcElement: target});
     }
     BluetoothEvent.prototype = {
         prototype: Event.prototype,

@@ -408,12 +408,11 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         if let err = error {
             NSLog("Error \(err) adding notifications to device \(peripheral.name ?? "<no-name>") for characteristic \(characteristic.uuid.uuidString)")
         } else {
-            NSLog("Notifications enabled on device \(peripheral.name ?? "<no-name>") for characteristic \(characteristic.uuid.uuidString)")
+            NSLog("Notifications \(characteristic.isNotifying ? "enabled" : "disabled") on device \(peripheral.name ?? "<no-name>") for characteristic \(characteristic.uuid.uuidString)")
         }
     }
 
     open func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-
         if self.readCharacteristicTM.transactions.count > 0 {
             // We have read transactions outstanding, which means that this is a response after a read request, so complete those transactions.
             self.readCharacteristicTM.apply({
