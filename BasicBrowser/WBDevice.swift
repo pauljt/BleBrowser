@@ -28,6 +28,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     enum DeviceRequests: String {
         case connectGATT, disconnectGATT,  getPrimaryService,
         getCharacteristic, readCharacteristicValue, startNotifications,
+        stopNotifications,
         writeCharacteristicValue
     }
     // MARK: Transaction views
@@ -330,6 +331,22 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             NSLog("Starting notifications for characteristic \(view.characteristicUUID.uuidString) on device \(self.peripheral.name ?? "<no-name>")")
 
             self.peripheral.setNotifyValue(true, for: char)
+            transaction.resolveAsSuccess()
+
+        case .stopNotifications:
+
+            guard let view = CharacteristicView(transaction: transaction) else {
+                transaction.resolveAsFailure(withMessage: "Invalid start notifications message")
+                break
+            }
+
+            guard let char = self.getCharacteristic(view.serviceUUID, uuid: view.characteristicUUID) else {
+                view.resolveUnknownCharacteristic()
+                break
+            }
+            NSLog("Stopping notifications for characteristic \(view.characteristicUUID.uuidString) on device \(self.peripheral.name ?? "<no-name>")")
+
+            self.peripheral.setNotifyValue(false, for: char)
             transaction.resolveAsSuccess()
         }
     }

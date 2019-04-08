@@ -351,10 +351,10 @@
             return this.sendMessage("writeCharacteristicValue", {data: {value: v64}});
         },
         startNotifications: function () {
-            return this.sendMessage("startNotifications");
+            return this.sendMessage("startNotifications").then(() => this);
         },
         stopNotifications: function () {
-            return this.sendMessage("stopNotifications");
+            return this.sendMessage("stopNotifications").then(() => this);
         },
         sendMessage: function (type, messageParms) {
             messageParms = messageParms || {};
