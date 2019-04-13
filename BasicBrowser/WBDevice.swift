@@ -28,6 +28,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     enum DeviceRequests: String {
         case connectGATT, disconnectGATT,  getPrimaryService,
         getCharacteristic, readCharacteristicValue, startNotifications,
+        stopNotifications,
         writeCharacteristicValue
     }
     // MARK: Transaction views
@@ -113,7 +114,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
 
     // MARK: - Properties
-    let debug = true
+    let debug = false
     var deviceId = UUID() // generated ID used instead of internal iOS name
     var peripheral: CBPeripheral
     var adData: BluetoothAdvertisingData
@@ -331,6 +332,22 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
             self.peripheral.setNotifyValue(true, for: char)
             transaction.resolveAsSuccess()
+
+        case .stopNotifications:
+
+            guard let view = CharacteristicView(transaction: transaction) else {
+                transaction.resolveAsFailure(withMessage: "Invalid start notifications message")
+                break
+            }
+
+            guard let char = self.getCharacteristic(view.serviceUUID, uuid: view.characteristicUUID) else {
+                view.resolveUnknownCharacteristic()
+                break
+            }
+            NSLog("Stopping notifications for characteristic \(view.characteristicUUID.uuidString) on device \(self.peripheral.name ?? "<no-name>")")
+
+            self.peripheral.setNotifyValue(false, for: char)
+            transaction.resolveAsSuccess()
         }
     }
     
@@ -408,12 +425,11 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         if let err = error {
             NSLog("Error \(err) adding notifications to device \(peripheral.name ?? "<no-name>") for characteristic \(characteristic.uuid.uuidString)")
         } else {
-            NSLog("Notifications enabled on device \(peripheral.name ?? "<no-name>") for characteristic \(characteristic.uuid.uuidString)")
+            NSLog("Notifications \(characteristic.isNotifying ? "enabled" : "disabled") on device \(peripheral.name ?? "<no-name>") for characteristic \(characteristic.uuid.uuidString)")
         }
     }
 
     open func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-
         if self.readCharacteristicTM.transactions.count > 0 {
             // We have read transactions outstanding, which means that this is a response after a read request, so complete those transactions.
             self.readCharacteristicTM.apply({
