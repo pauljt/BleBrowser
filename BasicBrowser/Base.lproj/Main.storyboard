@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bXw-Ly-snu">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bXw-Ly-snu">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -664,7 +664,7 @@
                                             </constraints>
                                         </view>
                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Swipe down" translatesAutoresizingMaskIntoConstraints="NO" id="4WE-dA-fdQ">
-                                            <rect key="frame" x="171.5" y="388.5" width="32" height="36"/>
+                                            <rect key="frame" x="154" y="388.5" width="67" height="76"/>
                                             <gestureRecognizers/>
                                             <connections>
                                                 <outletCollection property="gestureRecognizers" destination="Wc6-I5-L5A" appends="YES" id="zqk-6e-yL0"/>
@@ -715,11 +715,11 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Clear selection button" width="5.7600002288818359" height="5.7600002288818359"/>
-        <image name="Console Button" width="12" height="11.279999732971191"/>
-        <image name="Copy button" width="13.439999580383301" height="13.439999580383301"/>
+        <image name="Clear selection button" width="12" height="12"/>
+        <image name="Console Button" width="25" height="23.5"/>
+        <image name="Copy button" width="28" height="28"/>
         <image name="Copy@480.png" width="480" height="480"/>
-        <image name="Swipe down" width="32.159999847412109" height="36.479999542236328"/>
+        <image name="Swipe down" width="67" height="76"/>
         <image name="Tick@480.png" width="480" height="480"/>
     </resources>
 </document>

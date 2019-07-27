@@ -32,62 +32,6 @@
     }
 
     let native;
-    //
-    // We need an EventTarget implementation. This one nicked wholesale from
-    // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
-    //
-    nslog("Build EventTarget");
-    function EventTarget() {
-        this.listeners = {};
-    }
-
-    EventTarget.prototype.addEventListener = function (type, callback) {
-        if (this.listeners[type] === undefined) {
-            this.listeners[type] = [];
-        }
-        this.listeners[type].push(callback);
-    };
-    EventTarget.prototype.removeEventListener = function (type, callback) {
-
-        let stack = this.listeners[type];
-        if (stack === undefined) {
-            return;
-        }
-        let l = stack.length;
-        let ii;
-        for (ii = 0; ii < l; ii += 1) {
-            if (stack[ii] === callback) {
-                stack.splice(ii, 1);
-                return this.removeEventListener(type, callback);
-            }
-        }
-    };
-    EventTarget.prototype.dispatchEvent = function (event) {
-        let stack = this.listeners[event.type];
-        if (stack === undefined) {
-            return;
-        }
-        event.currentTarget = this;
-        stack.forEach(function (cb) {
-            try {
-                if (cb.handleEvent) {
-                    cb.handleEvent(event);
-                } else {
-                    cb.call(this, event);
-                }
-            } catch (e) {
-                console.error(`Exception dispatching to callback ${cb}: ${e}`);
-            }
-        });
-    };
-
-    //
-    // And this function is how we add EventTarget to the "sub"classes.
-    //
-    function mixin(target, src) {
-        Object.assign(target.prototype, src.prototype);
-        target.prototype.constructor = target;
-    }
 
     function defineROProperties(target, roDescriptors) {
         Object.keys(roDescriptors).forEach(function (key) {
@@ -98,7 +42,7 @@
     // https://webbluetoothcg.github.io/web-bluetooth/ interface
     nslog("Create BluetoothDevice");
     function BluetoothDevice(deviceJSON) {
-        EventTarget.call(this);
+        wbutils.EventTarget.call(this);
 
         let roProps = {
             adData: {},
@@ -143,7 +87,7 @@
             this.dispatchEvent(new native.BluetoothEvent("gattserverdisconnected", this));
         }
     };
-    mixin(BluetoothDevice, EventTarget);
+    wbutils.mixin(BluetoothDevice, wbutils.EventTarget);
 
     nslog("Create BluetoothRemoteGATTServer");
     function BluetoothRemoteGATTServer(webBluetoothDevice) {
@@ -291,7 +235,7 @@
         };
         defineROProperties(this, roProps);
         this.value = null;
-        EventTarget.call(this);
+        wbutils.EventTarget.call(this);
         native.registerCharacteristicForNotifications(this);
     }
 
@@ -345,7 +289,7 @@
             );
         }
     };
-    mixin(BluetoothRemoteGATTCharacteristic, EventTarget);
+    wbutils.mixin(BluetoothRemoteGATTCharacteristic, wbutils.EventTarget);
 
     nslog("Create BluetoothGATTDescriptor");
     function BluetoothGATTDescriptor(characteristic, uuid) {

@@ -62,6 +62,10 @@ uk.co.greenparksoftware.wbutils = {
 
         return canonicalizedFilter;
     },
+    mixin: function (target, src) {
+        Object.assign(target.prototype, src.prototype);
+        target.prototype.constructor = target;
+    },
     str64todv: function (str64) {
         // Return a DataView from a base64 encoded DOM String.
         let str16 = atob(str64);
@@ -95,7 +99,7 @@ uk.co.greenparksoftware.wbutils = {
     window.addEventListener('error', function (error) {
         consoleLog('error', `Uncaught error: ${error.message}`);
     });
- })();
+})();
 
 (function () {
     function nslog(message) {

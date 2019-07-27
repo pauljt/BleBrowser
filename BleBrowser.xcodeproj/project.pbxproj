@@ -32,6 +32,7 @@
 		5AC47CA81E2CCF2F00BCAE82 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */; };
 		5AC676FC221CA557007B1562 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC676FB221CA557007B1562 /* ErrorViewController.swift */; };
 		5AC8067D21655B5E00AA5176 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8067C21655B5E00AA5176 /* DividerView.swift */; };
+		5AFC77FE22ECD09E0071E792 /* WBEventTarget.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AFC77FD22ECD09E0071E792 /* WBEventTarget.js */; };
 		BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */ = {isa = PBXBuildFile; fileRef = BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */; };
 		BB303DF31C42070C00FCAF24 /* WBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB303DF21C42070C00FCAF24 /* WBManager.swift */; };
 		BB4DBE651C97F577000D2C35 /* WBTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DBE641C97F577000D2C35 /* WBTransaction.swift */; };
@@ -84,6 +85,7 @@
 		5AC8067C21655B5E00AA5176 /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
 		5AFACFEE1F03FB0B00A310D1 /* Info-allowing-http.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-allowing-http.plist"; sourceTree = "<group>"; };
+		5AFC77FD22ECD09E0071E792 /* WBEventTarget.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBEventTarget.js; sourceTree = "<group>"; };
 		BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; lineEnding = 0; path = WBPolyfill.js; sourceTree = "<group>"; tabWidth = 2; };
 		BB303DF21C42070C00FCAF24 /* WBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBManager.swift; sourceTree = "<group>"; };
 		BB4DBE641C97F577000D2C35 /* WBTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBTransaction.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				BB4DBE641C97F577000D2C35 /* WBTransaction.swift */,
 				5A95DDF71E0C080B00DFE26B /* WBWebView.swift */,
 				5AA79DDC1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js */,
+				5AFC77FD22ECD09E0071E792 /* WBEventTarget.js */,
 				BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */,
 				E44C18641A36203E00734F8B /* LaunchScreen.xib */,
 				E44C185F1A36203E00734F8B /* Main.storyboard */,
@@ -281,6 +284,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -309,6 +313,7 @@
 				BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */,
 				5A7579E6214F7965003F0CEA /* stringview.js in Resources */,
 				5A85B9F91E29582400E0B718 /* Defaults.plist in Resources */,
+				5AFC77FE22ECD09E0071E792 /* WBEventTarget.js in Resources */,
 				E44C18661A36203E00734F8B /* LaunchScreen.xib in Resources */,
 				E44C18631A36203E00734F8B /* Images.xcassets in Resources */,
 			);
