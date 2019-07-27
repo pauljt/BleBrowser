@@ -22,6 +22,7 @@
 (function () {
   'use strict';
 
+  const wb = uk.co.greenparksoftware.wb;
   const wbutils = uk.co.greenparksoftware.wbutils;
   nslog('Initialize web bluetooth runtime');
 
@@ -32,56 +33,6 @@
   }
 
   let native;
-
-  // https://webbluetoothcg.github.io/web-bluetooth/ interface
-  nslog('Create BluetoothDevice');
-  function BluetoothDevice(deviceJSON) {
-    wbutils.EventTarget.call(this);
-
-    let roProps = {
-      adData: {},
-      deviceClass: deviceJSON.deviceClass || 0,
-      id: deviceJSON.id,
-      gatt: new native.BluetoothRemoteGATTServer(this),
-      productId: deviceJSON.productId || 0,
-      productVersion: deviceJSON.productVersion || 0,
-      uuids: deviceJSON.uuids,
-      vendorId: deviceJSON.vendorId || 0,
-      vendorIdSource: deviceJSON.vendorIdSource || 'bluetooth'
-    };
-    wbutils.defineROProperties(this, roProps);
-
-    this.name = deviceJSON.name;
-
-    if (deviceJSON.adData) {
-      this.adData.appearance = deviceJSON.adData.appearance || '';
-      this.adData.txPower = deviceJSON.adData.txPower || 0;
-      this.adData.rssi = deviceJSON.adData.rssi || 0;
-      this.adData.manufacturerData = deviceJSON.adData.manufacturerData || [];
-      this.adData.serviceData = deviceJSON.adData.serviceData || [];
-    }
-  }
-
-  BluetoothDevice.prototype = {
-    toString: function () {
-      return `BluetoothDevice(${this.id.slice(0, 10)})`;
-    },
-    handleSpontaneousDisconnectEvent: function () {
-      // Code references as per
-      // https://webbluetoothcg.github.io/web-bluetooth/#disconnection-events
-      // 1. not implemented
-      // 2.
-      if (!this.gatt.connected) {
-        return;
-      }
-      // 3.1
-      this.gatt.connected = false;
-      // 3.2-3.7 not implemented
-      // 3.8
-      this.dispatchEvent(new native.BluetoothEvent('gattserverdisconnected', this));
-    }
-  };
-  wbutils.mixin(BluetoothDevice, wbutils.EventTarget);
 
   nslog('Create BluetoothRemoteGATTServer');
   function BluetoothRemoteGATTServer(webBluetoothDevice) {
@@ -172,6 +123,7 @@
       return `BluetoothRemoteGATTServer(${this.device.toString()})`;
     }
   };
+  wb.BluetoothRemoteGATTServer = BluetoothRemoteGATTServer;
 
   nslog('Create BluetoothRemoteGATTService');
   function BluetoothRemoteGATTService(device, uuid, isPrimary) {
@@ -313,7 +265,7 @@
       return native.sendMessage(
         'requestDevice', {data: {acceptAllDevices: true}}
       ).then(function (device) {
-        return new BluetoothDevice(device);
+        return new wb.BluetoothDevice(device);
       });
     }
 
@@ -338,7 +290,7 @@
       'requestDevice',
       {data: validatedDeviceOptions}
     ).then(function (device) {
-      return new BluetoothDevice(device);
+      return new wb.BluetoothDevice(device);
     });
   };
 
@@ -349,6 +301,7 @@
     prototype: Event.prototype,
     constructor: BluetoothEvent
   };
+  wb.BluetoothEvent = BluetoothEvent;
 
   //
   // ===== Communication with Native =====
@@ -502,7 +455,7 @@
   };
 
   // Exposed interfaces
-  window.BluetoothDevice = BluetoothDevice;
+  window.BluetoothDevice = wb.BluetoothDevice;
   window.iOSNativeAPI = native;
   window.receiveDeviceDisconnectEvent = native.receiveDeviceDisconnectEvent;
   window.receiveMessageResponse = native.receiveMessageResponse;

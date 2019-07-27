@@ -11,6 +11,7 @@ if (!uk.co) {
 if (!uk.co.greenparksoftware) {
   uk.co.greenparksoftware = {};
 }
+uk.co.greenparksoftware.wb = {};
 uk.co.greenparksoftware.wbutils = {
   arrayBufferToBase64: function (buffer) {
     let binary = '';
