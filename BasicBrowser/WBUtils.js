@@ -2,7 +2,7 @@
         browser
 */
 /*global
-        atob, BluetoothUUID, Event, uk, window
+        atob, BluetoothUUID, Event, StringView, uk, window
 */
 eval('var uk = uk || {};');
 if (!uk.co) {
@@ -12,13 +12,23 @@ if (!uk.co.greenparksoftware) {
     uk.co.greenparksoftware = {};
 }
 uk.co.greenparksoftware.wbutils = {
+    arrayBufferToBase64: function (buffer) {
+        let binary = '';
+        let bytes = new Uint8Array(buffer);
+        bytes.forEach(function (byte) {
+            const char = String.fromCharCode(byte);
+            binary += char;
+        });
+        let   b64 =  window.btoa(binary);
+        return b64;
+    },
     btDeviceNameIsOk: function (name) {
-        "use strict";
+        'use strict';
         let nameUTF8len = new StringView(name).buffer.byteLength;
         return nameUTF8len <= 248 && nameUTF8len >= 0;
     },
     canonicaliseFilter: function (filter) {
-        "use strict";
+        'use strict';
         // implemented as far as possible as per
         // https://webbluetoothcg.github.io/web-bluetooth/#bluetoothlescanfilterinit-canonicalizing
         const services = filter.services;
@@ -40,7 +50,7 @@ uk.co.greenparksoftware.wbutils = {
         let canonicalizedFilter = { name, namePrefix };
 
         if (services === undefined && name === undefined && namePrefix === undefined) {
-            throw new TypeError("Filter has no usable properties");
+            throw new TypeError('Filter has no usable properties');
         }
         if (services !== undefined) {
             if (!services) {
@@ -51,6 +61,17 @@ uk.co.greenparksoftware.wbutils = {
         }
 
         return canonicalizedFilter;
+    },
+    str64todv: function (str64) {
+        // Return a DataView from a base64 encoded DOM String.
+        let str16 = atob(str64);
+        let ab = new Int8Array(str16.length);
+        let ii;
+        for (ii = 0; ii < ab.length; ii += 1) {
+            // trusted interface, so don't check this is 0 <= charCode < 256
+            ab[ii] = str16.charCodeAt(ii);
+        }
+        return new DataView(ab.buffer);
     }
 };
 
@@ -83,4 +104,4 @@ uk.co.greenparksoftware.wbutils = {
     }
     window.nslog = nslog;
 })();
-nslog('WBUtils imported');
+window.nslog('WBUtils imported');

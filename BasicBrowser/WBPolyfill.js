@@ -22,7 +22,7 @@
 (function () {
     "use strict";
 
-    let wbutils = uk.co.greenparksoftware.wbutils;
+    const wbutils = uk.co.greenparksoftware.wbutils;
     nslog("Initialize web bluetooth runtime");
 
     if (navigator.bluetooth) {
@@ -32,30 +32,6 @@
     }
 
     let native;
-
-    function _arrayBufferToBase64(buffer) {
-        let binary = '';
-        let bytes = new Uint8Array(buffer);
-        bytes.forEach(function (byte) {
-            const char = String.fromCharCode(byte);
-            binary += char;
-        });
-        let b64 =  window.btoa(binary);
-        return b64;
-    }
-
-    function str64todv(str64) {
-        // Return a DataView from a base64 encoded DOM String.
-        let str16 = atob(str64);
-        let ab = new Int8Array(str16.length);
-        let ii;
-        for (ii = 0; ii < ab.length; ii += 1) {
-            // trusted interface, so don't check this is 0 <= charCode < 256
-            ab[ii] = str16.charCodeAt(ii);
-        }
-        return new DataView(ab.buffer);
-    }
-
     //
     // We need an EventTarget implementation. This one nicked wholesale from
     // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
@@ -347,7 +323,7 @@
                 }
             }
             // Can't send raw array bytes since we use JSON, so base64 encode.
-            let v64 = _arrayBufferToBase64(buffer);
+            let v64 = wbutils.arrayBufferToBase64(buffer);
             return this.sendMessage("writeCharacteristicValue", {data: {value: v64}});
         },
         startNotifications: function () {
