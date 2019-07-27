@@ -62,6 +62,11 @@ uk.co.greenparksoftware.wbutils = {
 
     return canonicalizedFilter;
   },
+  defineROProperties: function (target, roDescriptors) {
+    Object.keys(roDescriptors).forEach(function (key) {
+      Object.defineProperty(target, key, {value: roDescriptors[key]});
+    });
+  },
   mixin: function (target, src) {
     Object.assign(target.prototype, src.prototype);
     target.prototype.constructor = target;

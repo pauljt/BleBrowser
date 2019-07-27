@@ -33,12 +33,6 @@
 
   let native;
 
-  function defineROProperties(target, roDescriptors) {
-    Object.keys(roDescriptors).forEach(function (key) {
-      Object.defineProperty(target, key, {value: roDescriptors[key]});
-    });
-  }
-
   // https://webbluetoothcg.github.io/web-bluetooth/ interface
   nslog('Create BluetoothDevice');
   function BluetoothDevice(deviceJSON) {
@@ -55,7 +49,7 @@
       vendorId: deviceJSON.vendorId || 0,
       vendorIdSource: deviceJSON.vendorIdSource || 'bluetooth'
     };
-    defineROProperties(this, roProps);
+    wbutils.defineROProperties(this, roProps);
 
     this.name = deviceJSON.name;
 
@@ -94,7 +88,7 @@
     if (webBluetoothDevice === undefined) {
       throw new Error('Attempt to create BluetoothRemoteGATTServer with no device');
     }
-    defineROProperties(this, {device: webBluetoothDevice});
+    wbutils.defineROProperties(this, {device: webBluetoothDevice});
     this.connected = false;
     this.connectionTransactionIDs = [];
   }
@@ -184,7 +178,7 @@
     if (device === undefined || uuid === undefined || isPrimary === undefined) {
       throw new Error('Invalid call to BluetoothRemoteGATTService constructor');
     }
-    defineROProperties(this, {
+    wbutils.defineROProperties(this, {
       device: device,
       uuid: uuid,
       isPrimary: isPrimary
@@ -235,7 +229,7 @@
       properties: properties,
       uuid: uuid
     };
-    defineROProperties(this, roProps);
+    wbutils.defineROProperties(this, roProps);
     this.value = null;
     wbutils.EventTarget.call(this);
     native.registerCharacteristicForNotifications(this);
@@ -289,7 +283,7 @@
 
   nslog('Create BluetoothGATTDescriptor');
   function BluetoothGATTDescriptor(characteristic, uuid) {
-    defineROProperties(this, {characteristic: characteristic, uuid: uuid});
+    wbutils.defineROProperties(this, {characteristic: characteristic, uuid: uuid});
   }
 
   BluetoothGATTDescriptor.prototype = {
@@ -349,7 +343,7 @@
   };
 
   function BluetoothEvent(type, target) {
-    defineROProperties(this, {type, target, srcElement: target});
+    wbutils.defineROProperties(this, {type, target, srcElement: target});
   }
   BluetoothEvent.prototype = {
     prototype: Event.prototype,
