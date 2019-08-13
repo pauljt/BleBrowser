@@ -101,7 +101,7 @@
 		E44C18601A36203E00734F8B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E44C18621A36203E00734F8B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E44C18651A36203E00734F8B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		E44C186B1A36203E00734F8B /* BleBrowser.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BleBrowser.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E44C186B1A36203E00734F8B /* WebBLE.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WebBLE.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44C18701A36203E00734F8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E44C18711A36203E00734F8B /* BleBrowserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleBrowserTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -151,9 +151,23 @@
 			path = Bookmarks;
 			sourceTree = "<group>";
 		};
+		5A233341230353E1008D9F03 /* WBCore */ = {
+			isa = PBXGroup;
+			children = (
+				5AFC780322ECDD410071E792 /* Polyfill */,
+				5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */,
+				BB4DE1F31C8D0A44003151BF /* WBDevice.swift */,
+				BB303DF21C42070C00FCAF24 /* WBManager.swift */,
+				BB4DBE641C97F577000D2C35 /* WBTransaction.swift */,
+				5A95DDF71E0C080B00DFE26B /* WBWebView.swift */,
+			);
+			path = WBCore;
+			sourceTree = "<group>";
+		};
 		5AFC780322ECDD410071E792 /* Polyfill */ = {
 			isa = PBXGroup;
 			children = (
+				5A7579E5214F7965003F0CEA /* stringview.js */,
 				5AA79DDC1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js */,
 				5AFC77FF22ECD99B0071E792 /* WBDevice.js */,
 				5AFC77FD22ECD09E0071E792 /* WBEventTarget.js */,
@@ -171,7 +185,8 @@
 				5A9B90F81E1FBCFD00AEDC07 /* README.md */,
 				5AF110A51DDC6AA3006CB88F /* notes.md */,
 				5A9B90F71E1FB32E00AEDC07 /* test cases.md */,
-				E44C18581A36203E00734F8B /* BleBrowser */,
+				5A233341230353E1008D9F03 /* WBCore */,
+				E44C18581A36203E00734F8B /* WBUI */,
 				E44C186E1A36203E00734F8B /* BleBrowserTests */,
 				E44C18571A36203E00734F8B /* Products */,
 			);
@@ -181,29 +196,22 @@
 			isa = PBXGroup;
 			children = (
 				E44C18561A36203E00734F8B /* WebBLE.app */,
-				E44C186B1A36203E00734F8B /* BleBrowser.xctest */,
+				E44C186B1A36203E00734F8B /* WebBLE.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E44C18581A36203E00734F8B /* BleBrowser */ = {
+		E44C18581A36203E00734F8B /* WBUI */ = {
 			isa = PBXGroup;
 			children = (
+				5A10929D2168D5F4002CC973 /* Bookmarks */,
+				5A10929C2168D5B6002CC973 /* Console */,
 				5AC676FB221CA557007B1562 /* ErrorViewController.swift */,
 				5A6BF67921F503DF0051EC98 /* PopUpPickerController.swift */,
 				5A5D621521EBA83D00E417DC /* NavigationViewController.swift */,
-				5A10929D2168D5F4002CC973 /* Bookmarks */,
-				5A10929C2168D5B6002CC973 /* Console */,
-				5A7579E5214F7965003F0CEA /* stringview.js */,
 				5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */,
 				E44C185B1A36203E00734F8B /* AppDelegate.swift */,
-				5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */,
 				E44C185D1A36203E00734F8B /* ViewController.swift */,
-				BB4DE1F31C8D0A44003151BF /* WBDevice.swift */,
-				BB303DF21C42070C00FCAF24 /* WBManager.swift */,
-				BB4DBE641C97F577000D2C35 /* WBTransaction.swift */,
-				5A95DDF71E0C080B00DFE26B /* WBWebView.swift */,
-				5AFC780322ECDD410071E792 /* Polyfill */,
 				E44C18641A36203E00734F8B /* LaunchScreen.xib */,
 				E44C185F1A36203E00734F8B /* Main.storyboard */,
 				5AC47CA51E2BE57000BCAE82 /* Tick@480.png */,
@@ -212,7 +220,7 @@
 				5AFACFEE1F03FB0B00A310D1 /* Info-allowing-http.plist */,
 				E44C18621A36203E00734F8B /* Images.xcassets */,
 			);
-			name = BleBrowser;
+			name = WBUI;
 			path = BasicBrowser;
 			sourceTree = "<group>";
 		};
@@ -237,9 +245,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E44C18551A36203E00734F8B /* BleBrowser */ = {
+		E44C18551A36203E00734F8B /* WebBLE */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E44C18751A36203E00734F8B /* Build configuration list for PBXNativeTarget "BleBrowser" */;
+			buildConfigurationList = E44C18751A36203E00734F8B /* Build configuration list for PBXNativeTarget "WebBLE" */;
 			buildPhases = (
 				E44C18521A36203E00734F8B /* Sources */,
 				E44C18531A36203E00734F8B /* Frameworks */,
@@ -249,14 +257,14 @@
 			);
 			dependencies = (
 			);
-			name = BleBrowser;
+			name = WebBLE;
 			productName = BasicBrowser;
 			productReference = E44C18561A36203E00734F8B /* WebBLE.app */;
 			productType = "com.apple.product-type.application";
 		};
-		E44C186A1A36203E00734F8B /* BleBrowserTests */ = {
+		E44C186A1A36203E00734F8B /* WebBLETests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E44C18781A36203E00734F8B /* Build configuration list for PBXNativeTarget "BleBrowserTests" */;
+			buildConfigurationList = E44C18781A36203E00734F8B /* Build configuration list for PBXNativeTarget "WebBLETests" */;
 			buildPhases = (
 				E44C18671A36203E00734F8B /* Sources */,
 				E44C18681A36203E00734F8B /* Frameworks */,
@@ -267,9 +275,9 @@
 			dependencies = (
 				E44C186D1A36203E00734F8B /* PBXTargetDependency */,
 			);
-			name = BleBrowserTests;
+			name = WebBLETests;
 			productName = BasicBrowserTests;
-			productReference = E44C186B1A36203E00734F8B /* BleBrowser.xctest */;
+			productReference = E44C186B1A36203E00734F8B /* WebBLE.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -293,7 +301,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E44C18511A36203E00734F8B /* Build configuration list for PBXProject "BleBrowser" */;
+			buildConfigurationList = E44C18511A36203E00734F8B /* Build configuration list for PBXProject "WebBLE" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -307,8 +315,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E44C18551A36203E00734F8B /* BleBrowser */,
-				E44C186A1A36203E00734F8B /* BleBrowserTests */,
+				E44C18551A36203E00734F8B /* WebBLE */,
+				E44C186A1A36203E00734F8B /* WebBLETests */,
 			);
 		};
 /* End PBXProject section */
@@ -388,7 +396,7 @@
 /* Begin PBXTargetDependency section */
 		E44C186D1A36203E00734F8B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E44C18551A36203E00734F8B /* BleBrowser */;
+			target = E44C18551A36203E00734F8B /* WebBLE */;
 			targetProxy = E44C186C1A36203E00734F8B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -551,7 +559,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = BasicBrowserTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = BleBrowser;
+				PRODUCT_NAME = WebBLE;
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 			};
@@ -562,7 +570,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = BasicBrowserTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = BleBrowser;
+				PRODUCT_NAME = WebBLE;
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 			};
@@ -571,7 +579,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E44C18511A36203E00734F8B /* Build configuration list for PBXProject "BleBrowser" */ = {
+		E44C18511A36203E00734F8B /* Build configuration list for PBXProject "WebBLE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E44C18731A36203E00734F8B /* Debug */,
@@ -580,7 +588,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E44C18751A36203E00734F8B /* Build configuration list for PBXNativeTarget "BleBrowser" */ = {
+		E44C18751A36203E00734F8B /* Build configuration list for PBXNativeTarget "WebBLE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E44C18761A36203E00734F8B /* Debug */,
@@ -589,7 +597,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E44C18781A36203E00734F8B /* Build configuration list for PBXNativeTarget "BleBrowserTests" */ = {
+		E44C18781A36203E00734F8B /* Build configuration list for PBXNativeTarget "WebBLETests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E44C18791A36203E00734F8B /* Debug */,
