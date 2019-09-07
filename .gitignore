@@ -10,6 +10,7 @@ Thumbs.db
 
 # 20161006 DMP: xcode user data
 xcuserdata
+*.xcworkspace
 _intermediates
 
 # Byte-compiled / optimized / DLL files
