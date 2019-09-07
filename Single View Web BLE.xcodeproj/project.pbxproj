@@ -1,0 +1,591 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5AD6DA632323C1CB0005F733 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA622323C1CB0005F733 /* AppDelegate.swift */; };
+		5AD6DA652323C1CB0005F733 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA642323C1CB0005F733 /* ViewController.swift */; };
+		5AD6DA682323C1CB0005F733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA662323C1CB0005F733 /* Main.storyboard */; };
+		5AD6DA6A2323C1CC0005F733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA692323C1CC0005F733 /* Assets.xcassets */; };
+		5AD6DA6D2323C1CC0005F733 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA6B2323C1CC0005F733 /* LaunchScreen.storyboard */; };
+		5AD6DA782323C1CC0005F733 /* Single_View_Web_BLETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA772323C1CC0005F733 /* Single_View_Web_BLETests.swift */; };
+		5AD6DA832323C1CC0005F733 /* Single_View_Web_BLEUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA822323C1CC0005F733 /* Single_View_Web_BLEUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5AD6DA742323C1CC0005F733 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5AD6DA572323C1CB0005F733 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5AD6DA5E2323C1CB0005F733;
+			remoteInfo = "Single View Web BLE";
+		};
+		5AD6DA7F2323C1CC0005F733 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5AD6DA572323C1CB0005F733 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5AD6DA5E2323C1CB0005F733;
+			remoteInfo = "Single View Web BLE";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5AD6DA5F2323C1CB0005F733 /* Single View Web BLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Single View Web BLE.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AD6DA622323C1CB0005F733 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5AD6DA642323C1CB0005F733 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5AD6DA672323C1CB0005F733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5AD6DA692323C1CC0005F733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5AD6DA6C2323C1CC0005F733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5AD6DA6E2323C1CC0005F733 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5AD6DA732323C1CC0005F733 /* Single View Web BLETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Single View Web BLETests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AD6DA772323C1CC0005F733 /* Single_View_Web_BLETests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Single_View_Web_BLETests.swift; sourceTree = "<group>"; };
+		5AD6DA792323C1CC0005F733 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5AD6DA7E2323C1CC0005F733 /* Single View Web BLEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Single View Web BLEUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AD6DA822323C1CC0005F733 /* Single_View_Web_BLEUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Single_View_Web_BLEUITests.swift; sourceTree = "<group>"; };
+		5AD6DA842323C1CC0005F733 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5AD6DA5C2323C1CB0005F733 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AD6DA702323C1CC0005F733 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AD6DA7B2323C1CC0005F733 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5AD6DA562323C1CB0005F733 = {
+			isa = PBXGroup;
+			children = (
+				5AD6DA612323C1CB0005F733 /* Single View Web BLE */,
+				5AD6DA762323C1CC0005F733 /* Single View Web BLETests */,
+				5AD6DA812323C1CC0005F733 /* Single View Web BLEUITests */,
+				5AD6DA602323C1CB0005F733 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5AD6DA602323C1CB0005F733 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5AD6DA5F2323C1CB0005F733 /* Single View Web BLE.app */,
+				5AD6DA732323C1CC0005F733 /* Single View Web BLETests.xctest */,
+				5AD6DA7E2323C1CC0005F733 /* Single View Web BLEUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5AD6DA612323C1CB0005F733 /* Single View Web BLE */ = {
+			isa = PBXGroup;
+			children = (
+				5AD6DA622323C1CB0005F733 /* AppDelegate.swift */,
+				5AD6DA642323C1CB0005F733 /* ViewController.swift */,
+				5AD6DA662323C1CB0005F733 /* Main.storyboard */,
+				5AD6DA692323C1CC0005F733 /* Assets.xcassets */,
+				5AD6DA6B2323C1CC0005F733 /* LaunchScreen.storyboard */,
+				5AD6DA6E2323C1CC0005F733 /* Info.plist */,
+			);
+			path = "Single View Web BLE";
+			sourceTree = "<group>";
+		};
+		5AD6DA762323C1CC0005F733 /* Single View Web BLETests */ = {
+			isa = PBXGroup;
+			children = (
+				5AD6DA772323C1CC0005F733 /* Single_View_Web_BLETests.swift */,
+				5AD6DA792323C1CC0005F733 /* Info.plist */,
+			);
+			path = "Single View Web BLETests";
+			sourceTree = "<group>";
+		};
+		5AD6DA812323C1CC0005F733 /* Single View Web BLEUITests */ = {
+			isa = PBXGroup;
+			children = (
+				5AD6DA822323C1CC0005F733 /* Single_View_Web_BLEUITests.swift */,
+				5AD6DA842323C1CC0005F733 /* Info.plist */,
+			);
+			path = "Single View Web BLEUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5AD6DA5E2323C1CB0005F733 /* Single View Web BLE */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5AD6DA872323C1CC0005F733 /* Build configuration list for PBXNativeTarget "Single View Web BLE" */;
+			buildPhases = (
+				5AD6DA5B2323C1CB0005F733 /* Sources */,
+				5AD6DA5C2323C1CB0005F733 /* Frameworks */,
+				5AD6DA5D2323C1CB0005F733 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Single View Web BLE";
+			productName = "Single View Web BLE";
+			productReference = 5AD6DA5F2323C1CB0005F733 /* Single View Web BLE.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5AD6DA722323C1CC0005F733 /* Single View Web BLETests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5AD6DA8A2323C1CC0005F733 /* Build configuration list for PBXNativeTarget "Single View Web BLETests" */;
+			buildPhases = (
+				5AD6DA6F2323C1CC0005F733 /* Sources */,
+				5AD6DA702323C1CC0005F733 /* Frameworks */,
+				5AD6DA712323C1CC0005F733 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5AD6DA752323C1CC0005F733 /* PBXTargetDependency */,
+			);
+			name = "Single View Web BLETests";
+			productName = "Single View Web BLETests";
+			productReference = 5AD6DA732323C1CC0005F733 /* Single View Web BLETests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		5AD6DA7D2323C1CC0005F733 /* Single View Web BLEUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5AD6DA8D2323C1CC0005F733 /* Build configuration list for PBXNativeTarget "Single View Web BLEUITests" */;
+			buildPhases = (
+				5AD6DA7A2323C1CC0005F733 /* Sources */,
+				5AD6DA7B2323C1CC0005F733 /* Frameworks */,
+				5AD6DA7C2323C1CC0005F733 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5AD6DA802323C1CC0005F733 /* PBXTargetDependency */,
+			);
+			name = "Single View Web BLEUITests";
+			productName = "Single View Web BLEUITests";
+			productReference = 5AD6DA7E2323C1CC0005F733 /* Single View Web BLEUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5AD6DA572323C1CB0005F733 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1030;
+				LastUpgradeCheck = 1030;
+				ORGANIZATIONNAME = "David Park";
+				TargetAttributes = {
+					5AD6DA5E2323C1CB0005F733 = {
+						CreatedOnToolsVersion = 10.3;
+					};
+					5AD6DA722323C1CC0005F733 = {
+						CreatedOnToolsVersion = 10.3;
+						TestTargetID = 5AD6DA5E2323C1CB0005F733;
+					};
+					5AD6DA7D2323C1CC0005F733 = {
+						CreatedOnToolsVersion = 10.3;
+						TestTargetID = 5AD6DA5E2323C1CB0005F733;
+					};
+				};
+			};
+			buildConfigurationList = 5AD6DA5A2323C1CB0005F733 /* Build configuration list for PBXProject "Single View Web BLE" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5AD6DA562323C1CB0005F733;
+			productRefGroup = 5AD6DA602323C1CB0005F733 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5AD6DA5E2323C1CB0005F733 /* Single View Web BLE */,
+				5AD6DA722323C1CC0005F733 /* Single View Web BLETests */,
+				5AD6DA7D2323C1CC0005F733 /* Single View Web BLEUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5AD6DA5D2323C1CB0005F733 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AD6DA6D2323C1CC0005F733 /* LaunchScreen.storyboard in Resources */,
+				5AD6DA6A2323C1CC0005F733 /* Assets.xcassets in Resources */,
+				5AD6DA682323C1CB0005F733 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AD6DA712323C1CC0005F733 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AD6DA7C2323C1CC0005F733 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5AD6DA5B2323C1CB0005F733 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AD6DA652323C1CB0005F733 /* ViewController.swift in Sources */,
+				5AD6DA632323C1CB0005F733 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AD6DA6F2323C1CC0005F733 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AD6DA782323C1CC0005F733 /* Single_View_Web_BLETests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AD6DA7A2323C1CC0005F733 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5AD6DA832323C1CC0005F733 /* Single_View_Web_BLEUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5AD6DA752323C1CC0005F733 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5AD6DA5E2323C1CB0005F733 /* Single View Web BLE */;
+			targetProxy = 5AD6DA742323C1CC0005F733 /* PBXContainerItemProxy */;
+		};
+		5AD6DA802323C1CC0005F733 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5AD6DA5E2323C1CB0005F733 /* Single View Web BLE */;
+			targetProxy = 5AD6DA7F2323C1CC0005F733 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		5AD6DA662323C1CB0005F733 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5AD6DA672323C1CB0005F733 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		5AD6DA6B2323C1CC0005F733 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5AD6DA6C2323C1CC0005F733 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5AD6DA852323C1CC0005F733 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5AD6DA862323C1CC0005F733 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5AD6DA882323C1CC0005F733 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7RKU9LK986;
+				INFOPLIST_FILE = "Single View Web BLE/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.greenparksoftware.Single-View-Web-BLE";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5AD6DA892323C1CC0005F733 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7RKU9LK986;
+				INFOPLIST_FILE = "Single View Web BLE/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.greenparksoftware.Single-View-Web-BLE";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5AD6DA8B2323C1CC0005F733 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7RKU9LK986;
+				INFOPLIST_FILE = "Single View Web BLETests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.greenparksoftware.Single-View-Web-BLETests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Single View Web BLE.app/Single View Web BLE";
+			};
+			name = Debug;
+		};
+		5AD6DA8C2323C1CC0005F733 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7RKU9LK986;
+				INFOPLIST_FILE = "Single View Web BLETests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.greenparksoftware.Single-View-Web-BLETests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Single View Web BLE.app/Single View Web BLE";
+			};
+			name = Release;
+		};
+		5AD6DA8E2323C1CC0005F733 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7RKU9LK986;
+				INFOPLIST_FILE = "Single View Web BLEUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.greenparksoftware.Single-View-Web-BLEUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Single View Web BLE";
+			};
+			name = Debug;
+		};
+		5AD6DA8F2323C1CC0005F733 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7RKU9LK986;
+				INFOPLIST_FILE = "Single View Web BLEUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.greenparksoftware.Single-View-Web-BLEUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Single View Web BLE";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5AD6DA5A2323C1CB0005F733 /* Build configuration list for PBXProject "Single View Web BLE" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5AD6DA852323C1CC0005F733 /* Debug */,
+				5AD6DA862323C1CC0005F733 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5AD6DA872323C1CC0005F733 /* Build configuration list for PBXNativeTarget "Single View Web BLE" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5AD6DA882323C1CC0005F733 /* Debug */,
+				5AD6DA892323C1CC0005F733 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5AD6DA8A2323C1CC0005F733 /* Build configuration list for PBXNativeTarget "Single View Web BLETests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5AD6DA8B2323C1CC0005F733 /* Debug */,
+				5AD6DA8C2323C1CC0005F733 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5AD6DA8D2323C1CC0005F733 /* Build configuration list for PBXNativeTarget "Single View Web BLEUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5AD6DA8E2323C1CC0005F733 /* Debug */,
+				5AD6DA8F2323C1CC0005F733 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5AD6DA572323C1CB0005F733 /* Project object */;
+}
