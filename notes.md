@@ -27,7 +27,7 @@ Main.storyboard
 
 ## BLE
 
-WBManager: WKScriptMessageHandler, CBCentralManagerDelegate, PopUpPickerViewDelegate
+WBManager: WKScriptMessageHandler, CBCentralManagerDelegate, WBPopUpPickerViewDelegate
 
     - userContentController(WKUserContentController, WKScriptMessage):
     - 

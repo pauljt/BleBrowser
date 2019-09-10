@@ -1,5 +1,5 @@
 //
-//  PopUpPickerController.swift
+//  WBPopUpPickerController.swift
 //  BleBrowser
 //
 //  Created by David Park on 20/01/2019.
@@ -9,16 +9,16 @@ import UIKit
 
 // MARK: - Protocols
 @objc
-protocol PopUpPickerViewDelegate: UIPickerViewDelegate, UIPickerViewDataSource {
+protocol WBPopUpPickerViewDelegate: UIPickerViewDelegate, UIPickerViewDataSource {
     @objc optional func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int])
     @objc optional func pickerViewCancelled(_ pickerView: UIPickerView)
     @objc var numberOfItems: Int { get }
 }
 
-class PopUpPickerController: UIViewController, WBPicker {
+class WBPopUpPickerController: UIViewController, WBPicker {
 
     // MARK: - Public API
-    var delegate: PopUpPickerViewDelegate?
+    var delegate: WBPopUpPickerViewDelegate?
 
     // MARK: - IBOutlets and IBActions
     @IBOutlet var doneButton: UIButton!

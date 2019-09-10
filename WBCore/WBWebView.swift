@@ -22,44 +22,7 @@ import Foundation
 import UIKit
 import WebKit
 
-open class WBWebView: WKWebView {
-
-    @IBOutlet var logManager: WBLogManager! {
-        didSet(lm) {
-            self.wbLogger.manager = self.logManager
-        }
-    }
-
-    class WBLogger: NSObject, WKScriptMessageHandler {
-
-        var manager: WBLogManager!
-
-        open func userContentController(
-            _ userContentController: WKUserContentController,
-            didReceive message: WKScriptMessage
-        ) {
-            var log: WBLog
-            switch (message.body) {
-            case let bodyDict as [String: Any]:
-                guard
-                    let levelString = bodyDict["level"] as? String,
-                    let level = WBLog.Level(rawValue: levelString),
-                    let message = bodyDict["message"] as? String
-                else {
-                    NSLog("Badly formed dictionary \(bodyDict.description) passed to the logger")
-                    return
-                }
-                log = WBLog(level: level, message: message, args: [])
-            case let bodyString as String:
-                log = WBLog(level: .log, message: bodyString, args: [])
-            default:
-                log = WBLog(level: .warn, message: "Unexpected message type from console log: \(message.body)", args: [])
-            }
-            self.manager.addLog(log)
-        }
-    }
-    let wbLogger = WBLogger()
-
+class WBWebView: WKWebView, WKNavigationDelegate {
     let webBluetoothHandlerName = "bluetooth"
     private var _wbManager: WBManager?
     var wbManager: WBManager? {
@@ -77,6 +40,9 @@ open class WBWebView: WKWebView {
         }
     }
 
+    private var _navDelegates: [WKNavigationDelegate] = []
+
+    // MARK: - Initializers
     required public override init(frame: CGRect, configuration: WKWebViewConfiguration) {
         super.init(frame: frame, configuration: configuration)
     }
@@ -88,8 +54,9 @@ open class WBWebView: WKWebView {
         webCfg.userContentController = userController
         self.init(
             frame: CGRect(),
-            configuration:webCfg
+            configuration: webCfg
         )
+        self.navigationDelegate = self
 
         // TODO: this probably should be more controllable.
         // Before configuring the WKWebView, delete caches since
@@ -101,9 +68,6 @@ open class WBWebView: WKWebView {
             ofTypes: websiteDataTypes,
             modifiedSince: NSDate(timeIntervalSince1970: 0) as Date,
             completionHandler:{})
-
-        // Add logging script
-        userController.add(self.wbLogger, name: "logger")
 
         // Load js
         for jsfilename in ["stringview", "WBUtils", "WBEventTarget", "WBBluetoothUUID", "WBDevice", "WBRemoteGATTServer", "WBPolyfill"] {
@@ -129,7 +93,34 @@ open class WBWebView: WKWebView {
         self.allowsBackForwardNavigationGestures = true
     }
 
-    open func enableBluetoothInView() {
+    // MARK: - API
+    open func addNavigationDelegate(_ del: WKNavigationDelegate) {
+        self._navDelegates.append(del)
+    }
+    open func removeNavigationDelegate(_ del: WKNavigationDelegate) {
+        self._navDelegates.removeAll(where: {$0.isEqual(del)})
+    }
+
+    // MARK: - WKNavigationDelegate
+    // Propagates the notification to all the registered delegates
+    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        self._navDelegates.forEach{$0.webView?(webView, didStartProvisionalNavigation: navigation)}
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        self._enableBluetoothInView()
+        self._navDelegates.forEach{$0.webView?(webView, didFinish: navigation)}
+    }
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        self._navDelegates.forEach{$0.webView?(webView, didFail: navigation, withError: error)}
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        self._navDelegates.forEach{$0.webView?(webView, didFailProvisionalNavigation: navigation, withError: error)}
+    }
+
+    // MARK: - Internal
+    open func _enableBluetoothInView() {
         self.evaluateJavaScript(
             "window.iOSNativeAPI.enableBluetooth()",
             completionHandler: { _, error in

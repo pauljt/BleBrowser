@@ -25,7 +25,8 @@ protocol WBPicker {
     func updatePicker()
 }
 
-open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler, PopUpPickerViewDelegate {
+open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler, WBPopUpPickerViewDelegate
+{
 
     // MARK: - Embedded types
     enum ManagerRequests: String {
@@ -121,7 +122,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         NSLog("FAILED TO CONNECT PERIPHERAL UNHANDLED \(error?.localizedDescription ?? "<no error>")")
     }
 
-    // MARK: - PopUpPickerViewDelegate
+    // MARK: - WBPopUpPickerViewDelegate
     public var numberOfItems: Int {
         get {
             return self.pickerDevices.count

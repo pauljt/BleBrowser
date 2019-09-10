@@ -9,6 +9,24 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Web View Controller-->
+        <scene sceneID="EoL-FU-vdP">
+            <objects>
+                <viewController id="ge6-jU-CeF" customClass="WBWebViewController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ud5-C1-b8i"/>
+                        <viewControllerLayoutGuide type="bottom" id="jkd-JO-zzV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="pi9-pk-3Po" customClass="WBWebView" customModule="WebBLE" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="559"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="buP-Ua-XBJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-671" y="1122"/>
+        </scene>
         <!--Navigation View Controller-->
         <scene sceneID="lV6-vP-8ff">
             <objects>
@@ -44,16 +62,12 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FR6-sF-hFE" userLabel="WebViewContainer">
                                 <rect key="frame" x="0.0" y="64" width="375" height="559"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DRU-nU-zz3" customClass="WBWebView" customModule="WebBLE" customModuleProvider="target">
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EWE-do-a48">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="559"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="jg0-uu-J9P"/>
-                                        </constraints>
                                         <connections>
-                                            <outlet property="logManager" destination="eym-9B-1fd" id="rnd-bl-vLr"/>
+                                            <segue destination="ge6-jU-CeF" kind="embed" id="Fiv-L4-Vmv"/>
                                         </connections>
-                                    </view>
+                                    </containerView>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vFy-zw-Ue6">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="5"/>
                                         <subviews>
@@ -81,15 +95,15 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="EWE-do-a48" firstAttribute="leading" secondItem="FR6-sF-hFE" secondAttribute="leading" id="4rd-FJ-Dxh"/>
                                     <constraint firstAttribute="trailing" secondItem="vFy-zw-Ue6" secondAttribute="trailing" id="E97-g6-rq9"/>
                                     <constraint firstItem="vFy-zw-Ue6" firstAttribute="leading" secondItem="FR6-sF-hFE" secondAttribute="leading" id="Fci-Ix-OAK"/>
-                                    <constraint firstAttribute="trailing" secondItem="DRU-nU-zz3" secondAttribute="trailing" id="PRs-pW-gqt"/>
-                                    <constraint firstAttribute="bottom" secondItem="DRU-nU-zz3" secondAttribute="bottom" id="YLd-Gx-jgu"/>
-                                    <constraint firstItem="DRU-nU-zz3" firstAttribute="top" secondItem="FR6-sF-hFE" secondAttribute="top" id="bzf-J1-gyz"/>
+                                    <constraint firstItem="EWE-do-a48" firstAttribute="top" secondItem="FR6-sF-hFE" secondAttribute="top" id="djt-Wp-tMB"/>
                                     <constraint firstItem="6wE-az-iDp" firstAttribute="centerX" secondItem="FR6-sF-hFE" secondAttribute="centerX" id="hSb-cx-L8i"/>
                                     <constraint firstItem="6wE-az-iDp" firstAttribute="centerY" secondItem="FR6-sF-hFE" secondAttribute="centerY" id="kar-IP-cdM"/>
-                                    <constraint firstItem="DRU-nU-zz3" firstAttribute="leading" secondItem="FR6-sF-hFE" secondAttribute="leading" id="llV-7P-wNu"/>
+                                    <constraint firstAttribute="bottom" secondItem="EWE-do-a48" secondAttribute="bottom" id="nXB-hv-feS"/>
                                     <constraint firstItem="vFy-zw-Ue6" firstAttribute="top" secondItem="FR6-sF-hFE" secondAttribute="top" id="siF-ew-QAl"/>
+                                    <constraint firstAttribute="trailing" secondItem="EWE-do-a48" secondAttribute="trailing" id="xz2-XR-HiX"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="zpX-iF-0LJ"/>
                                 </constraints>
                             </view>
@@ -185,19 +199,16 @@
                         <outlet property="loadingProgressContainer" destination="vFy-zw-Ue6" id="Eg3-2q-EPL"/>
                         <outlet property="loadingProgressView" destination="b6e-61-g93" id="nkM-90-baO"/>
                         <outlet property="locationTextField" destination="O1l-7F-uXL" id="i8M-pT-n46"/>
-                        <outlet property="logManager" destination="eym-9B-1fd" id="Fec-Lj-MbA"/>
                         <outlet property="pickerContainer" destination="afH-KC-ljD" id="HCP-U3-g06"/>
                         <outlet property="refreshButton" destination="LXB-CH-4RT" id="350-AZ-rBZ"/>
                         <outlet property="showConsoleButton" destination="uNi-2X-YpW" id="CTt-pC-CFQ"/>
                         <outlet property="tick" destination="6wE-az-iDp" id="aNh-gM-jXz"/>
-                        <outlet property="webView" destination="DRU-nU-zz3" id="6mC-k5-D1b"/>
                         <outlet property="webViewBottomConstraint" destination="pMS-1Q-A60" id="UzU-1r-AFv"/>
                         <outlet property="webViewContainer" destination="FR6-sF-hFE" id="ve0-tR-IgP"/>
                         <segue destination="PQo-oV-Kiq" kind="presentation" identifier="nav-error-segue" id="E5w-mx-e5R"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <customObject id="eym-9B-1fd" customClass="WBLogManager" customModule="WebBLE" customModuleProvider="target"/>
                 <tapGestureRecognizer id="QVE-VE-sVj">
                     <connections>
                         <action selector="showBars" destination="BYZ-38-t0r" id="1KG-dv-0jM"/>
@@ -279,12 +290,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JMt-gK-Jlk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1741" y="1010"/>
+            <point key="canvasLocation" x="2758" y="311"/>
         </scene>
         <!--Picker Controller-->
         <scene sceneID="lU6-6m-3o5">
             <objects>
-                <viewController id="YHc-cH-18i" userLabel="Picker Controller" customClass="PopUpPickerController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="YHc-cH-18i" userLabel="Picker Controller" customClass="WBPopUpPickerController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="syy-43-meN"/>
                         <viewControllerLayoutGuide type="bottom" id="c9N-GI-zvS"/>
@@ -363,7 +374,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Cq-ny-xgJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-82" y="1011"/>
+            <point key="canvasLocation" x="958" y="1006"/>
         </scene>
         <!--Console View Container Controller-->
         <scene sceneID="A8U-PZ-eyK">
@@ -610,7 +621,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="863" y="1011"/>
+            <point key="canvasLocation" x="1879" y="312"/>
         </scene>
         <!--Error View Controller-->
         <scene sceneID="FQf-Te-HNC">
@@ -711,7 +722,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-930.39999999999998" y="1118.5907046476761"/>
+            <point key="canvasLocation" x="151" y="1173"/>
         </scene>
     </scenes>
     <resources>

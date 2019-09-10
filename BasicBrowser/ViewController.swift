@@ -39,8 +39,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var refreshButton: UIBarButtonItem!
     @IBOutlet var showConsoleButton: UIBarButtonItem!
     @IBOutlet var webViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet var webView: WBWebView!
-    @IBOutlet var logManager: WBLogManager!
     @IBOutlet var extraShowBarsView: UIView!
     @IBOutlet var pickerContainer: UIView!
     @IBOutlet var loadingProgressContainer: UIView!
@@ -65,6 +63,17 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
     let bottomMarginNotToHideBarsIn: CGFloat = 100.0
 
+    var webViewController: WBWebViewController {
+        get {
+            return self.childViewControllers.first(where: {$0 as? WBWebViewController != nil}) as! WBWebViewController
+        }
+    }
+    var webView: WBWebView {
+        get {
+            return self.webViewController.webView
+        }
+    }
+
     // MARK: - API
     // MARK: IBActions
     @IBAction func addBookmark() {
@@ -84,10 +93,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         FlashAnimation(withView: self.tick).go()
     }
     @IBAction func goForward() {
-        self.webView!.goForward()
+        self.webView.goForward()
     }
     @IBAction func goBackward() {
-        self.webView!.goBack()
+        self.webView.goBack()
     }
     @IBAction func reload() {
         if self.webView.url != nil {
@@ -143,7 +152,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         // connect view to other objects
         self.locationTextField.delegate = self
-        self.webView.navigationDelegate = self
+        self.webView.addNavigationDelegate(self)
         self.webView.uiDelegate = self
         self.webView.scrollView.delegate = self
         self.webView.scrollView.clipsToBounds = false
@@ -235,13 +244,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.setLocationText(urlString)
         }
         self.configureNewManager()
-        self.logManager.clearLogs()
         self.loadingProgressContainer.isHidden = false
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        self.webView.enableBluetoothInView()
-
         if let urlString = webView.url?.absoluteString,
             urlString != "about:blank" {
             UserDefaults.standard.setValue(urlString, forKey: ViewController.prefKeys.lastLocation.rawValue)
@@ -378,7 +384,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         // after adding the subview the IB outlets will be joined up,
         // so we can add the logger direct to the console view controller
-        cvcont.wbLogManager = self.webView.logManager
+        cvcont.wbLogManager = self.webViewController.logManager
 
         cvcont.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         NSLayoutConstraint.activate([
@@ -423,8 +429,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     func configureNewManager() {
         self.webView.wbManager?.clearState()
         let picker = self.childViewControllers.first(
-            where: {$0 as? PopUpPickerController != nil}
-            ) as! PopUpPickerController
+            where: {$0 as? WBPopUpPickerController != nil}
+            ) as! WBPopUpPickerController
         let manager = WBManager(devicePicker: picker)
         picker.delegate = manager
         self.webView.wbManager = manager
