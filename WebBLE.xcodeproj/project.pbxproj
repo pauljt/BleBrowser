@@ -27,6 +27,7 @@
 		5A85B9F71E294B2900E0B718 /* WBBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A85B9F61E294B2900E0B718 /* WBBookmark.swift */; };
 		5A85B9F91E29582400E0B718 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5A85B9F81E29582400E0B718 /* Defaults.plist */; };
 		5A8FD3FC233966050032DCE7 /* Console.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A8FD3FB233966050032DCE7 /* Console.storyboard */; };
+		5A8FD3FE233973710032DCE7 /* WBCore.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A8FD3FD233973710032DCE7 /* WBCore.storyboard */; };
 		5A95DDF81E0C080C00DFE26B /* WBWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A95DDF71E0C080B00DFE26B /* WBWebView.swift */; };
 		5AA79DDD1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AA79DDC1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js */; };
 		5AC47CA61E2BE57000BCAE82 /* Tick@480.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC47CA51E2BE57000BCAE82 /* Tick@480.png */; };
@@ -80,6 +81,7 @@
 		5A85B9F61E294B2900E0B718 /* WBBookmark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBBookmark.swift; sourceTree = "<group>"; };
 		5A85B9F81E29582400E0B718 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Defaults.plist; path = BasicBrowser/Defaults.plist; sourceTree = "<group>"; };
 		5A8FD3FB233966050032DCE7 /* Console.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Console.storyboard; sourceTree = "<group>"; };
+		5A8FD3FD233973710032DCE7 /* WBCore.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WBCore.storyboard; sourceTree = "<group>"; };
 		5A95DDF71E0C080B00DFE26B /* WBWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBWebView.swift; sourceTree = "<group>"; };
 		5A9B90F71E1FB32E00AEDC07 /* test cases.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "test cases.md"; sourceTree = "<group>"; };
 		5A9B90F81E1FBCFD00AEDC07 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				5A5D6403216C9F9300BCD722 /* WBLog.swift */,
 				5A1D3255216FC96500F3391C /* WBLogManager.swift */,
 				5A6BF67921F503DF0051EC98 /* WBPopUpPickerController.swift */,
+				5A8FD3FD233973710032DCE7 /* WBCore.storyboard */,
 			);
 			path = WBCore;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 				5AA79DDD1FB3AA0C00A4FCB4 /* WBBluetoothUUID.js in Resources */,
 				BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */,
 				5A7579E6214F7965003F0CEA /* stringview.js in Resources */,
+				5A8FD3FE233973710032DCE7 /* WBCore.storyboard in Resources */,
 				5A85B9F91E29582400E0B718 /* Defaults.plist in Resources */,
 				5A8FD3FC233966050032DCE7 /* Console.storyboard in Resources */,
 				5AFC77FE22ECD09E0071E792 /* WBEventTarget.js in Resources */,
