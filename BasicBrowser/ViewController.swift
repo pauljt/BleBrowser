@@ -40,7 +40,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var showConsoleButton: UIBarButtonItem!
     @IBOutlet var webViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet var extraShowBarsView: UIView!
-    @IBOutlet var pickerContainer: UIView!
     @IBOutlet var loadingProgressContainer: UIView!
     @IBOutlet var loadingProgressView: UIView!
 
@@ -371,7 +370,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         ud.set(self.currentPrefVersion, forKey: ViewController.prefKeys.version.rawValue)
     }
     func showConsole() {
-        guard let cvcont =  self.storyboard?.instantiateViewController(withIdentifier: "ConsoleViewContainer") as? ConsoleViewContainerController else {
+        let storyboard = UIStoryboard(name: "Console", bundle: nil)
+        guard let cvcont =  storyboard.instantiateViewController(withIdentifier: "ConsoleViewContainer") as? ConsoleViewContainerController else {
             NSLog("Unable to load ConsoleViewContainer from the storyboard")
             return
         }
