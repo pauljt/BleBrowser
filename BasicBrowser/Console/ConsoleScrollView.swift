@@ -25,7 +25,7 @@ class ConsoleScrollView: UIScrollView {
         guard self.subviews.count == 1 else {
             return
         }
-        let constr = NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: subview, attribute: NSLayoutAttribute.width, multiplier: 1.0, constant: 0.0)
+        let constr = NSLayoutConstraint(item: self, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: subview, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1.0, constant: 0.0)
         NSLayoutConstraint.activate([constr])
     }
 }

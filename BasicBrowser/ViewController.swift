@@ -61,7 +61,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     var webViewContainerController: WBWebViewContainerController {
         get {
-            return self.childViewControllers.first(where: {$0 as? WBWebViewContainerController != nil}) as! WBWebViewContainerController
+            return self.children.first(where: {$0 as? WBWebViewContainerController != nil}) as! WBWebViewContainerController
         }
     }
     var webViewController: WBWebViewController {
@@ -118,7 +118,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
 
     // MARK: - Home bar indicator control
-    override func prefersHomeIndicatorAutoHidden() -> Bool {
+    override var prefersHomeIndicatorAutoHidden: Bool {
         return !self.shouldShowBars
     }
 
@@ -348,7 +348,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         NSLayoutConstraint.deactivate(
             [self.webViewBottomConstraint]
         )
-        self.addChildViewController(cvcont)
+        self.addChild(cvcont)
 
         self.view.insertSubview(cvcont.view, at: self.view.subviews.firstIndex(of: self.extraShowBarsView)!)
 
@@ -370,7 +370,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         let cvcont = self.consoleViewContainerController!
         NSLayoutConstraint.deactivate(cvcont.view.constraints)
         cvcont.view.removeFromSuperview()
-        cvcont.removeFromParentViewController()
+        cvcont.removeFromParent()
         self.consoleViewContainerController = nil;
         NSLayoutConstraint.activate([self.webViewBottomConstraint])
         UserDefaults.standard.setValue(false, forKey: prefKeys.consoleOpen.rawValue)

@@ -33,7 +33,7 @@ class ConsoleViewContainerController: UIViewController {
             }
             logManager.addObserver(self, forKeyPath: "aLogIsSelected", options: [.initial, .new], context: nil)
             self._wbLogManager = logManager
-            for cvc in self.childViewControllers {
+            for cvc in self.children {
                 guard let consVC = cvc as? ConsoleViewController else {
                     continue
                 }

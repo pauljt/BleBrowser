@@ -59,7 +59,7 @@ class WBTransactionManager<K> where K: Hashable {
     }
     func removeTransaction(_ transaction: WBTransaction, atPath path: K) {
         if var ts = self.transactions[path] {
-            if let ind = ts.index(of: transaction) {
+            if let ind = ts.firstIndex(of: transaction) {
                 ts.remove(at: ind)
                 self.transactions[path] = ts
             }

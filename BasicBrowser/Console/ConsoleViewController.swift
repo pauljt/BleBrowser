@@ -35,7 +35,7 @@ class ConsoleViewController: UIViewController {
         self._observeLog(log)
 
         let clvc: ConsoleLogViewController = ConsoleLogViewController(nibName: "ConsoleLogView", bundle: nil)
-        self.addChildViewController(clvc)
+        self.addChild(clvc)
         clvc.log = log
         let clv = clvc.view as! ConsoleLogView
         clv.configureWithLog(log)

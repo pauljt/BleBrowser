@@ -226,7 +226,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             // async, so save transaction to resolve when connected
             transaction.addCompletionHandler({
                 transaction, _ in
-                if let ind = self.connectTransactions.index(of: transaction) {
+                if let ind = self.connectTransactions.firstIndex(of: transaction) {
                     self.connectTransactions.remove(at: ind)
                 }
             })
@@ -486,7 +486,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     private func getService(withUUID uuid: CBUUID) -> CBService?{
         guard
             let pservs = self.peripheral.services,
-            let ind = pservs.index(where: {$0.uuid == uuid})
+            let ind = pservs.firstIndex(where: {$0.uuid == uuid})
         else {
             return nil
         }
