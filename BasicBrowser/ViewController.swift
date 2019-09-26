@@ -23,7 +23,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     enum prefKeys: String {
         case bookmarks
         case consoleOpen
-        case lastLocation
         case version
     }
 
@@ -39,12 +38,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var refreshButton: UIBarButtonItem!
     @IBOutlet var showConsoleButton: UIBarButtonItem!
     @IBOutlet var webViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet var webView: WBWebView!
-    @IBOutlet var logManager: WBLogManager!
     @IBOutlet var extraShowBarsView: UIView!
-    @IBOutlet var pickerContainer: UIView!
-    @IBOutlet var loadingProgressContainer: UIView!
-    @IBOutlet var loadingProgressView: UIView!
 
     var initialURL: URL?
 
@@ -65,6 +59,22 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
     let bottomMarginNotToHideBarsIn: CGFloat = 100.0
 
+    var webViewContainerController: WBWebViewContainerController {
+        get {
+            return self.childViewControllers.first(where: {$0 as? WBWebViewContainerController != nil}) as! WBWebViewContainerController
+        }
+    }
+    var webViewController: WBWebViewController {
+        get {
+            return self.webViewContainerController.webViewController
+        }
+    }
+    var webView: WBWebView {
+        get {
+            return self.webViewController.webView
+        }
+    }
+
     // MARK: - API
     // MARK: IBActions
     @IBAction func addBookmark() {
@@ -84,10 +94,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         FlashAnimation(withView: self.tick).go()
     }
     @IBAction func goForward() {
-        self.webView!.goForward()
+        self.webView.goForward()
     }
     @IBAction func goBackward() {
-        self.webView!.goBack()
+        self.webView.goBack()
     }
     @IBAction func reload() {
         if self.webView.url != nil {
@@ -143,12 +153,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         // connect view to other objects
         self.locationTextField.delegate = self
-        self.webView.navigationDelegate = self
-        self.webView.uiDelegate = self
+        self.webView.addNavigationDelegate(self)
         self.webView.scrollView.delegate = self
         self.webView.scrollView.clipsToBounds = false
 
-        for path in ["canGoBack", "canGoForward", "estimatedProgress"] {
+        for path in ["canGoBack", "canGoForward"] {
             self.webView.addObserver(self, forKeyPath: path, options: .new, context: nil)
         }
 
@@ -160,7 +169,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         }
         else {
             var lastLocation: String
-            if let prefLoc = ud.value(forKey: ViewController.prefKeys.lastLocation.rawValue) as? String {
+            if let prefLoc = ud.value(forKey: WBWebViewContainerController.prefKeys.lastLocation.rawValue) as? String {
             lastLocation = prefLoc
             } else {
                 let svers = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
@@ -206,7 +215,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     func loadLocation(_ location: String) {
         var location = location
         if !location.hasPrefix("http://") && !location.hasPrefix("https://") {
-            location = "https://" + location
+            location = "https://\(location)"
         }
         guard let url = URL(string: location) else {
             NSLog("Failed to convert location \(location) into a URL")
@@ -234,37 +243,14 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         if let urlString = webView.url?.absoluteString {
             self.setLocationText(urlString)
         }
-        self.configureNewManager()
-        self.logManager.clearLogs()
-        self.loadingProgressContainer.isHidden = false
     }
-
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        self.webView.enableBluetoothInView()
-
-        if let urlString = webView.url?.absoluteString,
-            urlString != "about:blank" {
-            UserDefaults.standard.setValue(urlString, forKey: ViewController.prefKeys.lastLocation.rawValue)
-        }
-        self.loadingProgressContainer.isHidden = true
-    }
+    
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         self.performSegue(withIdentifier: "nav-error-segue", sender: error)
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         self.performSegue(withIdentifier: "nav-error-segue", sender: error)
-        self.loadingProgressContainer.isHidden = true
-    }
-
-    // MARK: - WKUIDelegate
-    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: (@escaping () -> Void)) {
-        let alertController = UIAlertController(
-            title: frame.request.url?.host, message: message,
-            preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(
-            title: "OK", style: .default, handler: {_ in completionHandler()}))
-        self.present(alertController, animated: true, completion: nil)
     }
 
     // MARK: - UIScrollViewDelegate
@@ -295,17 +281,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         case "navBarIsHidden":
             let navBarIsHidden = defChange[NSKeyValueChangeKey.newKey] as! Bool
             self.shouldShowBars = !navBarIsHidden
-        case "estimatedProgress":
-            let estimatedProgress = defChange[NSKeyValueChangeKey.newKey] as! Double
-            let fwidth = self.loadingProgressContainer.frame.size.width
-            let newWidth: CGFloat = CGFloat(estimatedProgress) * fwidth
-            if newWidth < self.loadingProgressView.frame.size.width {
-                self.loadingProgressView.frame.size.width = newWidth
-            } else {
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.loadingProgressView.frame.size.width = newWidth
-                })
-            }
         default:
             NSLog("Unexpected change observed by ViewController: \(defKeyPath)")
         }
@@ -365,7 +340,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         ud.set(self.currentPrefVersion, forKey: ViewController.prefKeys.version.rawValue)
     }
     func showConsole() {
-        guard let cvcont =  self.storyboard?.instantiateViewController(withIdentifier: "ConsoleViewContainer") as? ConsoleViewContainerController else {
+        let storyboard = UIStoryboard(name: "Console", bundle: nil)
+        guard let cvcont =  storyboard.instantiateViewController(withIdentifier: "ConsoleViewContainer") as? ConsoleViewContainerController else {
             NSLog("Unable to load ConsoleViewContainer from the storyboard")
             return
         }
@@ -378,7 +354,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         // after adding the subview the IB outlets will be joined up,
         // so we can add the logger direct to the console view controller
-        cvcont.wbLogManager = self.webView.logManager
+        cvcont.wbLogManager = self.webViewController.logManager
 
         cvcont.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         NSLayoutConstraint.activate([
@@ -419,14 +395,5 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
                 nc.hidesBarsOnSwipe = true
             }
         }
-    }
-    func configureNewManager() {
-        self.webView.wbManager?.clearState()
-        let picker = self.childViewControllers.first(
-            where: {$0 as? PopUpPickerController != nil}
-            ) as! PopUpPickerController
-        let manager = WBManager(devicePicker: picker)
-        picker.delegate = manager
-        self.webView.wbManager = manager
     }
 }
