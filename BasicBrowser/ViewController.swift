@@ -32,7 +32,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     // MARK: IBOutlets
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet var tick: UIImageView!
-    @IBOutlet var webViewContainer: UIView!
     @IBOutlet var goBackButton: UIBarButtonItem!
     @IBOutlet var goForwardButton: UIBarButtonItem!
     @IBOutlet var refreshButton: UIBarButtonItem!
@@ -61,7 +60,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     var webViewContainerController: WBWebViewContainerController {
         get {
-            return self.childViewControllers.first(where: {$0 as? WBWebViewContainerController != nil}) as! WBWebViewContainerController
+            return self.children.first(where: {$0 as? WBWebViewContainerController != nil}) as! WBWebViewContainerController
         }
     }
     var webViewController: WBWebViewController {
@@ -118,7 +117,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
 
     // MARK: - Home bar indicator control
-    override func prefersHomeIndicatorAutoHidden() -> Bool {
+    override var prefersHomeIndicatorAutoHidden: Bool {
         return !self.shouldShowBars
     }
 
@@ -348,7 +347,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         NSLayoutConstraint.deactivate(
             [self.webViewBottomConstraint]
         )
-        self.addChildViewController(cvcont)
+        self.addChild(cvcont)
 
         self.view.insertSubview(cvcont.view, at: self.view.subviews.firstIndex(of: self.extraShowBarsView)!)
 
@@ -358,10 +357,13 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         cvcont.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         NSLayoutConstraint.activate([
-            NSLayoutConstraint(item: cvcont.view, attribute: .top, relatedBy: .equal, toItem: self.webViewContainer, attribute: .bottom, multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: cvcont.view, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: cvcont.view, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1.0, constant: 0.0),
-            ])
+            cvcont.view.topAnchor.constraint(equalTo: self.webViewContainerController.view.bottomAnchor),
+            cvcont.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            cvcont.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            // ensure we do not enlarge the console above the url bar,
+            // this is something of a hack
+            cvcont.view.topAnchor.constraint(greaterThanOrEqualTo: self.view.topAnchor, constant: 60.0)
+        ])
 
         self.consoleViewContainerController = cvcont
         UserDefaults.standard.setValue(true, forKey: prefKeys.consoleOpen.rawValue)
@@ -370,7 +372,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         let cvcont = self.consoleViewContainerController!
         NSLayoutConstraint.deactivate(cvcont.view.constraints)
         cvcont.view.removeFromSuperview()
-        cvcont.removeFromParentViewController()
+        cvcont.removeFromParent()
         self.consoleViewContainerController = nil;
         NSLayoutConstraint.activate([self.webViewBottomConstraint])
         UserDefaults.standard.setValue(false, forKey: prefKeys.consoleOpen.rawValue)

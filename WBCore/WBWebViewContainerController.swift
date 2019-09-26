@@ -26,7 +26,7 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     
     var webViewController: WBWebViewController {
         get {
-            return self.childViewControllers.first(where: {$0 as? WBWebViewController != nil}) as! WBWebViewController
+            return self.children.first(where: {$0 as? WBWebViewController != nil}) as! WBWebViewController
         }
     }
     var webView: WBWebView {

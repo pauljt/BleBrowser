@@ -54,12 +54,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E44C186C1A36203E00734F8B /* PBXContainerItemProxy */ = {
+		5A495413233D37C1007CA132 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E44C184E1A36203E00734F8B /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = E44C18551A36203E00734F8B;
-			remoteInfo = BasicBrowser;
+			remoteInfo = WebBLE;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -113,7 +113,7 @@
 		E44C18601A36203E00734F8B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E44C18621A36203E00734F8B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E44C18651A36203E00734F8B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		E44C186B1A36203E00734F8B /* WebBLE.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WebBLE.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E44C186B1A36203E00734F8B /* WebBLETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WebBLETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44C18701A36203E00734F8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E44C18711A36203E00734F8B /* BleBrowserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleBrowserTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -215,7 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				E44C18561A36203E00734F8B /* WebBLE.app */,
-				E44C186B1A36203E00734F8B /* WebBLE.xctest */,
+				E44C186B1A36203E00734F8B /* WebBLETests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -291,11 +291,11 @@
 			buildRules = (
 			);
 			dependencies = (
-				E44C186D1A36203E00734F8B /* PBXTargetDependency */,
+				5A495414233D37C1007CA132 /* PBXTargetDependency */,
 			);
 			name = WebBLETests;
 			productName = BasicBrowserTests;
-			productReference = E44C186B1A36203E00734F8B /* WebBLE.xctest */;
+			productReference = E44C186B1A36203E00734F8B /* WebBLETests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -306,16 +306,18 @@
 			attributes = {
 				LastSwiftMigration = 0720;
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1030;
 				TargetAttributes = {
 					E44C18551A36203E00734F8B = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 7RKU9LK986;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1030;
 					};
 					E44C186A1A36203E00734F8B = {
 						CreatedOnToolsVersion = 6.1.1;
-						LastSwiftMigration = 0900;
+						DevelopmentTeam = 7RKU9LK986;
+						LastSwiftMigration = 1030;
+						TestTargetID = E44C18551A36203E00734F8B;
 					};
 				};
 			};
@@ -418,10 +420,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		E44C186D1A36203E00734F8B /* PBXTargetDependency */ = {
+		5A495414233D37C1007CA132 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E44C18551A36203E00734F8B /* WebBLE */;
-			targetProxy = E44C186C1A36203E00734F8B /* PBXContainerItemProxy */;
+			targetProxy = 5A495413233D37C1007CA132 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -449,6 +451,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -503,6 +506,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -558,7 +562,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.uk.greenparksoftware.webble;
 				PRODUCT_NAME = WebBLE;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -573,7 +577,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.uk.greenparksoftware.webble;
 				PRODUCT_NAME = WebBLE;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -581,22 +585,24 @@
 		E44C18791A36203E00734F8B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 7RKU9LK986;
 				INFOPLIST_FILE = BasicBrowserTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = WebBLE;
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				PRODUCT_NAME = WebBLETests;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WebBLE.app/WebBLE";
 			};
 			name = Debug;
 		};
 		E44C187A1A36203E00734F8B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 7RKU9LK986;
 				INFOPLIST_FILE = BasicBrowserTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = WebBLE;
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				PRODUCT_NAME = WebBLETests;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WebBLE.app/WebBLE";
 			};
 			name = Release;
 		};

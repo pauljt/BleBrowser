@@ -38,11 +38,11 @@ struct FlashAnimation {
             return
         }
 
-        UIView.transition(with: sv, duration: self.fadeInDuration, options: UIViewAnimationOptions.transitionCrossDissolve, animations: {self.view.isHidden = false}, completion: {
+        UIView.transition(with: sv, duration: self.fadeInDuration, options: UIView.AnimationOptions.transitionCrossDissolve, animations: {self.view.isHidden = false}, completion: {
             _ in
             Timer.scheduledTimer(withTimeInterval: self.lingerDuration, repeats: false, block: {
                 _ in
-                UIView.transition(with: sv, duration: self.fadeOutDuration, options: UIViewAnimationOptions.transitionCrossDissolve, animations: {
+                UIView.transition(with: sv, duration: self.fadeOutDuration, options: UIView.AnimationOptions.transitionCrossDissolve, animations: {
                         self.view.isHidden = true
                 })
             })

@@ -59,7 +59,7 @@ class WBTransactionManager<K> where K: Hashable {
     }
     func removeTransaction(_ transaction: WBTransaction, atPath path: K) {
         if var ts = self.transactions[path] {
-            if let ind = ts.index(of: transaction) {
+            if let ind = ts.firstIndex(of: transaction) {
                 ts.remove(at: ind)
                 self.transactions[path] = ts
             }
@@ -75,12 +75,10 @@ class WBTransaction: Equatable, CustomStringConvertible {
     struct Key: Hashable, CustomStringConvertible {
         let typeComponents: [String]
 
-        var hashValue: Int {
-            var hash: Int = 0
+        func hash(into hasher: inout Hasher) {
             for tc in self.typeComponents {
-                hash ^= tc.hashValue
+                hasher.combine(tc)
             }
-            return hash
         }
 
         var description: String {

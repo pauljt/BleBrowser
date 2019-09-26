@@ -13,7 +13,7 @@ class WBShowPickerSegue: UIStoryboardSegue {
     override func perform() {
         let wvcc = self.source as! WBWebViewContainerController
         let puvc = self.destination as! WBPopUpPickerController
-        wvcc.addChildViewController(self.destination)
+        wvcc.addChild(self.destination)
         wvcc.view.addSubview(self.destination.view)
         let topBotConstraint = wvcc.view.bottomAnchor.constraint(equalTo: puvc.view.topAnchor)
         NSLayoutConstraint.activate([
@@ -43,7 +43,7 @@ class WBHidePickerSegue: UIStoryboardSegue {
             wvcc.view.layoutIfNeeded()
         }, completion: {
             _ in
-            puvc.removeFromParentViewController()
+            puvc.removeFromParent()
             puvc.view.removeFromSuperview()
         })
     }
