@@ -359,7 +359,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         NSLayoutConstraint.activate([
             cvcont.view.topAnchor.constraint(equalTo: self.webViewContainerController.view.bottomAnchor),
             cvcont.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            cvcont.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+            cvcont.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            // ensure we do not enlarge the console above the url bar,
+            // this is something of a hack
+            cvcont.view.topAnchor.constraint(greaterThanOrEqualTo: self.view.topAnchor, constant: 60.0)
         ])
 
         self.consoleViewContainerController = cvcont
