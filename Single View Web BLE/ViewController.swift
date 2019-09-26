@@ -8,13 +8,23 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class SVViewController: UIViewController {
+    var WBWebViewContainerController: WBWebViewContainerController {
+        get {
+            return self.children.first(where: {$0 as? WBWebViewContainerController != nil}) as! WBWebViewContainerController
+        }
+    }
+    var webView: WBWebView {
+        get {
+            return self.WBWebViewContainerController.webView
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        self.webView.load(URLRequest(url: URL(
+            string: "https://www.greenparksoftware.co.uk"
+        )!))
     }
-
-
 }
 

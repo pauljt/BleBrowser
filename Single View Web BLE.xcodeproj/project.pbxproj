@@ -7,6 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A181FF423284F1A0092A850 /* Jsonifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A181FF323284F1A0092A850 /* Jsonifiable.swift */; };
+		5A181FF523284F1A0092A850 /* Jsonifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A181FF323284F1A0092A850 /* Jsonifiable.swift */; };
+		5A181FF623284F1A0092A850 /* Jsonifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A181FF323284F1A0092A850 /* Jsonifiable.swift */; };
+		5A495416233D4D6A007CA132 /* WBCore.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A495415233D4D69007CA132 /* WBCore.storyboard */; };
+		5A495417233D4D6A007CA132 /* WBCore.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A495415233D4D69007CA132 /* WBCore.storyboard */; };
+		5A49541B233D4DD0007CA132 /* WBPopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A495418233D4DD0007CA132 /* WBPopUpPickerView.swift */; };
+		5A49541C233D4DD0007CA132 /* WBPopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A495418233D4DD0007CA132 /* WBPopUpPickerView.swift */; };
+		5A49541D233D4DD0007CA132 /* WBPopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A495418233D4DD0007CA132 /* WBPopUpPickerView.swift */; };
+		5A49541E233D4DD0007CA132 /* Segues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A495419233D4DD0007CA132 /* Segues.swift */; };
+		5A49541F233D4DD0007CA132 /* Segues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A495419233D4DD0007CA132 /* Segues.swift */; };
+		5A495420233D4DD0007CA132 /* Segues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A495419233D4DD0007CA132 /* Segues.swift */; };
+		5A495421233D4DD0007CA132 /* WBWebViewContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A49541A233D4DD0007CA132 /* WBWebViewContainerController.swift */; };
+		5A495422233D4DD0007CA132 /* WBWebViewContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A49541A233D4DD0007CA132 /* WBWebViewContainerController.swift */; };
+		5A495423233D4DD0007CA132 /* WBWebViewContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A49541A233D4DD0007CA132 /* WBWebViewContainerController.swift */; };
+		5A4E2655232846C000755BD8 /* WBWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2644232846BF00755BD8 /* WBWebViewController.swift */; };
+		5A4E2656232846C000755BD8 /* WBWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2644232846BF00755BD8 /* WBWebViewController.swift */; };
+		5A4E2657232846C000755BD8 /* WBWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2644232846BF00755BD8 /* WBWebViewController.swift */; };
+		5A4E265B232846C000755BD8 /* WBLogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2646232846BF00755BD8 /* WBLogManager.swift */; };
+		5A4E265C232846C000755BD8 /* WBLogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2646232846BF00755BD8 /* WBLogManager.swift */; };
+		5A4E265D232846C000755BD8 /* WBLogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2646232846BF00755BD8 /* WBLogManager.swift */; };
+		5A4E265E232846C000755BD8 /* WBPopUpPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2647232846BF00755BD8 /* WBPopUpPickerController.swift */; };
+		5A4E265F232846C000755BD8 /* WBPopUpPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2647232846BF00755BD8 /* WBPopUpPickerController.swift */; };
+		5A4E2660232846C000755BD8 /* WBPopUpPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2647232846BF00755BD8 /* WBPopUpPickerController.swift */; };
 		5AD6DA632323C1CB0005F733 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA622323C1CB0005F733 /* AppDelegate.swift */; };
 		5AD6DA652323C1CB0005F733 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA642323C1CB0005F733 /* ViewController.swift */; };
 		5AD6DA682323C1CB0005F733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA662323C1CB0005F733 /* Main.storyboard */; };
@@ -14,6 +37,42 @@
 		5AD6DA6D2323C1CC0005F733 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA6B2323C1CC0005F733 /* LaunchScreen.storyboard */; };
 		5AD6DA782323C1CC0005F733 /* Single_View_Web_BLETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA772323C1CC0005F733 /* Single_View_Web_BLETests.swift */; };
 		5AD6DA832323C1CC0005F733 /* Single_View_Web_BLEUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA822323C1CC0005F733 /* Single_View_Web_BLEUITests.swift */; };
+		5AD6DAA12323CA080005F733 /* WBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA922323CA080005F733 /* WBManager.swift */; };
+		5AD6DAA22323CA080005F733 /* WBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA922323CA080005F733 /* WBManager.swift */; };
+		5AD6DAA32323CA080005F733 /* WBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA922323CA080005F733 /* WBManager.swift */; };
+		5AD6DAA42323CA080005F733 /* WBDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA932323CA080005F733 /* WBDevice.swift */; };
+		5AD6DAA52323CA080005F733 /* WBDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA932323CA080005F733 /* WBDevice.swift */; };
+		5AD6DAA62323CA080005F733 /* WBDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA932323CA080005F733 /* WBDevice.swift */; };
+		5AD6DAA72323CA080005F733 /* WBWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA942323CA080005F733 /* WBWebView.swift */; };
+		5AD6DAA82323CA080005F733 /* WBWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA942323CA080005F733 /* WBWebView.swift */; };
+		5AD6DAA92323CA080005F733 /* WBWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA942323CA080005F733 /* WBWebView.swift */; };
+		5AD6DAAA2323CA080005F733 /* WBDevice.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA962323CA080005F733 /* WBDevice.js */; };
+		5AD6DAAB2323CA080005F733 /* WBDevice.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA962323CA080005F733 /* WBDevice.js */; };
+		5AD6DAAC2323CA080005F733 /* WBDevice.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA962323CA080005F733 /* WBDevice.js */; };
+		5AD6DAAD2323CA080005F733 /* WBBluetoothUUID.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA972323CA080005F733 /* WBBluetoothUUID.js */; };
+		5AD6DAAE2323CA080005F733 /* WBBluetoothUUID.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA972323CA080005F733 /* WBBluetoothUUID.js */; };
+		5AD6DAAF2323CA080005F733 /* WBBluetoothUUID.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA972323CA080005F733 /* WBBluetoothUUID.js */; };
+		5AD6DAB02323CA080005F733 /* WBPolyfill.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA982323CA080005F733 /* WBPolyfill.js */; };
+		5AD6DAB12323CA080005F733 /* WBPolyfill.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA982323CA080005F733 /* WBPolyfill.js */; };
+		5AD6DAB22323CA080005F733 /* WBPolyfill.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA982323CA080005F733 /* WBPolyfill.js */; };
+		5AD6DAB32323CA080005F733 /* WBUtils.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA992323CA080005F733 /* WBUtils.js */; };
+		5AD6DAB42323CA080005F733 /* WBUtils.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA992323CA080005F733 /* WBUtils.js */; };
+		5AD6DAB52323CA080005F733 /* WBUtils.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA992323CA080005F733 /* WBUtils.js */; };
+		5AD6DAB62323CA080005F733 /* stringview.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9A2323CA080005F733 /* stringview.js */; };
+		5AD6DAB72323CA080005F733 /* stringview.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9A2323CA080005F733 /* stringview.js */; };
+		5AD6DAB82323CA080005F733 /* stringview.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9A2323CA080005F733 /* stringview.js */; };
+		5AD6DAB92323CA080005F733 /* WBEventTarget.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9B2323CA080005F733 /* WBEventTarget.js */; };
+		5AD6DABA2323CA080005F733 /* WBEventTarget.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9B2323CA080005F733 /* WBEventTarget.js */; };
+		5AD6DABB2323CA080005F733 /* WBEventTarget.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9B2323CA080005F733 /* WBEventTarget.js */; };
+		5AD6DABC2323CA080005F733 /* WBRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */; };
+		5AD6DABD2323CA080005F733 /* WBRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */; };
+		5AD6DABE2323CA080005F733 /* WBRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */; };
+		5AD6DABF2323CA080005F733 /* WBTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9D2323CA080005F733 /* WBTransaction.swift */; };
+		5AD6DAC02323CA080005F733 /* WBTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9D2323CA080005F733 /* WBTransaction.swift */; };
+		5AD6DAC12323CA080005F733 /* WBTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9D2323CA080005F733 /* WBTransaction.swift */; };
+		5AD6DAC72323CEF70005F733 /* WBLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DAC32323CEF70005F733 /* WBLog.swift */; };
+		5AD6DAC82323CEF80005F733 /* WBLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DAC32323CEF70005F733 /* WBLog.swift */; };
+		5AD6DAC92323CEF80005F733 /* WBLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DAC32323CEF70005F733 /* WBLog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +93,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5A181FF323284F1A0092A850 /* Jsonifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Jsonifiable.swift; sourceTree = "<group>"; };
+		5A495415233D4D69007CA132 /* WBCore.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WBCore.storyboard; sourceTree = "<group>"; };
+		5A495418233D4DD0007CA132 /* WBPopUpPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBPopUpPickerView.swift; sourceTree = "<group>"; };
+		5A495419233D4DD0007CA132 /* Segues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segues.swift; sourceTree = "<group>"; };
+		5A49541A233D4DD0007CA132 /* WBWebViewContainerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBWebViewContainerController.swift; sourceTree = "<group>"; };
+		5A4E2644232846BF00755BD8 /* WBWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBWebViewController.swift; sourceTree = "<group>"; };
+		5A4E2646232846BF00755BD8 /* WBLogManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBLogManager.swift; sourceTree = "<group>"; };
+		5A4E2647232846BF00755BD8 /* WBPopUpPickerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBPopUpPickerController.swift; sourceTree = "<group>"; };
 		5AD6DA5F2323C1CB0005F733 /* Single View Web BLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Single View Web BLE.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AD6DA622323C1CB0005F733 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5AD6DA642323C1CB0005F733 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +114,18 @@
 		5AD6DA7E2323C1CC0005F733 /* Single View Web BLEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Single View Web BLEUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AD6DA822323C1CC0005F733 /* Single_View_Web_BLEUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Single_View_Web_BLEUITests.swift; sourceTree = "<group>"; };
 		5AD6DA842323C1CC0005F733 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5AD6DA922323CA080005F733 /* WBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBManager.swift; sourceTree = "<group>"; };
+		5AD6DA932323CA080005F733 /* WBDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBDevice.swift; sourceTree = "<group>"; };
+		5AD6DA942323CA080005F733 /* WBWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBWebView.swift; sourceTree = "<group>"; };
+		5AD6DA962323CA080005F733 /* WBDevice.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBDevice.js; sourceTree = "<group>"; };
+		5AD6DA972323CA080005F733 /* WBBluetoothUUID.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBBluetoothUUID.js; sourceTree = "<group>"; };
+		5AD6DA982323CA080005F733 /* WBPolyfill.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBPolyfill.js; sourceTree = "<group>"; };
+		5AD6DA992323CA080005F733 /* WBUtils.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBUtils.js; sourceTree = "<group>"; };
+		5AD6DA9A2323CA080005F733 /* stringview.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = stringview.js; sourceTree = "<group>"; };
+		5AD6DA9B2323CA080005F733 /* WBEventTarget.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBEventTarget.js; sourceTree = "<group>"; };
+		5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBRemoteGATTServer.js; sourceTree = "<group>"; };
+		5AD6DA9D2323CA080005F733 /* WBTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBTransaction.swift; sourceTree = "<group>"; };
+		5AD6DAC32323CEF70005F733 /* WBLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBLog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +156,7 @@
 		5AD6DA562323C1CB0005F733 = {
 			isa = PBXGroup;
 			children = (
+				5AD6DA902323CA080005F733 /* WBCore */,
 				5AD6DA612323C1CB0005F733 /* Single View Web BLE */,
 				5AD6DA762323C1CC0005F733 /* Single View Web BLETests */,
 				5AD6DA812323C1CC0005F733 /* Single View Web BLEUITests */,
@@ -123,6 +203,41 @@
 				5AD6DA842323C1CC0005F733 /* Info.plist */,
 			);
 			path = "Single View Web BLEUITests";
+			sourceTree = "<group>";
+		};
+		5AD6DA902323CA080005F733 /* WBCore */ = {
+			isa = PBXGroup;
+			children = (
+				5A495419233D4DD0007CA132 /* Segues.swift */,
+				5A181FF323284F1A0092A850 /* Jsonifiable.swift */,
+				5AD6DA932323CA080005F733 /* WBDevice.swift */,
+				5AD6DAC32323CEF70005F733 /* WBLog.swift */,
+				5A4E2646232846BF00755BD8 /* WBLogManager.swift */,
+				5AD6DA922323CA080005F733 /* WBManager.swift */,
+				5A4E2647232846BF00755BD8 /* WBPopUpPickerController.swift */,
+				5A495418233D4DD0007CA132 /* WBPopUpPickerView.swift */,
+				5AD6DA9D2323CA080005F733 /* WBTransaction.swift */,
+				5AD6DA942323CA080005F733 /* WBWebView.swift */,
+				5A4E2644232846BF00755BD8 /* WBWebViewController.swift */,
+				5A49541A233D4DD0007CA132 /* WBWebViewContainerController.swift */,
+				5A495415233D4D69007CA132 /* WBCore.storyboard */,
+				5AD6DA952323CA080005F733 /* Polyfill */,
+			);
+			path = WBCore;
+			sourceTree = "<group>";
+		};
+		5AD6DA952323CA080005F733 /* Polyfill */ = {
+			isa = PBXGroup;
+			children = (
+				5AD6DA962323CA080005F733 /* WBDevice.js */,
+				5AD6DA972323CA080005F733 /* WBBluetoothUUID.js */,
+				5AD6DA982323CA080005F733 /* WBPolyfill.js */,
+				5AD6DA992323CA080005F733 /* WBUtils.js */,
+				5AD6DA9A2323CA080005F733 /* stringview.js */,
+				5AD6DA9B2323CA080005F733 /* WBEventTarget.js */,
+				5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */,
+			);
+			path = Polyfill;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,9 +344,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AD6DAB92323CA080005F733 /* WBEventTarget.js in Resources */,
+				5AD6DAAD2323CA080005F733 /* WBBluetoothUUID.js in Resources */,
 				5AD6DA6D2323C1CC0005F733 /* LaunchScreen.storyboard in Resources */,
+				5AD6DAB62323CA080005F733 /* stringview.js in Resources */,
+				5AD6DAB32323CA080005F733 /* WBUtils.js in Resources */,
+				5AD6DAB02323CA080005F733 /* WBPolyfill.js in Resources */,
 				5AD6DA6A2323C1CC0005F733 /* Assets.xcassets in Resources */,
 				5AD6DA682323C1CB0005F733 /* Main.storyboard in Resources */,
+				5A495416233D4D6A007CA132 /* WBCore.storyboard in Resources */,
+				5AD6DABC2323CA080005F733 /* WBRemoteGATTServer.js in Resources */,
+				5AD6DAAA2323CA080005F733 /* WBDevice.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,6 +362,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AD6DABD2323CA080005F733 /* WBRemoteGATTServer.js in Resources */,
+				5AD6DAAB2323CA080005F733 /* WBDevice.js in Resources */,
+				5AD6DAAE2323CA080005F733 /* WBBluetoothUUID.js in Resources */,
+				5AD6DAB12323CA080005F733 /* WBPolyfill.js in Resources */,
+				5AD6DABA2323CA080005F733 /* WBEventTarget.js in Resources */,
+				5AD6DAB42323CA080005F733 /* WBUtils.js in Resources */,
+				5AD6DAB72323CA080005F733 /* stringview.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +376,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AD6DABE2323CA080005F733 /* WBRemoteGATTServer.js in Resources */,
+				5AD6DAAC2323CA080005F733 /* WBDevice.js in Resources */,
+				5A495417233D4D6A007CA132 /* WBCore.storyboard in Resources */,
+				5AD6DAAF2323CA080005F733 /* WBBluetoothUUID.js in Resources */,
+				5AD6DAB22323CA080005F733 /* WBPolyfill.js in Resources */,
+				5AD6DABB2323CA080005F733 /* WBEventTarget.js in Resources */,
+				5AD6DAB52323CA080005F733 /* WBUtils.js in Resources */,
+				5AD6DAB82323CA080005F733 /* stringview.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,7 +394,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A4E2655232846C000755BD8 /* WBWebViewController.swift in Sources */,
 				5AD6DA652323C1CB0005F733 /* ViewController.swift in Sources */,
+				5A4E265B232846C000755BD8 /* WBLogManager.swift in Sources */,
+				5A49541E233D4DD0007CA132 /* Segues.swift in Sources */,
+				5AD6DABF2323CA080005F733 /* WBTransaction.swift in Sources */,
+				5A49541B233D4DD0007CA132 /* WBPopUpPickerView.swift in Sources */,
+				5A181FF423284F1A0092A850 /* Jsonifiable.swift in Sources */,
+				5A4E265E232846C000755BD8 /* WBPopUpPickerController.swift in Sources */,
+				5A495421233D4DD0007CA132 /* WBWebViewContainerController.swift in Sources */,
+				5AD6DAA72323CA080005F733 /* WBWebView.swift in Sources */,
+				5AD6DAA42323CA080005F733 /* WBDevice.swift in Sources */,
+				5AD6DAA12323CA080005F733 /* WBManager.swift in Sources */,
+				5AD6DAC72323CEF70005F733 /* WBLog.swift in Sources */,
 				5AD6DA632323C1CB0005F733 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -265,7 +415,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AD6DAA22323CA080005F733 /* WBManager.swift in Sources */,
+				5AD6DAC82323CEF80005F733 /* WBLog.swift in Sources */,
+				5A49541F233D4DD0007CA132 /* Segues.swift in Sources */,
+				5AD6DAA52323CA080005F733 /* WBDevice.swift in Sources */,
+				5A49541C233D4DD0007CA132 /* WBPopUpPickerView.swift in Sources */,
+				5A181FF523284F1A0092A850 /* Jsonifiable.swift in Sources */,
 				5AD6DA782323C1CC0005F733 /* Single_View_Web_BLETests.swift in Sources */,
+				5A495422233D4DD0007CA132 /* WBWebViewContainerController.swift in Sources */,
+				5A4E265F232846C000755BD8 /* WBPopUpPickerController.swift in Sources */,
+				5A4E2656232846C000755BD8 /* WBWebViewController.swift in Sources */,
+				5A4E265C232846C000755BD8 /* WBLogManager.swift in Sources */,
+				5AD6DAA82323CA080005F733 /* WBWebView.swift in Sources */,
+				5AD6DAC02323CA080005F733 /* WBTransaction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,7 +435,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AD6DAA32323CA080005F733 /* WBManager.swift in Sources */,
+				5AD6DAC92323CEF80005F733 /* WBLog.swift in Sources */,
+				5A495420233D4DD0007CA132 /* Segues.swift in Sources */,
+				5AD6DAA62323CA080005F733 /* WBDevice.swift in Sources */,
+				5A49541D233D4DD0007CA132 /* WBPopUpPickerView.swift in Sources */,
+				5A181FF623284F1A0092A850 /* Jsonifiable.swift in Sources */,
 				5AD6DA832323C1CC0005F733 /* Single_View_Web_BLEUITests.swift in Sources */,
+				5A495423233D4DD0007CA132 /* WBWebViewContainerController.swift in Sources */,
+				5A4E2660232846C000755BD8 /* WBPopUpPickerController.swift in Sources */,
+				5A4E2657232846C000755BD8 /* WBWebViewController.swift in Sources */,
+				5A4E265D232846C000755BD8 /* WBLogManager.swift in Sources */,
+				5AD6DAA92323CA080005F733 /* WBWebView.swift in Sources */,
+				5AD6DAC12323CA080005F733 /* WBTransaction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
