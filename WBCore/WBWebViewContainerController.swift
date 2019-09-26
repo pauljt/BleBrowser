@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUIDelegate {
+class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUIDelegate, WBPicker {
     
     enum prefKeys: String {
         case lastLocation
@@ -16,6 +16,13 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     
     @IBOutlet var loadingProgressContainer: UIView!
     @IBOutlet var loadingProgressView: UIView!
+    
+    // At some point it might be nice to try and handle back and
+    // forward in the browser better, i.e. by managing multiple managers
+    // for recent pages so that you can go back and forward to them
+    // without losing bluetooth connections, or at least notifying that
+    // the devices have been disconnected
+    var wbManager: WBManager?
     
     var webViewController: WBWebViewController {
         get {
@@ -28,6 +35,11 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         }
     }
     
+    // If the pop up picker is showing, this is the constraint
+    // pinning its bottom.
+    var popUpPickerController: WBPopUpPickerController?
+    var popUpPickerBottomConstraint: NSLayoutConstraint?
+    
     // MARK: - View Event handling
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,9 +51,18 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         }
     }
     
+    // MARK: - WBPicker
+    public func showPicker() {
+        self.performSegue(withIdentifier: "ShowDevicePicker", sender: self)
+    }
+    public func updatePicker() {
+        self.popUpPickerController?.pickerView.reloadAllComponents()
+    }
+    
     // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         self.loadingProgressContainer.isHidden = false
+        self._configureNewManager()
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -64,6 +85,29 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         alertController.addAction(UIAlertAction(
             title: "OK", style: .default, handler: {_ in completionHandler()}))
         self.present(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK: - Segue handling
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let puvc = segue.destination as? WBPopUpPickerController {
+            self.popUpPickerController = puvc
+            puvc.wbManager = self.wbManager
+        }
+    }
+    @IBAction func unwindToWVContainerController(sender: UIStoryboardSegue) {
+        if let puvc = sender.source as? WBPopUpPickerController {
+            puvc.wbManager = nil
+            self.popUpPickerController = nil
+            if sender.identifier == "Cancel" {
+                self.wbManager?.cancelDeviceSearch()
+            } else if sender.identifier == "Done" {
+                self.wbManager?.selectDeviceAt(
+                    puvc.pickerView.selectedRow
+                )
+            } else {
+                NSLog("Unknown unwind segue ignored: \(sender.identifier ?? "<none>")")
+            }
+        }
     }
     
     // MARK: - Observe protocol
@@ -90,5 +134,12 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         default:
             NSLog("Unexpected change observed by ViewController: \(defKeyPath)")
         }
+    }
+    
+    // MARK: - Private
+    private func _configureNewManager() {
+        self.wbManager?.clearState()
+        self.wbManager = WBManager(devicePicker: self)
+        self.webView.wbManager = self.wbManager
     }
 }

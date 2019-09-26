@@ -67,31 +67,19 @@
                                     <outletCollection property="gestureRecognizers" destination="QVE-VE-sVj" appends="YES" id="J2j-S7-lR0"/>
                                 </connections>
                             </view>
-                            <containerView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="afH-KC-ljD">
-                                <rect key="frame" x="0.0" y="623" width="375" height="0.0"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" priority="500" id="gt1-jT-rfe"/>
-                                </constraints>
-                                <connections>
-                                    <segue destination="kup-Ct-PYE" kind="embed" id="YNk-7e-dMe"/>
-                                </connections>
-                            </containerView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="afH-KC-ljD" secondAttribute="bottom" id="94w-nc-nD0"/>
                             <constraint firstItem="I1P-4j-XZZ" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="BXQ-S1-vK1"/>
                             <constraint firstAttribute="trailing" secondItem="NgV-mf-Lto" secondAttribute="trailing" id="Gf8-bX-1Mj"/>
                             <constraint firstItem="6wE-az-iDp" firstAttribute="centerX" secondItem="I1P-4j-XZZ" secondAttribute="centerX" constant="-2" id="Q8c-Vr-441"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="I1P-4j-XZZ" secondAttribute="bottom" id="TU2-jE-Jwf"/>
                             <constraint firstItem="I1P-4j-XZZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Tmc-iu-YcI"/>
-                            <constraint firstAttribute="trailing" secondItem="afH-KC-ljD" secondAttribute="trailing" id="WQ1-SC-Oe6"/>
                             <constraint firstItem="NgV-mf-Lto" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ceZ-8R-SPH"/>
                             <constraint firstItem="6wE-az-iDp" firstAttribute="centerY" secondItem="I1P-4j-XZZ" secondAttribute="centerY" id="ch6-ac-DgS"/>
                             <constraint firstAttribute="trailing" secondItem="I1P-4j-XZZ" secondAttribute="trailing" id="fWT-8M-CoL"/>
                             <constraint firstAttribute="bottom" secondItem="NgV-mf-Lto" secondAttribute="bottom" id="gC0-D0-aU8"/>
-                            <constraint firstItem="afH-KC-ljD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="li7-l4-N9k"/>
                         </constraints>
                     </view>
                     <toolbarItems>
@@ -309,15 +297,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="151" y="1173"/>
-        </scene>
-        <!--PopUpPickerController-->
-        <scene sceneID="aej-Yy-Kte">
-            <objects>
-                <viewControllerPlaceholder storyboardName="WBCore" referencedIdentifier="PopUpPickerController" id="kup-Ct-PYE" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zmk-Pq-GST" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="399" y="730"/>
+            <point key="canvasLocation" x="436" y="1034"/>
         </scene>
         <!--WebViewContainerController-->
         <scene sceneID="NFU-EG-6av">
@@ -325,7 +305,7 @@
                 <viewControllerPlaceholder storyboardName="WBCore" referencedIdentifier="WebViewContainerController" id="uPD-zx-e6p" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qhx-F4-qxC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-128" y="730"/>
+            <point key="canvasLocation" x="-144" y="720"/>
         </scene>
     </scenes>
     <resources>

@@ -10,48 +10,26 @@ import UIKit
 // MARK: - Protocols
 @objc
 protocol WBPopUpPickerViewDelegate: UIPickerViewDelegate, UIPickerViewDataSource {
-    @objc optional func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int])
-    @objc optional func pickerViewCancelled(_ pickerView: UIPickerView)
-    @objc var numberOfItems: Int { get }
 }
 
-class WBPopUpPickerController: UIViewController, WBPicker {
+class WBPopUpPickerController: UIViewController {
 
     // MARK: - Public API
-    var delegate: WBPopUpPickerViewDelegate?
+    var wbManager: WBManager!
 
     // MARK: - IBOutlets and IBActions
-    @IBOutlet var doneButton: UIButton!
-    @IBOutlet var pickerView: UIPickerView!
+    @IBOutlet var pickerView: WBPopUpPickerView!
     @IBOutlet var bottomConstraint: NSLayoutConstraint!
-    @IBAction func endPicker() {
-        // TRY gestureRecognizerShouldBegin
-        self._hidePicker()
-        self.delegate?.pickerView?(self.pickerView, didSelect: self._getSelectedRows())
-    }
-    @IBAction func cancelPicker() {
-        self._hidePicker()
-        self._restoreSelectedRows()
-        self.delegate?.pickerViewCancelled?(self.pickerView)
-    }
 
-    // MARK: - WBPicker protocol
-    func showPicker() {
-        self.selectedRows = self._getSelectedRows()
-        self.bottomConstraint.priority = UILayoutPriority.defaultHigh
-        self._animateIntoPlace()
-        self.pickerView.dataSource = self.delegate
-        self.pickerView.delegate = self.delegate
+    // MARK: - UIViewController overrides
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.pickerView.dataSource = self.wbManager
+        self.pickerView.delegate = self.wbManager
+        self.pickerView.reloadAllComponents()
     }
 
     func updatePicker() {
-        if let numDevices = self.delegate?.numberOfItems,
-            numDevices > 0 {
-            self.doneButton.isEnabled = true
-        }
-        else {
-            self.doneButton.isEnabled = false
-        }
         self.pickerView.reloadAllComponents()
     }
 
@@ -63,13 +41,6 @@ class WBPopUpPickerController: UIViewController, WBPicker {
         UIView.animate(withDuration: self.animationDuration, animations: {
             self.view.superview?.layoutIfNeeded()
         })
-    }
-    fileprivate func _getSelectedRows() -> [Int] {
-        var selectedRows = [Int]()
-        for ii in 0 ..< pickerView.numberOfComponents {
-            selectedRows.append(pickerView.selectedRow(inComponent: ii))
-        }
-        return selectedRows
     }
     private func _hidePicker() {
         self.bottomConstraint.priority = UILayoutPriority.defaultLow

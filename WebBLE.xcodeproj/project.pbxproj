@@ -34,6 +34,8 @@
 		5AC47CA61E2BE57000BCAE82 /* Tick@480.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC47CA51E2BE57000BCAE82 /* Tick@480.png */; };
 		5AC47CA81E2CCF2F00BCAE82 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */; };
 		5AC676FC221CA557007B1562 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC676FB221CA557007B1562 /* ErrorViewController.swift */; };
+		5AC7ECAB233D0F9700CE7A2A /* Segues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC7ECAA233D0F9700CE7A2A /* Segues.swift */; };
+		5AC7ECAD233D177700CE7A2A /* WBPopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */; };
 		5AC8067D21655B5E00AA5176 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8067C21655B5E00AA5176 /* DividerView.swift */; };
 		5AD6DACB2323EBFE0005F733 /* WBWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DACA2323EBFE0005F733 /* WBWebViewController.swift */; };
 		5AFC77FE22ECD09E0071E792 /* WBEventTarget.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AFC77FD22ECD09E0071E792 /* WBEventTarget.js */; };
@@ -91,6 +93,8 @@
 		5AC47CA51E2BE57000BCAE82 /* Tick@480.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Tick@480.png"; sourceTree = "<group>"; };
 		5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		5AC676FB221CA557007B1562 /* ErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
+		5AC7ECAA233D0F9700CE7A2A /* Segues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segues.swift; sourceTree = "<group>"; };
+		5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBPopUpPickerView.swift; sourceTree = "<group>"; };
 		5AC8067C21655B5E00AA5176 /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		5AD6DACA2323EBFE0005F733 /* WBWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBWebViewController.swift; sourceTree = "<group>"; };
 		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
@@ -161,6 +165,8 @@
 		5A233341230353E1008D9F03 /* WBCore */ = {
 			isa = PBXGroup;
 			children = (
+				5AC7ECAA233D0F9700CE7A2A /* Segues.swift */,
+				5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */,
 				5AFC780322ECDD410071E792 /* Polyfill */,
 				5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */,
 				BB4DE1F31C8D0A44003151BF /* WBDevice.swift */,
@@ -374,6 +380,8 @@
 				5A85B9F51E2946DE00E0B718 /* BookmarksViewController.swift in Sources */,
 				5A4B8E1F2157ABC500C7C858 /* ConsoleLogViewController.swift in Sources */,
 				BB4DBE651C97F577000D2C35 /* WBTransaction.swift in Sources */,
+				5AC7ECAB233D0F9700CE7A2A /* Segues.swift in Sources */,
+				5AC7ECAD233D177700CE7A2A /* WBPopUpPickerView.swift in Sources */,
 				5AC47CA81E2CCF2F00BCAE82 /* Animations.swift in Sources */,
 				5AC8067D21655B5E00AA5176 /* DividerView.swift in Sources */,
 				5A7579EA2151588B003F0CEA /* ConsoleViewController.swift in Sources */,

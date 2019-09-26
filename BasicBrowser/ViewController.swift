@@ -243,7 +243,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         if let urlString = webView.url?.absoluteString {
             self.setLocationText(urlString)
         }
-        self.configureNewManager()
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -396,14 +395,5 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
                 nc.hidesBarsOnSwipe = true
             }
         }
-    }
-    func configureNewManager() {
-        self.webView.wbManager?.clearState()
-        let picker = self.childViewControllers.first(
-            where: {$0 as? WBPopUpPickerController != nil}
-            ) as! WBPopUpPickerController
-        let manager = WBManager(devicePicker: picker)
-        picker.delegate = manager
-        self.webView.wbManager = manager
     }
 }

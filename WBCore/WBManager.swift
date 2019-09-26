@@ -59,6 +59,20 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         super.init()
         self.centralManager.delegate = self
     }
+    
+    // MARK: - Public API
+    public func selectDeviceAt(_ index: Int) {
+        let device = self.pickerDevices[index]
+        device.view = self.requestDeviceTransaction?.webView
+        self.requestDeviceTransaction?.resolveAsSuccess(withObject: device)
+        self.deviceWasSelected(device)
+    }
+    public func cancelDeviceSearch() {
+        NSLog("User cancelled device selection.")
+        self.requestDeviceTransaction?.resolveAsFailure(withMessage: "User cancelled")
+        self.stopScanForPeripherals()
+        self._clearPickerView()
+    }
 
     // MARK: - WKScriptMessageHandler
     open func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -122,41 +136,11 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         NSLog("FAILED TO CONNECT PERIPHERAL UNHANDLED \(error?.localizedDescription ?? "<no error>")")
     }
 
-    // MARK: - WBPopUpPickerViewDelegate
-    public var numberOfItems: Int {
-        get {
-            return self.pickerDevices.count
-        }
-    }
-
+    // MARK: - UIPickerViewDelegate
     public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         // dummy response for making screen shots from the simulator
         // return row == 0 ? "Puck.js 69c5 (82DF60A5-3C0B..." : "Puck.js c728 (9AB342DA-4C27..."
         return self._pv(pickerView, titleForRow: row, forComponent: component)
-    }
-    
-    public func pickerView(_ pickerView: UIPickerView, didSelect numbers: [Int]) {
-
-        guard
-            numbers.count > 0,
-            let index = Optional(numbers[0]),
-            self.pickerDevices.count > index
-        else {
-            NSLog("Invalid device selection \(numbers), try again")
-            self.devicePicker.showPicker()
-            return
-        }
-
-        let device = self.pickerDevices[index]
-        device.view = self.requestDeviceTransaction?.webView
-        self.requestDeviceTransaction?.resolveAsSuccess(withObject: device)
-        self.deviceWasSelected(device)
-
-    }
-    public func pickerViewCancelled(_ pickerView: UIPickerView) {
-        NSLog("User cancelled device selection.")
-        self.requestDeviceTransaction?.resolveAsFailure(withMessage: "User cancelled")
-        self._clearPickerView()
     }
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -285,7 +269,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         self.filters = filters
         centralManager.scanForPeripherals(withServices: servicesCBUUID, options: nil)
     }
-    func stopScanForPeripherals() {
+    private func stopScanForPeripherals() {
         if self.centralManager.state == .poweredOn {
             self.centralManager.stopScan()
         }
