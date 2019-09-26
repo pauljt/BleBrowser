@@ -32,7 +32,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     // MARK: IBOutlets
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet var tick: UIImageView!
-    @IBOutlet var webViewContainer: UIView!
     @IBOutlet var goBackButton: UIBarButtonItem!
     @IBOutlet var goForwardButton: UIBarButtonItem!
     @IBOutlet var refreshButton: UIBarButtonItem!
@@ -358,10 +357,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         cvcont.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         NSLayoutConstraint.activate([
-            NSLayoutConstraint(item: cvcont.view, attribute: .top, relatedBy: .equal, toItem: self.webViewContainer, attribute: .bottom, multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: cvcont.view, attribute: .leading, relatedBy: .equal, toItem: self.view, attribute: .leading, multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: cvcont.view, attribute: .trailing, relatedBy: .equal, toItem: self.view, attribute: .trailing, multiplier: 1.0, constant: 0.0),
-            ])
+            cvcont.view.topAnchor.constraint(equalTo: self.webViewContainerController.view.bottomAnchor),
+            cvcont.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            cvcont.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+        ])
 
         self.consoleViewContainerController = cvcont
         UserDefaults.standard.setValue(true, forKey: prefKeys.consoleOpen.rawValue)

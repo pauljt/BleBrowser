@@ -42,7 +42,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I1P-4j-XZZ">
-                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="ew5-31-Qcw"/>
                                 </constraints>
@@ -51,7 +51,7 @@
                                 </connections>
                             </containerView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick@480.png" translatesAutoresizingMaskIntoConstraints="NO" id="6wE-az-iDp">
-                                <rect key="frame" x="65.5" y="223.5" width="240" height="240"/>
+                                <rect key="frame" x="65.5" y="213.5" width="240" height="240"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="em1-ft-ljS"/>
                                     <constraint firstAttribute="height" constant="240" id="qSE-Sl-Qc3"/>
@@ -71,10 +71,10 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="I1P-4j-XZZ" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="BXQ-S1-vK1"/>
+                            <constraint firstAttribute="bottom" secondItem="I1P-4j-XZZ" secondAttribute="bottom" id="9fT-eR-ny8"/>
                             <constraint firstAttribute="trailing" secondItem="NgV-mf-Lto" secondAttribute="trailing" id="Gf8-bX-1Mj"/>
+                            <constraint firstItem="I1P-4j-XZZ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Inn-hn-vYb"/>
                             <constraint firstItem="6wE-az-iDp" firstAttribute="centerX" secondItem="I1P-4j-XZZ" secondAttribute="centerX" constant="-2" id="Q8c-Vr-441"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="I1P-4j-XZZ" secondAttribute="bottom" id="TU2-jE-Jwf"/>
                             <constraint firstItem="I1P-4j-XZZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Tmc-iu-YcI"/>
                             <constraint firstItem="NgV-mf-Lto" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ceZ-8R-SPH"/>
                             <constraint firstItem="6wE-az-iDp" firstAttribute="centerY" secondItem="I1P-4j-XZZ" secondAttribute="centerY" id="ch6-ac-DgS"/>
@@ -137,6 +137,7 @@
                         <outlet property="refreshButton" destination="LXB-CH-4RT" id="350-AZ-rBZ"/>
                         <outlet property="showConsoleButton" destination="uNi-2X-YpW" id="CTt-pC-CFQ"/>
                         <outlet property="tick" destination="6wE-az-iDp" id="aNh-gM-jXz"/>
+                        <outlet property="webViewBottomConstraint" destination="9fT-eR-ny8" id="tvW-Mc-ZzG"/>
                         <segue destination="PQo-oV-Kiq" kind="presentation" identifier="nav-error-segue" id="E5w-mx-e5R"/>
                     </connections>
                 </viewController>
@@ -250,7 +251,7 @@
                                             </constraints>
                                         </view>
                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Swipe down" translatesAutoresizingMaskIntoConstraints="NO" id="4WE-dA-fdQ">
-                                            <rect key="frame" x="179.5" y="388.5" width="16" height="16"/>
+                                            <rect key="frame" x="154" y="388.5" width="67" height="76"/>
                                             <gestureRecognizers/>
                                             <connections>
                                                 <outletCollection property="gestureRecognizers" destination="Wc6-I5-L5A" appends="YES" id="zqk-6e-yL0"/>

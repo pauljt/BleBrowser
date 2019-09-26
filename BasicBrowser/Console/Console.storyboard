@@ -228,6 +228,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="5bj-QH-Q4o" firstAttribute="leading" secondItem="0fs-Bd-y72" secondAttribute="leading" id="3rs-va-MHs"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="DSl-4f-yGT" secondAttribute="bottom" priority="900" constant="10" id="Axf-aq-NAH"/>
                             <constraint firstAttribute="trailing" secondItem="RSx-eV-DJD" secondAttribute="trailing" id="JGH-mn-8kd"/>
                             <constraint firstAttribute="trailing" secondItem="ca8-g2-bii" secondAttribute="trailing" id="Jkp-gq-3mp"/>
                             <constraint firstAttribute="bottom" secondItem="rnO-dD-ogt" secondAttribute="bottom" id="LZz-w7-Mtr"/>
@@ -241,7 +242,6 @@
                             <constraint firstItem="DSl-4f-yGT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="0fs-Bd-y72" secondAttribute="top" constant="40" id="adh-nO-eSY"/>
                             <constraint firstItem="DSl-4f-yGT" firstAttribute="centerX" secondItem="0fs-Bd-y72" secondAttribute="centerX" id="fpu-Tb-l5X"/>
                             <constraint firstItem="rnO-dD-ogt" firstAttribute="leading" secondItem="0fs-Bd-y72" secondAttribute="leading" id="hg3-AE-Nii"/>
-                            <constraint firstItem="ehj-ex-qU1" firstAttribute="top" relation="greaterThanOrEqual" secondItem="DSl-4f-yGT" secondAttribute="bottom" priority="900" constant="10" id="kPT-YO-f8l"/>
                             <constraint firstAttribute="trailing" secondItem="5bj-QH-Q4o" secondAttribute="trailing" id="md5-T3-hwr"/>
                             <constraint firstItem="RSx-eV-DJD" firstAttribute="width" secondItem="0fs-Bd-y72" secondAttribute="width" multiplier="0.5" id="z6P-JR-xin"/>
                         </constraints>

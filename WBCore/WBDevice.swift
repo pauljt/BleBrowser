@@ -105,8 +105,9 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         let serviceUUID: CBUUID
         let characteristicUUID: CBUUID
 
-        var hashValue: Int {
-            return self.serviceUUID.hashValue ^ self.characteristicUUID.hashValue
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(self.serviceUUID)
+            hasher.combine(self.characteristicUUID)
         }
         static func == (left: CharacteristicTransactionKey, right: CharacteristicTransactionKey) -> Bool {
             return left.serviceUUID == right.serviceUUID && left.characteristicUUID == right.characteristicUUID
