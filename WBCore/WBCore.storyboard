@@ -18,18 +18,16 @@
                         <viewControllerLayoutGuide type="top" id="bHo-ME-94V"/>
                         <viewControllerLayoutGuide type="bottom" id="7m2-k6-X9g"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="tcw-Gz-tvd" customClass="WBWebView" customModule="WebBLE" customModuleProvider="target">
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tcw-Gz-tvd" customClass="WBWebView" customModule="WebBLE" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="kYC-mH-oT6"/>
                     </view>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
+                    <size key="freeformSize" width="414" height="896"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SO5-s9-Alo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-671" y="1122"/>
+            <point key="canvasLocation" x="-780" y="1051"/>
         </scene>
         <!--Picker Controller-->
         <scene sceneID="mU8-Tl-OMC">
@@ -115,6 +113,64 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yPE-Fd-Zqb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="173" y="1105"/>
+        </scene>
+        <!--Web View Container Controller-->
+        <scene sceneID="0x7-H9-L3v">
+            <objects>
+                <viewController storyboardIdentifier="WebViewContainerController" id="hCi-h3-YHB" customClass="WBWebViewContainerController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="sZ7-qK-PTn"/>
+                        <viewControllerLayoutGuide type="bottom" id="gxN-o6-9VC"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="jp5-Jb-GNU">
+                        <rect key="frame" x="0.0" y="0.0" width="339" height="559"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ymH-yY-3z1">
+                                <rect key="frame" x="0.0" y="0.0" width="339" height="559"/>
+                                <connections>
+                                    <segue destination="hXW-g0-2N9" kind="embed" id="Vdx-vC-Zx8"/>
+                                </connections>
+                            </containerView>
+                            <view hidden="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1VQ-cV-QDZ">
+                                <rect key="frame" x="0.0" y="44" width="339" height="5"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XxI-Sv-pHo">
+                                        <rect key="frame" x="0.0" y="0.0" width="169.5" height="5"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="5" id="9Yh-hS-w23"/>
+                                    <constraint firstItem="XxI-Sv-pHo" firstAttribute="top" secondItem="1VQ-cV-QDZ" secondAttribute="top" id="DMr-5c-4oZ"/>
+                                    <constraint firstItem="XxI-Sv-pHo" firstAttribute="width" secondItem="1VQ-cV-QDZ" secondAttribute="width" multiplier="0.5" id="LFf-vJ-XQg"/>
+                                    <constraint firstItem="XxI-Sv-pHo" firstAttribute="leading" secondItem="1VQ-cV-QDZ" secondAttribute="leading" id="qxT-NO-3Be"/>
+                                    <constraint firstAttribute="bottom" secondItem="XxI-Sv-pHo" secondAttribute="bottom" id="vgD-Km-PaP"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="ymH-yY-3z1" firstAttribute="top" secondItem="jp5-Jb-GNU" secondAttribute="topMargin" id="0Yg-yq-035"/>
+                            <constraint firstItem="1VQ-cV-QDZ" firstAttribute="top" secondItem="sZ7-qK-PTn" secondAttribute="bottom" id="1eS-ce-Gg0"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="ymH-yY-3z1" secondAttribute="bottom" id="2WG-5d-tWV"/>
+                            <constraint firstAttribute="trailing" secondItem="ymH-yY-3z1" secondAttribute="trailing" id="QgN-AI-1rW"/>
+                            <constraint firstItem="1VQ-cV-QDZ" firstAttribute="leading" secondItem="jp5-Jb-GNU" secondAttribute="leading" id="U3P-UV-hAK"/>
+                            <constraint firstItem="ymH-yY-3z1" firstAttribute="leading" secondItem="jp5-Jb-GNU" secondAttribute="leading" id="ack-VR-sY0"/>
+                            <constraint firstAttribute="trailing" secondItem="1VQ-cV-QDZ" secondAttribute="trailing" id="tYz-vl-NKN"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="FWj-jx-LBn"/>
+                    </view>
+                    <size key="freeformSize" width="339" height="559"/>
+                    <connections>
+                        <outlet property="loadingProgressContainer" destination="1VQ-cV-QDZ" id="pwk-tS-xpa"/>
+                        <outlet property="loadingProgressView" destination="XxI-Sv-pHo" id="YJj-Dq-EvG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Oir-tl-BMD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1611" y="1051"/>
         </scene>
     </scenes>
 </document>
