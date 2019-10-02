@@ -323,10 +323,9 @@
 			};
 			buildConfigurationList = E44C18511A36203E00734F8B /* Build configuration list for PBXProject "WebBLE" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
