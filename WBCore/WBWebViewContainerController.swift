@@ -35,10 +35,11 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         }
     }
     
-    // If the pop up picker is showing, this is the constraint
-    // pinning its bottom.
-    var popUpPickerController: WBPopUpPickerController?
-    var popUpPickerBottomConstraint: NSLayoutConstraint?
+    // If the pop up picker is showing, then the
+    // following two vars are not null.
+    @objc var pickerIsShowing = false
+    var popUpPickerController: WBPopUpPickerController!
+    var popUpPickerBottomConstraint: NSLayoutConstraint!
     
     // MARK: - View Event handling
     override func viewDidLoad() {
@@ -56,7 +57,9 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         self.performSegue(withIdentifier: "ShowDevicePicker", sender: self)
     }
     public func updatePicker() {
-        self.popUpPickerController?.pickerView.reloadAllComponents()
+        if self.pickerIsShowing {
+            self.popUpPickerController.pickerView.reloadAllComponents()
+        }
     }
     
     // MARK: - WKNavigationDelegate
@@ -90,12 +93,14 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     // MARK: - Segue handling
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let puvc = segue.destination as? WBPopUpPickerController {
+            self.setValue(true, forKey: "pickerIsShowing")
             self.popUpPickerController = puvc
             puvc.wbManager = self.wbManager
         }
     }
     @IBAction func unwindToWVContainerController(sender: UIStoryboardSegue) {
         if let puvc = sender.source as? WBPopUpPickerController {
+            self.setValue(false, forKey: "pickerIsShowing")
             puvc.wbManager = nil
             self.popUpPickerController = nil
             if sender.identifier == "Cancel" {

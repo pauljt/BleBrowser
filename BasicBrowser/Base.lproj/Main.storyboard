@@ -12,7 +12,7 @@
             <objects>
                 <navigationController toolbarHidden="NO" hidesBarsOnSwipe="YES" id="bXw-Ly-snu" customClass="NavigationViewController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="izC-eW-IMa">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="UlI-6c-o9z">
@@ -40,7 +40,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I1P-4j-XZZ">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="574"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="ew5-31-Qcw"/>
                                 </constraints>
@@ -49,7 +49,7 @@
                                 </connections>
                             </containerView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tick@480.png" translatesAutoresizingMaskIntoConstraints="NO" id="6wE-az-iDp">
-                                <rect key="frame" x="65.5" y="213.5" width="240" height="240"/>
+                                <rect key="frame" x="65.5" y="211" width="240" height="240"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="em1-ft-ljS"/>
                                     <constraint firstAttribute="height" constant="240" id="qSE-Sl-Qc3"/>
@@ -69,15 +69,15 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="I1P-4j-XZZ" secondAttribute="bottom" id="9fT-eR-ny8"/>
                             <constraint firstAttribute="trailing" secondItem="NgV-mf-Lto" secondAttribute="trailing" id="Gf8-bX-1Mj"/>
-                            <constraint firstItem="I1P-4j-XZZ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Inn-hn-vYb"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="I1P-4j-XZZ" secondAttribute="bottom" priority="990" id="N1N-kn-YIh"/>
                             <constraint firstItem="6wE-az-iDp" firstAttribute="centerX" secondItem="I1P-4j-XZZ" secondAttribute="centerX" constant="-2" id="Q8c-Vr-441"/>
                             <constraint firstItem="I1P-4j-XZZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Tmc-iu-YcI"/>
                             <constraint firstItem="NgV-mf-Lto" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ceZ-8R-SPH"/>
                             <constraint firstItem="6wE-az-iDp" firstAttribute="centerY" secondItem="I1P-4j-XZZ" secondAttribute="centerY" id="ch6-ac-DgS"/>
                             <constraint firstAttribute="trailing" secondItem="I1P-4j-XZZ" secondAttribute="trailing" id="fWT-8M-CoL"/>
                             <constraint firstAttribute="bottom" secondItem="NgV-mf-Lto" secondAttribute="bottom" id="gC0-D0-aU8"/>
+                            <constraint firstItem="I1P-4j-XZZ" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="lKc-uu-8Vk"/>
                         </constraints>
                     </view>
                     <toolbarItems>
@@ -119,7 +119,7 @@
                     <navigationItem key="navigationItem" id="5bm-lP-CUV">
                         <nil key="title"/>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="fill" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="O1l-7F-uXL">
-                            <rect key="frame" x="138" y="7" width="100" height="30"/>
+                            <rect key="frame" x="138" y="5" width="100" height="34"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -135,8 +135,8 @@
                         <outlet property="refreshButton" destination="LXB-CH-4RT" id="350-AZ-rBZ"/>
                         <outlet property="showConsoleButton" destination="uNi-2X-YpW" id="CTt-pC-CFQ"/>
                         <outlet property="tick" destination="6wE-az-iDp" id="aNh-gM-jXz"/>
-                        <outlet property="webViewBottomConstraint" destination="9fT-eR-ny8" id="tvW-Mc-ZzG"/>
                         <segue destination="PQo-oV-Kiq" kind="presentation" identifier="nav-error-segue" id="E5w-mx-e5R"/>
+                        <segue destination="r3u-6B-Bee" kind="custom" identifier="ViewControllerToConsoleSegueID" customClass="ViewControllerToConsoleSegue" customModule="WebBLE" customModuleProvider="target" id="jdv-Vn-omc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -161,18 +161,18 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0yI-38-CeH" id="2Hb-F4-o6p">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oFT-ZQ-s8A">
-                                            <rect key="frame" x="16" y="5" width="33.5" height="20.5"/>
+                                            <rect key="frame" x="16" y="6" width="25" height="14.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" id="hzE-yV-kjH">
-                                            <rect key="frame" x="16" y="25.5" width="33" height="14.5"/>
+                                            <rect key="frame" x="16" y="22.5" width="33" height="14.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
@@ -296,7 +296,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="436" y="1034"/>
+            <point key="canvasLocation" x="740" y="1033"/>
         </scene>
         <!--WebViewContainerController-->
         <scene sceneID="NFU-EG-6av">
@@ -305,6 +305,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qhx-F4-qxC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-144" y="720"/>
+        </scene>
+        <!--ConsoleViewContainer-->
+        <scene sceneID="cyl-xg-7VB">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Console" referencedIdentifier="ConsoleViewContainer" id="r3u-6B-Bee" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3TA-2E-A2X" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="79" y="839"/>
         </scene>
     </scenes>
     <resources>

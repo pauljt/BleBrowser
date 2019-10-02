@@ -165,9 +165,9 @@
 		5A233341230353E1008D9F03 /* WBCore */ = {
 			isa = PBXGroup;
 			children = (
+				5AFC780322ECDD410071E792 /* Polyfill */,
 				5AC7ECAA233D0F9700CE7A2A /* Segues.swift */,
 				5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */,
-				5AFC780322ECDD410071E792 /* Polyfill */,
 				5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */,
 				BB4DE1F31C8D0A44003151BF /* WBDevice.swift */,
 				BB303DF21C42070C00FCAF24 /* WBManager.swift */,

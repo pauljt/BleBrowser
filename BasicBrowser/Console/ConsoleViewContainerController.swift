@@ -11,7 +11,11 @@ class ConsoleViewContainerController: UIViewController {
 
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var consoleScrollViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet var clearSelectionImageView: UIImageView!
+    @IBOutlet var clearSelectionImageView: UIImageView! {
+        didSet {
+            self._configureImageView()
+        }
+    }
     @IBOutlet var copySuccessIndication: UIImageView!
 
     private var _wbLogManager: WBLogManager?
@@ -97,8 +101,12 @@ class ConsoleViewContainerController: UIViewController {
     // MARK: - KVO
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "aLogIsSelected" {
-            let aLogIsSelected = change![.newKey] as! Bool
-            self.clearSelectionImageView.alpha = aLogIsSelected ? 1.0 : 0.5
+            self._configureImageView()
+        }
+    }
+    private func _configureImageView() {
+        if let lm = self._wbLogManager {
+            self.clearSelectionImageView?.alpha = lm.aLogIsSelected ? 1.0 : 0.5
         }
     }
 }
