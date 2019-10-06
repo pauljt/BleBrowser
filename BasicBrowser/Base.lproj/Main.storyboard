@@ -119,7 +119,7 @@
                     <navigationItem key="navigationItem" id="5bm-lP-CUV">
                         <nil key="title"/>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="fill" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="O1l-7F-uXL">
-                            <rect key="frame" x="138" y="5" width="100" height="34"/>
+                            <rect key="frame" x="137.5" y="5" width="100" height="34"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -135,7 +135,6 @@
                         <outlet property="refreshButton" destination="LXB-CH-4RT" id="350-AZ-rBZ"/>
                         <outlet property="showConsoleButton" destination="uNi-2X-YpW" id="CTt-pC-CFQ"/>
                         <outlet property="tick" destination="6wE-az-iDp" id="aNh-gM-jXz"/>
-                        <segue destination="PQo-oV-Kiq" kind="presentation" identifier="nav-error-segue" id="E5w-mx-e5R"/>
                         <segue destination="r3u-6B-Bee" kind="custom" identifier="ViewControllerToConsoleSegueID" customClass="ViewControllerToConsoleSegue" customModule="WebBLE" customModuleProvider="target" id="jdv-Vn-omc"/>
                     </connections>
                 </viewController>
@@ -197,114 +196,13 @@
             </objects>
             <point key="canvasLocation" x="1060" y="252"/>
         </scene>
-        <!--Error View Controller-->
-        <scene sceneID="FQf-Te-HNC">
-            <objects>
-                <viewController modalPresentationStyle="overCurrentContext" id="PQo-oV-Kiq" customClass="ErrorViewController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="4oq-hg-3rP"/>
-                        <viewControllerLayoutGuide type="bottom" id="puD-8Q-pIp"/>
-                    </layoutGuides>
-                    <view key="view" opaque="NO" contentMode="scaleToFill" id="pko-4S-8Vm">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <visualEffectView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JG9-h5-a0B">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="eMF-OR-w3U">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4U2-DS-BmS">
-                                            <rect key="frame" x="122" y="310.5" width="131" height="46"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Navigation Failed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mWG-iu-KZM">
-                                                    <rect key="frame" x="0.0" y="0.0" width="131" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error goes here" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hHx-XD-5E5">
-                                                    <rect key="frame" x="15.5" y="29" width="100" height="17"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <gestureRecognizers/>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="hHx-XD-5E5" secondAttribute="trailing" priority="250" id="0Kx-fj-6CM"/>
-                                                <constraint firstItem="mWG-iu-KZM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4U2-DS-BmS" secondAttribute="leading" id="1r7-5t-O9A"/>
-                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="hHx-XD-5E5" secondAttribute="trailing" id="61d-9q-fxC"/>
-                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mWG-iu-KZM" secondAttribute="trailing" id="ATl-32-rmY"/>
-                                                <constraint firstItem="mWG-iu-KZM" firstAttribute="top" secondItem="4U2-DS-BmS" secondAttribute="top" id="Cdi-0Z-3YE"/>
-                                                <constraint firstItem="mWG-iu-KZM" firstAttribute="leading" secondItem="4U2-DS-BmS" secondAttribute="leading" priority="250" id="ISe-y5-LKd"/>
-                                                <constraint firstItem="hHx-XD-5E5" firstAttribute="centerX" secondItem="4U2-DS-BmS" secondAttribute="centerX" id="M9B-9Q-Vnb"/>
-                                                <constraint firstAttribute="trailing" secondItem="mWG-iu-KZM" secondAttribute="trailing" priority="250" id="Sq1-TD-z5K"/>
-                                                <constraint firstItem="mWG-iu-KZM" firstAttribute="centerX" secondItem="4U2-DS-BmS" secondAttribute="centerX" id="Uss-lj-oQO"/>
-                                                <constraint firstItem="hHx-XD-5E5" firstAttribute="leading" secondItem="4U2-DS-BmS" secondAttribute="leading" priority="250" id="gOa-Zs-2r1"/>
-                                                <constraint firstItem="hHx-XD-5E5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4U2-DS-BmS" secondAttribute="leading" id="q0p-0w-jki"/>
-                                                <constraint firstItem="hHx-XD-5E5" firstAttribute="top" secondItem="mWG-iu-KZM" secondAttribute="bottom" constant="8" id="ut8-RP-9hP"/>
-                                                <constraint firstAttribute="bottom" secondItem="hHx-XD-5E5" secondAttribute="bottom" id="xOd-fM-lcY"/>
-                                            </constraints>
-                                        </view>
-                                        <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Swipe down" translatesAutoresizingMaskIntoConstraints="NO" id="4WE-dA-fdQ">
-                                            <rect key="frame" x="154" y="388.5" width="67" height="76"/>
-                                            <gestureRecognizers/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="Wc6-I5-L5A" appends="YES" id="zqk-6e-yL0"/>
-                                            </connections>
-                                        </imageView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="4WE-dA-fdQ" firstAttribute="top" secondItem="4U2-DS-BmS" secondAttribute="bottom" constant="32" id="JyF-HF-oNG"/>
-                                        <constraint firstItem="4U2-DS-BmS" firstAttribute="centerY" secondItem="eMF-OR-w3U" secondAttribute="centerY" id="MMo-m8-sN6"/>
-                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="4U2-DS-BmS" secondAttribute="trailing" id="bRT-Hk-abR"/>
-                                        <constraint firstItem="4U2-DS-BmS" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="eMF-OR-w3U" secondAttribute="leading" id="edP-pB-a8O"/>
-                                        <constraint firstItem="4WE-dA-fdQ" firstAttribute="centerX" secondItem="eMF-OR-w3U" secondAttribute="centerX" id="mVv-Dd-Xgh"/>
-                                        <constraint firstItem="4U2-DS-BmS" firstAttribute="centerX" secondItem="eMF-OR-w3U" secondAttribute="centerX" id="rlI-Cn-wde"/>
-                                    </constraints>
-                                    <connections>
-                                        <outletCollection property="gestureRecognizers" destination="PGz-Vu-8Ol" appends="YES" id="WWG-za-Vw1"/>
-                                    </connections>
-                                </view>
-                                <blurEffect style="light"/>
-                            </visualEffectView>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="JG9-h5-a0B" firstAttribute="top" secondItem="pko-4S-8Vm" secondAttribute="top" id="8hE-JR-Ivz"/>
-                            <constraint firstAttribute="bottom" secondItem="JG9-h5-a0B" secondAttribute="bottom" id="FgA-yL-JFq"/>
-                            <constraint firstItem="JG9-h5-a0B" firstAttribute="leading" secondItem="pko-4S-8Vm" secondAttribute="leading" id="bUM-jN-Nhh"/>
-                            <constraint firstAttribute="trailing" secondItem="JG9-h5-a0B" secondAttribute="trailing" id="fEX-fS-XNO"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="messageField" destination="hHx-XD-5E5" id="FgK-Do-FJg"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="haD-rb-AXh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="JXW-T5-dUW" userLabel="Exit" sceneMemberID="exit"/>
-                <swipeGestureRecognizer cancelsTouchesInView="NO" direction="down" id="PGz-Vu-8Ol">
-                    <connections>
-                        <outlet property="delegate" destination="PQo-oV-Kiq" id="6tU-XK-ppU"/>
-                        <segue destination="JXW-T5-dUW" kind="unwind" unwindAction="unwindToWBControllerWithSender:" id="b6p-E1-0vl"/>
-                    </connections>
-                </swipeGestureRecognizer>
-                <tapGestureRecognizer id="Wc6-I5-L5A">
-                    <connections>
-                        <segue destination="JXW-T5-dUW" kind="unwind" unwindAction="unwindToWBControllerWithSender:" id="HBB-bx-aaD"/>
-                    </connections>
-                </tapGestureRecognizer>
-            </objects>
-            <point key="canvasLocation" x="740" y="1033"/>
-        </scene>
         <!--WebViewContainerController-->
         <scene sceneID="NFU-EG-6av">
             <objects>
                 <viewControllerPlaceholder storyboardName="WBCore" referencedIdentifier="WebViewContainerController" id="uPD-zx-e6p" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qhx-F4-qxC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-144" y="720"/>
+            <point key="canvasLocation" x="-34" y="720"/>
         </scene>
         <!--ConsoleViewContainer-->
         <scene sceneID="cyl-xg-7VB">
@@ -312,12 +210,11 @@
                 <viewControllerPlaceholder storyboardName="Console" referencedIdentifier="ConsoleViewContainer" id="r3u-6B-Bee" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3TA-2E-A2X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="79" y="839"/>
+            <point key="canvasLocation" x="313" y="720"/>
         </scene>
     </scenes>
     <resources>
         <image name="Console Button" width="25" height="23.5"/>
-        <image name="Swipe down" width="67" height="76"/>
         <image name="Tick@480.png" width="480" height="480"/>
     </resources>
 </document>

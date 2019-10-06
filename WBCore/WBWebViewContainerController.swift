@@ -78,6 +78,11 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         self.loadingProgressContainer.isHidden = true
+        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
+    }
+    
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
     }
     
     // MARK: - WKUIDelegate
@@ -96,6 +101,10 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
             self.setValue(true, forKey: "pickerIsShowing")
             self.popUpPickerController = puvc
             puvc.wbManager = self.wbManager
+        }
+        if let evc = segue.destination as? ErrorViewController {
+            let error = sender as! Error
+            evc.errorMessage = error.localizedDescription
         }
     }
     @IBAction func unwindToWVContainerController(sender: UIStoryboardSegue) {

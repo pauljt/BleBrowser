@@ -154,10 +154,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         if let bvc = segue.destination as? BookmarksViewController {
             bvc.bookmarksManager = self.bookmarksManager
         }
-        if let evc = segue.destination as? ErrorViewController {
-            let error = sender as! Error
-            evc.errorMessage = error.localizedDescription
-        }
         if let cc = segue.destination as? ConsoleViewContainerController {
             cc.wbLogManager = self.webViewController.logManager
             self.consoleViewContainerController = cc
@@ -276,14 +272,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         if let urlString = webView.url?.absoluteString {
             self.setLocationText(urlString)
         }
-    }
-    
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
-    }
-
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
     }
 
     // MARK: - UIScrollViewDelegate
