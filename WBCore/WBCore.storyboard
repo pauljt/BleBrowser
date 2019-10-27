@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,16 +17,18 @@
                         <viewControllerLayoutGuide type="bottom" id="7m2-k6-X9g"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tcw-Gz-tvd" customClass="WBWebView" customModule="WebBLE" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="559"/>
+                        <rect key="frame" x="0.0" y="0.0" width="360" height="559"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="KsY-XS-FfM"/>
+                        <gestureRecognizers/>
                     </view>
-                    <size key="freeformSize" width="414" height="559"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <size key="freeformSize" width="360" height="559"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SO5-s9-Alo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-829" y="1050"/>
+            <point key="canvasLocation" x="-1346" y="1558"/>
         </scene>
         <!--Picker Controller-->
         <scene sceneID="mU8-Tl-OMC">
@@ -39,11 +39,11 @@
                         <viewControllerLayoutGuide type="bottom" id="1Ib-i8-Y4E"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BQs-xP-4kK">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="297"/>
+                        <rect key="frame" x="0.0" y="0.0" width="360" height="297"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DtO-zw-0Ra" customClass="WBPopUpPickerView" customModule="WebBLE" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="246"/>
+                                <rect key="frame" x="0.0" y="0.0" width="360" height="246"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="246" id="HYo-4B-X50"/>
@@ -53,7 +53,7 @@
                                 </connections>
                             </pickerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0nP-kJ-O4B" userLabel="Picker Toolbar">
-                                <rect key="frame" x="0.0" y="246" width="375" height="50"/>
+                                <rect key="frame" x="0.0" y="246" width="360" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OGF-0F-YDI">
                                         <rect key="frame" x="16" y="8" width="56" height="34"/>
@@ -67,7 +67,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gJU-nc-xHd">
-                                        <rect key="frame" x="316" y="8" width="43" height="34"/>
+                                        <rect key="frame" x="301" y="8" width="43" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="34" id="990-gd-MPx"/>
                                         </constraints>
@@ -107,7 +107,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="375" height="297"/>
+                    <size key="freeformSize" width="360" height="297"/>
                     <connections>
                         <outlet property="bottomConstraint" destination="2Ft-SA-6KE" id="Ot1-En-uph"/>
                         <outlet property="pickerView" destination="DtO-zw-0Ra" id="SVp-UC-R7y"/>
@@ -116,7 +116,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yPE-Fd-Zqb" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="mCz-f6-Rgv" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1612" y="1451"/>
+            <point key="canvasLocation" x="-693" y="831"/>
         </scene>
         <!--Web View Container Controller-->
         <scene sceneID="0x7-H9-L3v">
@@ -127,20 +127,20 @@
                         <viewControllerLayoutGuide type="bottom" id="gxN-o6-9VC"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="jp5-Jb-GNU">
-                        <rect key="frame" x="0.0" y="0.0" width="339" height="559"/>
+                        <rect key="frame" x="0.0" y="0.0" width="360" height="559"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ymH-yY-3z1">
-                                <rect key="frame" x="0.0" y="0.0" width="339" height="559"/>
+                                <rect key="frame" x="0.0" y="0.0" width="360" height="559"/>
                                 <connections>
                                     <segue destination="hXW-g0-2N9" kind="embed" id="Vdx-vC-Zx8"/>
                                 </connections>
                             </containerView>
                             <view hidden="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1VQ-cV-QDZ">
-                                <rect key="frame" x="0.0" y="0.0" width="339" height="5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="360" height="5"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XxI-Sv-pHo">
-                                        <rect key="frame" x="0.0" y="0.0" width="169.5" height="5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="180" height="5"/>
                                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
                                 </subviews>
@@ -157,25 +157,151 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="ymH-yY-3z1" firstAttribute="top" secondItem="jp5-Jb-GNU" secondAttribute="topMargin" id="0Yg-yq-035"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="ymH-yY-3z1" secondAttribute="bottom" id="2WG-5d-tWV"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="ymH-yY-3z1" secondAttribute="bottom" priority="990" id="2WG-5d-tWV"/>
                             <constraint firstAttribute="trailing" secondItem="ymH-yY-3z1" secondAttribute="trailing" id="QgN-AI-1rW"/>
                             <constraint firstItem="1VQ-cV-QDZ" firstAttribute="leading" secondItem="jp5-Jb-GNU" secondAttribute="leading" id="U3P-UV-hAK"/>
                             <constraint firstItem="ymH-yY-3z1" firstAttribute="leading" secondItem="jp5-Jb-GNU" secondAttribute="leading" id="ack-VR-sY0"/>
                             <constraint firstAttribute="trailing" secondItem="1VQ-cV-QDZ" secondAttribute="trailing" id="tYz-vl-NKN"/>
                             <constraint firstItem="1VQ-cV-QDZ" firstAttribute="top" secondItem="jp5-Jb-GNU" secondAttribute="top" id="wQK-7R-noX"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="4EG-vu-CNJ"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="uUA-wO-GEl" appends="YES" id="j2d-eI-kJp"/>
+                        </connections>
                     </view>
-                    <size key="freeformSize" width="339" height="559"/>
+                    <size key="freeformSize" width="360" height="559"/>
                     <connections>
                         <outlet property="loadingProgressContainer" destination="1VQ-cV-QDZ" id="pwk-tS-xpa"/>
                         <outlet property="loadingProgressView" destination="XxI-Sv-pHo" id="YJj-Dq-EvG"/>
                         <segue destination="KTy-YM-LKE" kind="showDetail" identifier="ShowDevicePicker" customClass="WBShowPickerSegue" customModule="WebBLE" customModuleProvider="target" id="dOv-qy-DBm"/>
+                        <segue destination="GEZ-JB-y3I" kind="presentation" identifier="nav-error-segue" id="GoK-zO-nz2"/>
+                        <segue destination="PcF-M0-ge6" kind="custom" identifier="WBContainerControllerToConsoleSegueID" customClass="WBContainerControllerToConsoleSegue" customModule="WebBLE" customModuleProvider="target" id="fM4-Q7-qkF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oir-tl-BMD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTapsRequired="2" numberOfTouchesRequired="2" id="uUA-wO-GEl" customClass="SpecialTapRecognizer" customModule="WebBLE" customModuleProvider="target">
+                    <connections>
+                        <action selector="toggleConsole" destination="hCi-h3-YHB" id="Iw7-yM-rkP"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1611" y="1051"/>
         </scene>
+        <!--Error View Controller-->
+        <scene sceneID="B5t-zb-uOo">
+            <objects>
+                <viewController storyboardIdentifier="ErrorViewControllerID" modalPresentationStyle="overCurrentContext" interfaceStyle="light" id="GEZ-JB-y3I" customClass="ErrorViewController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="M9U-vA-Yd7"/>
+                        <viewControllerLayoutGuide type="bottom" id="CrN-3T-gcY"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="XhM-QQ-OE5">
+                        <rect key="frame" x="0.0" y="0.0" width="360" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <visualEffectView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lO5-VU-GdG">
+                                <rect key="frame" x="0.0" y="0.0" width="360" height="600"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Sp8-II-fep">
+                                    <rect key="frame" x="0.0" y="0.0" width="360" height="600"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EI0-vJ-eIg">
+                                            <rect key="frame" x="114.5" y="277" width="131" height="46"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Navigation Failed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Bb-ge-tKq">
+                                                    <rect key="frame" x="0.0" y="0.0" width="131" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error goes here" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="py2-rv-GNV">
+                                                    <rect key="frame" x="15.5" y="29" width="100" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <gestureRecognizers/>
+                                            <constraints>
+                                                <constraint firstItem="7Bb-ge-tKq" firstAttribute="centerX" secondItem="EI0-vJ-eIg" secondAttribute="centerX" id="0TK-Od-ehI"/>
+                                                <constraint firstItem="py2-rv-GNV" firstAttribute="top" secondItem="7Bb-ge-tKq" secondAttribute="bottom" constant="8" id="C2X-OL-KUP"/>
+                                                <constraint firstItem="py2-rv-GNV" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="EI0-vJ-eIg" secondAttribute="leading" id="I7b-hH-IRX"/>
+                                                <constraint firstAttribute="trailing" secondItem="7Bb-ge-tKq" secondAttribute="trailing" priority="250" id="KIW-Vm-Org"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="7Bb-ge-tKq" secondAttribute="trailing" id="VQJ-0G-POu"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="py2-rv-GNV" secondAttribute="trailing" id="Vbh-QQ-Ql4"/>
+                                                <constraint firstItem="7Bb-ge-tKq" firstAttribute="leading" secondItem="EI0-vJ-eIg" secondAttribute="leading" priority="250" id="cNm-z0-hLh"/>
+                                                <constraint firstAttribute="bottom" secondItem="py2-rv-GNV" secondAttribute="bottom" id="hiM-h3-Y7u"/>
+                                                <constraint firstItem="7Bb-ge-tKq" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="EI0-vJ-eIg" secondAttribute="leading" id="mFp-x0-13T"/>
+                                                <constraint firstItem="py2-rv-GNV" firstAttribute="leading" secondItem="EI0-vJ-eIg" secondAttribute="leading" priority="250" id="miL-Hp-Kx4"/>
+                                                <constraint firstItem="7Bb-ge-tKq" firstAttribute="top" secondItem="EI0-vJ-eIg" secondAttribute="top" id="pbW-7h-vjs"/>
+                                                <constraint firstAttribute="trailing" secondItem="py2-rv-GNV" secondAttribute="trailing" priority="250" id="qUG-AH-Ydl"/>
+                                                <constraint firstItem="py2-rv-GNV" firstAttribute="centerX" secondItem="EI0-vJ-eIg" secondAttribute="centerX" id="yYq-GJ-qIz"/>
+                                            </constraints>
+                                        </view>
+                                        <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Swipe down" translatesAutoresizingMaskIntoConstraints="NO" id="IxM-Gq-T4K">
+                                            <rect key="frame" x="146.5" y="355" width="67" height="76"/>
+                                            <gestureRecognizers/>
+                                            <connections>
+                                                <outletCollection property="gestureRecognizers" destination="qmb-Mn-Pjw" appends="YES" id="dEz-JI-SNL"/>
+                                            </connections>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="EI0-vJ-eIg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Sp8-II-fep" secondAttribute="leading" id="1HS-3x-dWn"/>
+                                        <constraint firstItem="EI0-vJ-eIg" firstAttribute="centerX" secondItem="Sp8-II-fep" secondAttribute="centerX" id="GN4-Zm-K2z"/>
+                                        <constraint firstItem="IxM-Gq-T4K" firstAttribute="top" secondItem="EI0-vJ-eIg" secondAttribute="bottom" constant="32" id="RGH-Za-TTX"/>
+                                        <constraint firstItem="IxM-Gq-T4K" firstAttribute="centerX" secondItem="Sp8-II-fep" secondAttribute="centerX" id="Rh0-0f-yV1"/>
+                                        <constraint firstItem="EI0-vJ-eIg" firstAttribute="centerY" secondItem="Sp8-II-fep" secondAttribute="centerY" id="aSJ-Rc-7lB"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="EI0-vJ-eIg" secondAttribute="trailing" id="eVi-U3-Qgr"/>
+                                    </constraints>
+                                    <connections>
+                                        <outletCollection property="gestureRecognizers" destination="6xU-FR-Ddh" appends="YES" id="9Fg-tn-0F1"/>
+                                    </connections>
+                                </view>
+                                <blurEffect style="light"/>
+                            </visualEffectView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="lO5-VU-GdG" firstAttribute="top" secondItem="XhM-QQ-OE5" secondAttribute="top" id="4uR-ZA-Qa6"/>
+                            <constraint firstAttribute="bottom" secondItem="lO5-VU-GdG" secondAttribute="bottom" id="MKm-1k-x1b"/>
+                            <constraint firstAttribute="trailing" secondItem="lO5-VU-GdG" secondAttribute="trailing" id="q51-PB-6t0"/>
+                            <constraint firstItem="lO5-VU-GdG" firstAttribute="leading" secondItem="XhM-QQ-OE5" secondAttribute="leading" id="sNE-Ab-cYA"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="UwE-8b-agv"/>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="360" height="600"/>
+                    <connections>
+                        <outlet property="messageField" destination="py2-rv-GNV" id="X6K-os-S4N"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="640-sl-J0H" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="TyY-mp-p9i" userLabel="Exit" sceneMemberID="exit"/>
+                <swipeGestureRecognizer cancelsTouchesInView="NO" direction="down" id="6xU-FR-Ddh">
+                    <connections>
+                        <outlet property="delegate" destination="GEZ-JB-y3I" id="grH-9G-Fgm"/>
+                        <segue destination="TyY-mp-p9i" kind="unwind" unwindAction="unwindToWBControllerWithSender:" id="nOW-kN-d4w"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <tapGestureRecognizer id="qmb-Mn-Pjw">
+                    <connections>
+                        <segue destination="TyY-mp-p9i" kind="unwind" unwindAction="unwindToWBControllerWithSender:" id="D7l-FD-fHj"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="-693" y="1189"/>
+        </scene>
+        <!--ConsoleViewContainer-->
+        <scene sceneID="LPD-PL-wfN">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Console" referencedIdentifier="ConsoleViewContainer" id="PcF-M0-ge6" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="z6I-Gl-Nt8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1849" y="1359"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="Swipe down" width="67" height="76"/>
+    </resources>
 </document>

@@ -22,7 +22,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     enum prefKeys: String {
         case bookmarks
-        case consoleOpen
         case version
     }
 
@@ -36,7 +35,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var goForwardButton: UIBarButtonItem!
     @IBOutlet var refreshButton: UIBarButtonItem!
     @IBOutlet var showConsoleButton: UIBarButtonItem!
-    @IBOutlet var webViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet var extraShowBarsView: UIView!
 
     var initialURL: URL?
@@ -52,8 +50,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             nc.setToolbarHidden(!self.shouldShowBars, animated: true)
             nc.setNavigationBarHidden(!self.shouldShowBars, animated: true)
             self.setNeedsUpdateOfHomeIndicatorAutoHidden()
-            self.extraShowBarsView.isHidden = self.shouldShowBars
-            self.setHidesOnSwipesFromScrollView(self.webView.scrollView)
+            self._setExtraBarHiddenState()
+            self.setHidesOnSwipesFromScrollView(
+                self.webView.scrollView
+            )
         }
     }
     let bottomMarginNotToHideBarsIn: CGFloat = 100.0
@@ -109,11 +109,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.shouldShowBars = true
     }
     @IBAction func toggleConsole() {
-        if self.consoleViewContainerController != nil {
-            self.hideConsole()
-        } else {
-            self.showConsole()
-        }
+        self.webViewContainerController.toggleConsole()
     }
 
     // MARK: - Home bar indicator control
@@ -125,10 +121,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let bvc = segue.destination as? BookmarksViewController {
             bvc.bookmarksManager = self.bookmarksManager
-        }
-        if let evc = segue.destination as? ErrorViewController {
-            let error = sender as! Error
-            evc.errorMessage = error.localizedDescription
         }
     }
     @IBAction func unwindToWBController(sender: UIStoryboardSegue) {
@@ -155,6 +147,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.webView.addNavigationDelegate(self)
         self.webView.scrollView.delegate = self
         self.webView.scrollView.clipsToBounds = false
+        self.webViewContainerController.addObserver(self, forKeyPath: "pickerIsShowing", options: [], context: nil)
 
         for path in ["canGoBack", "canGoForward"] {
             self.webView.addObserver(self, forKeyPath: path, options: .new, context: nil)
@@ -175,10 +168,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
                 lastLocation = "https://www.greenparksoftware.co.uk/projects/webble/\(svers)"
             }
             self.loadLocation(lastLocation)
-        }
-
-        if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {
-            self.showConsole()
         }
     }
 
@@ -243,14 +232,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             self.setLocationText(urlString)
         }
     }
-    
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
-    }
-
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
-    }
 
     // MARK: - UIScrollViewDelegate
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -280,6 +261,8 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         case "navBarIsHidden":
             let navBarIsHidden = defChange[NSKeyValueChangeKey.newKey] as! Bool
             self.shouldShowBars = !navBarIsHidden
+        case "pickerIsShowing":
+            self._setExtraBarHiddenState()
         default:
             NSLog("Unexpected change observed by ViewController: \(defKeyPath)")
         }
@@ -338,45 +321,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         // Set the preferences version to be up to date.
         ud.set(self.currentPrefVersion, forKey: ViewController.prefKeys.version.rawValue)
     }
-    func showConsole() {
-        let storyboard = UIStoryboard(name: "Console", bundle: nil)
-        guard let cvcont =  storyboard.instantiateViewController(withIdentifier: "ConsoleViewContainer") as? ConsoleViewContainerController else {
-            NSLog("Unable to load ConsoleViewContainer from the storyboard")
-            return
-        }
-        NSLayoutConstraint.deactivate(
-            [self.webViewBottomConstraint]
-        )
-        self.addChild(cvcont)
-
-        self.view.insertSubview(cvcont.view, at: self.view.subviews.firstIndex(of: self.extraShowBarsView)!)
-
-        // after adding the subview the IB outlets will be joined up,
-        // so we can add the logger direct to the console view controller
-        cvcont.wbLogManager = self.webViewController.logManager
-
-        cvcont.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        NSLayoutConstraint.activate([
-            cvcont.view.topAnchor.constraint(equalTo: self.webViewContainerController.view.bottomAnchor),
-            cvcont.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            cvcont.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            // ensure we do not enlarge the console above the url bar,
-            // this is something of a hack
-            cvcont.view.topAnchor.constraint(greaterThanOrEqualTo: self.view.topAnchor, constant: 60.0)
-        ])
-
-        self.consoleViewContainerController = cvcont
-        UserDefaults.standard.setValue(true, forKey: prefKeys.consoleOpen.rawValue)
-    }
-    func hideConsole() {
-        let cvcont = self.consoleViewContainerController!
-        NSLayoutConstraint.deactivate(cvcont.view.constraints)
-        cvcont.view.removeFromSuperview()
-        cvcont.removeFromParent()
-        self.consoleViewContainerController = nil;
-        NSLayoutConstraint.activate([self.webViewBottomConstraint])
-        UserDefaults.standard.setValue(false, forKey: prefKeys.consoleOpen.rawValue)
-    }
     func setHidesOnSwipesFromScrollView(_ scrollView: UIScrollView) {
         // Due to an apparent bug this should not be called when the toolbar / navbar are animating up or down as far as possible as that seems to cause a crash
         let yOffset = scrollView.contentOffset.y
@@ -397,5 +341,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
                 nc.hidesBarsOnSwipe = true
             }
         }
+    }
+    private func _setExtraBarHiddenState() {
+        let pickerIsShowing = self.webViewContainerController.pickerIsShowing
+        let toolBarIsShowing = !self.navigationController!.isToolbarHidden
+        self.extraShowBarsView.isHidden = pickerIsShowing || toolBarIsShowing
     }
 }
