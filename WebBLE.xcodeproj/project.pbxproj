@@ -38,6 +38,7 @@
 		5AC7ECAD233D177700CE7A2A /* WBPopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */; };
 		5AC8067D21655B5E00AA5176 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8067C21655B5E00AA5176 /* DividerView.swift */; };
 		5AD6DACB2323EBFE0005F733 /* WBWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DACA2323EBFE0005F733 /* WBWebViewController.swift */; };
+		5ADE336E23663353007E6AD7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5ADE336D23663353007E6AD7 /* Images.xcassets */; };
 		5AFC77FE22ECD09E0071E792 /* WBEventTarget.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AFC77FD22ECD09E0071E792 /* WBEventTarget.js */; };
 		5AFC780022ECD99B0071E792 /* WBDevice.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AFC77FF22ECD99B0071E792 /* WBDevice.js */; };
 		5AFC780222ECDCC50071E792 /* WBRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AFC780122ECDCC40071E792 /* WBRemoteGATTServer.js */; };
@@ -97,6 +98,7 @@
 		5AC7ECAC233D177700CE7A2A /* WBPopUpPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBPopUpPickerView.swift; sourceTree = "<group>"; };
 		5AC8067C21655B5E00AA5176 /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		5AD6DACA2323EBFE0005F733 /* WBWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBWebViewController.swift; sourceTree = "<group>"; };
+		5ADE336D23663353007E6AD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
 		5AFACFEE1F03FB0B00A310D1 /* Info-allowing-http.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-allowing-http.plist"; sourceTree = "<group>"; };
 		5AFC77FD22ECD09E0071E792 /* WBEventTarget.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBEventTarget.js; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 			children = (
 				5A10929C2168D5B6002CC973 /* Console */,
 				5AFC780322ECDD410071E792 /* Polyfill */,
+				5ADE336D23663353007E6AD7 /* Images.xcassets */,
 				5AC47CA71E2CCF2F00BCAE82 /* Animations.swift */,
 				5AC676FB221CA557007B1562 /* ErrorViewController.swift */,
 				5AC7ECAA233D0F9700CE7A2A /* Segues.swift */,
@@ -356,6 +359,7 @@
 				BB303DF11C41EF2F00FCAF24 /* WBPolyfill.js in Resources */,
 				5A7579E6214F7965003F0CEA /* stringview.js in Resources */,
 				5A8FD3FE233973710032DCE7 /* WBCore.storyboard in Resources */,
+				5ADE336E23663353007E6AD7 /* Images.xcassets in Resources */,
 				5A85B9F91E29582400E0B718 /* Defaults.plist in Resources */,
 				5A8FD3FC233966050032DCE7 /* Console.storyboard in Resources */,
 				5AFC77FE22ECD09E0071E792 /* WBEventTarget.js in Resources */,

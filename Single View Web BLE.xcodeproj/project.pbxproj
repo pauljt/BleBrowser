@@ -73,6 +73,40 @@
 		5AD6DAC72323CEF70005F733 /* WBLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DAC32323CEF70005F733 /* WBLog.swift */; };
 		5AD6DAC82323CEF80005F733 /* WBLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DAC32323CEF70005F733 /* WBLog.swift */; };
 		5AD6DAC92323CEF80005F733 /* WBLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DAC32323CEF70005F733 /* WBLog.swift */; };
+		5ADE334823663104007E6AD7 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE333F23663104007E6AD7 /* DividerView.swift */; };
+		5ADE334923663104007E6AD7 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE333F23663104007E6AD7 /* DividerView.swift */; };
+		5ADE334A23663104007E6AD7 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE333F23663104007E6AD7 /* DividerView.swift */; };
+		5ADE334B23663104007E6AD7 /* ConsoleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334023663104007E6AD7 /* ConsoleLogViewController.swift */; };
+		5ADE334C23663104007E6AD7 /* ConsoleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334023663104007E6AD7 /* ConsoleLogViewController.swift */; };
+		5ADE334D23663104007E6AD7 /* ConsoleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334023663104007E6AD7 /* ConsoleLogViewController.swift */; };
+		5ADE334E23663104007E6AD7 /* ConsoleLogView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADE334123663104007E6AD7 /* ConsoleLogView.xib */; };
+		5ADE334F23663104007E6AD7 /* ConsoleLogView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADE334123663104007E6AD7 /* ConsoleLogView.xib */; };
+		5ADE335023663104007E6AD7 /* ConsoleLogView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADE334123663104007E6AD7 /* ConsoleLogView.xib */; };
+		5ADE335123663104007E6AD7 /* ConsoleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334223663104007E6AD7 /* ConsoleScrollView.swift */; };
+		5ADE335223663104007E6AD7 /* ConsoleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334223663104007E6AD7 /* ConsoleScrollView.swift */; };
+		5ADE335323663104007E6AD7 /* ConsoleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334223663104007E6AD7 /* ConsoleScrollView.swift */; };
+		5ADE335423663104007E6AD7 /* ConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334323663104007E6AD7 /* ConsoleView.swift */; };
+		5ADE335523663104007E6AD7 /* ConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334323663104007E6AD7 /* ConsoleView.swift */; };
+		5ADE335623663104007E6AD7 /* ConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334323663104007E6AD7 /* ConsoleView.swift */; };
+		5ADE335723663104007E6AD7 /* Console.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5ADE334423663104007E6AD7 /* Console.storyboard */; };
+		5ADE335823663104007E6AD7 /* Console.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5ADE334423663104007E6AD7 /* Console.storyboard */; };
+		5ADE335923663104007E6AD7 /* Console.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5ADE334423663104007E6AD7 /* Console.storyboard */; };
+		5ADE335A23663104007E6AD7 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334523663104007E6AD7 /* ConsoleViewController.swift */; };
+		5ADE335B23663104007E6AD7 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334523663104007E6AD7 /* ConsoleViewController.swift */; };
+		5ADE335C23663104007E6AD7 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334523663104007E6AD7 /* ConsoleViewController.swift */; };
+		5ADE335D23663104007E6AD7 /* ConsoleLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334623663104007E6AD7 /* ConsoleLogView.swift */; };
+		5ADE335E23663104007E6AD7 /* ConsoleLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334623663104007E6AD7 /* ConsoleLogView.swift */; };
+		5ADE335F23663104007E6AD7 /* ConsoleLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334623663104007E6AD7 /* ConsoleLogView.swift */; };
+		5ADE336023663104007E6AD7 /* ConsoleViewContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334723663104007E6AD7 /* ConsoleViewContainerController.swift */; };
+		5ADE336123663104007E6AD7 /* ConsoleViewContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334723663104007E6AD7 /* ConsoleViewContainerController.swift */; };
+		5ADE336223663104007E6AD7 /* ConsoleViewContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE334723663104007E6AD7 /* ConsoleViewContainerController.swift */; };
+		5ADE336423663143007E6AD7 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE336323663143007E6AD7 /* Animations.swift */; };
+		5ADE336523663143007E6AD7 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE336323663143007E6AD7 /* Animations.swift */; };
+		5ADE336623663143007E6AD7 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE336323663143007E6AD7 /* Animations.swift */; };
+		5ADE336823663166007E6AD7 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE336723663166007E6AD7 /* ErrorViewController.swift */; };
+		5ADE336923663166007E6AD7 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE336723663166007E6AD7 /* ErrorViewController.swift */; };
+		5ADE336A23663166007E6AD7 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE336723663166007E6AD7 /* ErrorViewController.swift */; };
+		5ADE336C236631F0007E6AD7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5ADE336B236631F0007E6AD7 /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +160,18 @@
 		5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBRemoteGATTServer.js; sourceTree = "<group>"; };
 		5AD6DA9D2323CA080005F733 /* WBTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBTransaction.swift; sourceTree = "<group>"; };
 		5AD6DAC32323CEF70005F733 /* WBLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBLog.swift; sourceTree = "<group>"; };
+		5ADE333F23663104007E6AD7 /* DividerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
+		5ADE334023663104007E6AD7 /* ConsoleLogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleLogViewController.swift; sourceTree = "<group>"; };
+		5ADE334123663104007E6AD7 /* ConsoleLogView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConsoleLogView.xib; sourceTree = "<group>"; };
+		5ADE334223663104007E6AD7 /* ConsoleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleScrollView.swift; sourceTree = "<group>"; };
+		5ADE334323663104007E6AD7 /* ConsoleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleView.swift; sourceTree = "<group>"; };
+		5ADE334423663104007E6AD7 /* Console.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Console.storyboard; sourceTree = "<group>"; };
+		5ADE334523663104007E6AD7 /* ConsoleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleViewController.swift; sourceTree = "<group>"; };
+		5ADE334623663104007E6AD7 /* ConsoleLogView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleLogView.swift; sourceTree = "<group>"; };
+		5ADE334723663104007E6AD7 /* ConsoleViewContainerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleViewContainerController.swift; sourceTree = "<group>"; };
+		5ADE336323663143007E6AD7 /* Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
+		5ADE336723663166007E6AD7 /* ErrorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
+		5ADE336B236631F0007E6AD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = WBCore/Images.xcassets; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,8 +254,10 @@
 		5AD6DA902323CA080005F733 /* WBCore */ = {
 			isa = PBXGroup;
 			children = (
-				5A495419233D4DD0007CA132 /* Segues.swift */,
+				5ADE336323663143007E6AD7 /* Animations.swift */,
+				5ADE336723663166007E6AD7 /* ErrorViewController.swift */,
 				5A181FF323284F1A0092A850 /* Jsonifiable.swift */,
+				5A495419233D4DD0007CA132 /* Segues.swift */,
 				5AD6DA932323CA080005F733 /* WBDevice.swift */,
 				5AD6DAC32323CEF70005F733 /* WBLog.swift */,
 				5A4E2646232846BF00755BD8 /* WBLogManager.swift */,
@@ -221,7 +269,9 @@
 				5A4E2644232846BF00755BD8 /* WBWebViewController.swift */,
 				5A49541A233D4DD0007CA132 /* WBWebViewContainerController.swift */,
 				5A495415233D4D69007CA132 /* WBCore.storyboard */,
+				5ADE333E23663104007E6AD7 /* Console */,
 				5AD6DA952323CA080005F733 /* Polyfill */,
+				5ADE336B236631F0007E6AD7 /* Images.xcassets */,
 			);
 			path = WBCore;
 			sourceTree = "<group>";
@@ -238,6 +288,22 @@
 				5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */,
 			);
 			path = Polyfill;
+			sourceTree = "<group>";
+		};
+		5ADE333E23663104007E6AD7 /* Console */ = {
+			isa = PBXGroup;
+			children = (
+				5ADE333F23663104007E6AD7 /* DividerView.swift */,
+				5ADE334023663104007E6AD7 /* ConsoleLogViewController.swift */,
+				5ADE334123663104007E6AD7 /* ConsoleLogView.xib */,
+				5ADE334223663104007E6AD7 /* ConsoleScrollView.swift */,
+				5ADE334323663104007E6AD7 /* ConsoleView.swift */,
+				5ADE334423663104007E6AD7 /* Console.storyboard */,
+				5ADE334523663104007E6AD7 /* ConsoleViewController.swift */,
+				5ADE334623663104007E6AD7 /* ConsoleLogView.swift */,
+				5ADE334723663104007E6AD7 /* ConsoleViewContainerController.swift */,
+			);
+			path = Console;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -353,8 +419,11 @@
 				5AD6DA6A2323C1CC0005F733 /* Assets.xcassets in Resources */,
 				5AD6DA682323C1CB0005F733 /* Main.storyboard in Resources */,
 				5A495416233D4D6A007CA132 /* WBCore.storyboard in Resources */,
+				5ADE336C236631F0007E6AD7 /* Images.xcassets in Resources */,
+				5ADE335723663104007E6AD7 /* Console.storyboard in Resources */,
 				5AD6DABC2323CA080005F733 /* WBRemoteGATTServer.js in Resources */,
 				5AD6DAAA2323CA080005F733 /* WBDevice.js in Resources */,
+				5ADE334E23663104007E6AD7 /* ConsoleLogView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,7 +434,9 @@
 				5AD6DABD2323CA080005F733 /* WBRemoteGATTServer.js in Resources */,
 				5AD6DAAB2323CA080005F733 /* WBDevice.js in Resources */,
 				5AD6DAAE2323CA080005F733 /* WBBluetoothUUID.js in Resources */,
+				5ADE334F23663104007E6AD7 /* ConsoleLogView.xib in Resources */,
 				5AD6DAB12323CA080005F733 /* WBPolyfill.js in Resources */,
+				5ADE335823663104007E6AD7 /* Console.storyboard in Resources */,
 				5AD6DABA2323CA080005F733 /* WBEventTarget.js in Resources */,
 				5AD6DAB42323CA080005F733 /* WBUtils.js in Resources */,
 				5AD6DAB72323CA080005F733 /* stringview.js in Resources */,
@@ -382,8 +453,10 @@
 				5AD6DAAF2323CA080005F733 /* WBBluetoothUUID.js in Resources */,
 				5AD6DAB22323CA080005F733 /* WBPolyfill.js in Resources */,
 				5AD6DABB2323CA080005F733 /* WBEventTarget.js in Resources */,
+				5ADE335923663104007E6AD7 /* Console.storyboard in Resources */,
 				5AD6DAB52323CA080005F733 /* WBUtils.js in Resources */,
 				5AD6DAB82323CA080005F733 /* stringview.js in Resources */,
+				5ADE335023663104007E6AD7 /* ConsoleLogView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,16 +471,25 @@
 				5AD6DA652323C1CB0005F733 /* ViewController.swift in Sources */,
 				5A4E265B232846C000755BD8 /* WBLogManager.swift in Sources */,
 				5A49541E233D4DD0007CA132 /* Segues.swift in Sources */,
+				5ADE335423663104007E6AD7 /* ConsoleView.swift in Sources */,
+				5ADE334823663104007E6AD7 /* DividerView.swift in Sources */,
 				5AD6DABF2323CA080005F733 /* WBTransaction.swift in Sources */,
 				5A49541B233D4DD0007CA132 /* WBPopUpPickerView.swift in Sources */,
 				5A181FF423284F1A0092A850 /* Jsonifiable.swift in Sources */,
 				5A4E265E232846C000755BD8 /* WBPopUpPickerController.swift in Sources */,
 				5A495421233D4DD0007CA132 /* WBWebViewContainerController.swift in Sources */,
+				5ADE335123663104007E6AD7 /* ConsoleScrollView.swift in Sources */,
 				5AD6DAA72323CA080005F733 /* WBWebView.swift in Sources */,
 				5AD6DAA42323CA080005F733 /* WBDevice.swift in Sources */,
 				5AD6DAA12323CA080005F733 /* WBManager.swift in Sources */,
+				5ADE336823663166007E6AD7 /* ErrorViewController.swift in Sources */,
+				5ADE335D23663104007E6AD7 /* ConsoleLogView.swift in Sources */,
+				5ADE334B23663104007E6AD7 /* ConsoleLogViewController.swift in Sources */,
+				5ADE336023663104007E6AD7 /* ConsoleViewContainerController.swift in Sources */,
 				5AD6DAC72323CEF70005F733 /* WBLog.swift in Sources */,
 				5AD6DA632323C1CB0005F733 /* AppDelegate.swift in Sources */,
+				5ADE336423663143007E6AD7 /* Animations.swift in Sources */,
+				5ADE335A23663104007E6AD7 /* ConsoleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,17 +499,26 @@
 			files = (
 				5AD6DAA22323CA080005F733 /* WBManager.swift in Sources */,
 				5AD6DAC82323CEF80005F733 /* WBLog.swift in Sources */,
+				5ADE334923663104007E6AD7 /* DividerView.swift in Sources */,
 				5A49541F233D4DD0007CA132 /* Segues.swift in Sources */,
 				5AD6DAA52323CA080005F733 /* WBDevice.swift in Sources */,
+				5ADE336923663166007E6AD7 /* ErrorViewController.swift in Sources */,
 				5A49541C233D4DD0007CA132 /* WBPopUpPickerView.swift in Sources */,
+				5ADE335B23663104007E6AD7 /* ConsoleViewController.swift in Sources */,
 				5A181FF523284F1A0092A850 /* Jsonifiable.swift in Sources */,
+				5ADE334C23663104007E6AD7 /* ConsoleLogViewController.swift in Sources */,
 				5AD6DA782323C1CC0005F733 /* Single_View_Web_BLETests.swift in Sources */,
+				5ADE335E23663104007E6AD7 /* ConsoleLogView.swift in Sources */,
 				5A495422233D4DD0007CA132 /* WBWebViewContainerController.swift in Sources */,
+				5ADE336123663104007E6AD7 /* ConsoleViewContainerController.swift in Sources */,
 				5A4E265F232846C000755BD8 /* WBPopUpPickerController.swift in Sources */,
 				5A4E2656232846C000755BD8 /* WBWebViewController.swift in Sources */,
 				5A4E265C232846C000755BD8 /* WBLogManager.swift in Sources */,
 				5AD6DAA82323CA080005F733 /* WBWebView.swift in Sources */,
 				5AD6DAC02323CA080005F733 /* WBTransaction.swift in Sources */,
+				5ADE335223663104007E6AD7 /* ConsoleScrollView.swift in Sources */,
+				5ADE335523663104007E6AD7 /* ConsoleView.swift in Sources */,
+				5ADE336523663143007E6AD7 /* Animations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,17 +528,26 @@
 			files = (
 				5AD6DAA32323CA080005F733 /* WBManager.swift in Sources */,
 				5AD6DAC92323CEF80005F733 /* WBLog.swift in Sources */,
+				5ADE334A23663104007E6AD7 /* DividerView.swift in Sources */,
 				5A495420233D4DD0007CA132 /* Segues.swift in Sources */,
 				5AD6DAA62323CA080005F733 /* WBDevice.swift in Sources */,
+				5ADE336A23663166007E6AD7 /* ErrorViewController.swift in Sources */,
 				5A49541D233D4DD0007CA132 /* WBPopUpPickerView.swift in Sources */,
+				5ADE335C23663104007E6AD7 /* ConsoleViewController.swift in Sources */,
 				5A181FF623284F1A0092A850 /* Jsonifiable.swift in Sources */,
+				5ADE334D23663104007E6AD7 /* ConsoleLogViewController.swift in Sources */,
 				5AD6DA832323C1CC0005F733 /* Single_View_Web_BLEUITests.swift in Sources */,
+				5ADE335F23663104007E6AD7 /* ConsoleLogView.swift in Sources */,
 				5A495423233D4DD0007CA132 /* WBWebViewContainerController.swift in Sources */,
+				5ADE336223663104007E6AD7 /* ConsoleViewContainerController.swift in Sources */,
 				5A4E2660232846C000755BD8 /* WBPopUpPickerController.swift in Sources */,
 				5A4E2657232846C000755BD8 /* WBWebViewController.swift in Sources */,
 				5A4E265D232846C000755BD8 /* WBLogManager.swift in Sources */,
 				5AD6DAA92323CA080005F733 /* WBWebView.swift in Sources */,
 				5AD6DAC12323CA080005F733 /* WBTransaction.swift in Sources */,
+				5ADE335323663104007E6AD7 /* ConsoleScrollView.swift in Sources */,
+				5ADE335623663104007E6AD7 /* ConsoleView.swift in Sources */,
+				5ADE336623663143007E6AD7 /* Animations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
