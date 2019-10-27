@@ -100,7 +100,7 @@
                         <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="vNO-d3-Qzl"/>
                         <barButtonItem image="Console Button" width="28" id="uNi-2X-YpW">
                             <connections>
-                                <action selector="toggleConsole" destination="BYZ-38-t0r" id="gvJ-pj-8It"/>
+                                <action selector="toggleConsole" destination="BYZ-38-t0r" id="r85-BZ-MHL"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="dS0-fO-69k"/>
@@ -135,7 +135,6 @@
                         <outlet property="refreshButton" destination="LXB-CH-4RT" id="350-AZ-rBZ"/>
                         <outlet property="showConsoleButton" destination="uNi-2X-YpW" id="CTt-pC-CFQ"/>
                         <outlet property="tick" destination="6wE-az-iDp" id="aNh-gM-jXz"/>
-                        <segue destination="r3u-6B-Bee" kind="custom" identifier="ViewControllerToConsoleSegueID" customClass="ViewControllerToConsoleSegue" customModule="WebBLE" customModuleProvider="target" id="jdv-Vn-omc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -203,14 +202,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qhx-F4-qxC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-34" y="720"/>
-        </scene>
-        <!--ConsoleViewContainer-->
-        <scene sceneID="cyl-xg-7VB">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Console" referencedIdentifier="ConsoleViewContainer" id="r3u-6B-Bee" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3TA-2E-A2X" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="313" y="720"/>
         </scene>
     </scenes>
     <resources>

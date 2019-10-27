@@ -20,13 +20,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="360" height="559"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="KsY-XS-FfM"/>
+                        <gestureRecognizers/>
                     </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="360" height="559"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SO5-s9-Alo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1612" y="1562"/>
+            <point key="canvasLocation" x="-1346" y="1558"/>
         </scene>
         <!--Picker Controller-->
         <scene sceneID="mU8-Tl-OMC">
@@ -114,7 +116,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yPE-Fd-Zqb" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="mCz-f6-Rgv" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-694" y="963"/>
+            <point key="canvasLocation" x="-693" y="831"/>
         </scene>
         <!--Web View Container Controller-->
         <scene sceneID="0x7-H9-L3v">
@@ -155,14 +157,16 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="ymH-yY-3z1" firstAttribute="top" secondItem="jp5-Jb-GNU" secondAttribute="topMargin" id="0Yg-yq-035"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="ymH-yY-3z1" secondAttribute="bottom" id="2WG-5d-tWV"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="ymH-yY-3z1" secondAttribute="bottom" priority="990" id="2WG-5d-tWV"/>
                             <constraint firstAttribute="trailing" secondItem="ymH-yY-3z1" secondAttribute="trailing" id="QgN-AI-1rW"/>
                             <constraint firstItem="1VQ-cV-QDZ" firstAttribute="leading" secondItem="jp5-Jb-GNU" secondAttribute="leading" id="U3P-UV-hAK"/>
                             <constraint firstItem="ymH-yY-3z1" firstAttribute="leading" secondItem="jp5-Jb-GNU" secondAttribute="leading" id="ack-VR-sY0"/>
                             <constraint firstAttribute="trailing" secondItem="1VQ-cV-QDZ" secondAttribute="trailing" id="tYz-vl-NKN"/>
                             <constraint firstItem="1VQ-cV-QDZ" firstAttribute="top" secondItem="jp5-Jb-GNU" secondAttribute="top" id="wQK-7R-noX"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="4EG-vu-CNJ"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="uUA-wO-GEl" appends="YES" id="j2d-eI-kJp"/>
+                        </connections>
                     </view>
                     <size key="freeformSize" width="360" height="559"/>
                     <connections>
@@ -170,9 +174,15 @@
                         <outlet property="loadingProgressView" destination="XxI-Sv-pHo" id="YJj-Dq-EvG"/>
                         <segue destination="KTy-YM-LKE" kind="showDetail" identifier="ShowDevicePicker" customClass="WBShowPickerSegue" customModule="WebBLE" customModuleProvider="target" id="dOv-qy-DBm"/>
                         <segue destination="GEZ-JB-y3I" kind="presentation" identifier="nav-error-segue" id="GoK-zO-nz2"/>
+                        <segue destination="PcF-M0-ge6" kind="custom" identifier="WBContainerControllerToConsoleSegueID" customClass="WBContainerControllerToConsoleSegue" customModule="WebBLE" customModuleProvider="target" id="fM4-Q7-qkF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oir-tl-BMD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTapsRequired="2" numberOfTouchesRequired="2" id="uUA-wO-GEl" customClass="SpecialTapRecognizer" customModule="WebBLE" customModuleProvider="target">
+                    <connections>
+                        <action selector="toggleConsole" destination="hCi-h3-YHB" id="Iw7-yM-rkP"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1611" y="1051"/>
         </scene>
@@ -280,7 +290,15 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-694" y="1321"/>
+            <point key="canvasLocation" x="-693" y="1189"/>
+        </scene>
+        <!--ConsoleViewContainer-->
+        <scene sceneID="LPD-PL-wfN">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Console" referencedIdentifier="ConsoleViewContainer" id="PcF-M0-ge6" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="z6I-Gl-Nt8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1849" y="1359"/>
         </scene>
     </scenes>
     <resources>

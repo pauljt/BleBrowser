@@ -18,38 +18,10 @@ import WebKit
 
 let statusBarTappedNotification = Notification(name: Notification.Name(rawValue: "statusBarTappedNotification"))
 
-class ViewControllerToConsoleSegue: UIStoryboardSegue {
-    override func perform() {
-        let vc = self.source as! ViewController
-        let cc = self.destination as! ConsoleViewContainerController
-        
-        vc.view.insertSubview(cc.view, at: vc.view.subviews.firstIndex(of: vc.extraShowBarsView)!)
-        
-        // after adding the subview the IB outlets will be joined up,
-        // so we can add the logger direct to the console view controller
-        cc.wbLogManager = vc.webViewController.logManager
-        
-        cc.view.bottomAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        NSLayoutConstraint.activate([
-            cc.view.topAnchor.constraint(equalTo: vc.webViewContainerController.view.bottomAnchor),
-            cc.view.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
-            cc.view.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
-            // ensure we do not enlarge the console above the url bar,
-            // this is something of a hack
-            cc.view.topAnchor.constraint(
-                greaterThanOrEqualTo: vc.view.topAnchor,
-                constant: 60.0
-            )
-        ])
-        UserDefaults.standard.setValue(true, forKey: ViewController.prefKeys.consoleOpen.rawValue)
-    }
-}
-
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate {
 
     enum prefKeys: String {
         case bookmarks
-        case consoleOpen
         case version
     }
 
@@ -137,11 +109,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.shouldShowBars = true
     }
     @IBAction func toggleConsole() {
-        if self.consoleViewContainerController != nil {
-            self.hideConsole()
-        } else {
-            self.showConsole()
-        }
+        self.webViewContainerController.toggleConsole()
     }
 
     // MARK: - Home bar indicator control
@@ -153,11 +121,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let bvc = segue.destination as? BookmarksViewController {
             bvc.bookmarksManager = self.bookmarksManager
-        }
-        if let cc = segue.destination as? ConsoleViewContainerController {
-            cc.wbLogManager = self.webViewController.logManager
-            self.consoleViewContainerController = cc
-            UserDefaults.standard.setValue(true, forKey: prefKeys.consoleOpen.rawValue)
         }
     }
     @IBAction func unwindToWBController(sender: UIStoryboardSegue) {
@@ -205,10 +168,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
                 lastLocation = "https://www.greenparksoftware.co.uk/projects/webble/\(svers)"
             }
             self.loadLocation(lastLocation)
-        }
-
-        if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {
-            self.showConsole()
         }
     }
 
@@ -361,20 +320,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         // Set the preferences version to be up to date.
         ud.set(self.currentPrefVersion, forKey: ViewController.prefKeys.version.rawValue)
-    }
-    func showConsole() {
-        self.performSegue(
-            withIdentifier: "ViewControllerToConsoleSegueID",
-            sender: self
-        )
-    }
-    func hideConsole() {
-        let cvcont = self.consoleViewContainerController!
-        NSLayoutConstraint.deactivate(cvcont.view.constraints)
-        cvcont.view.removeFromSuperview()
-        cvcont.removeFromParent()
-        self.consoleViewContainerController = nil;
-        UserDefaults.standard.setValue(false, forKey: prefKeys.consoleOpen.rawValue)
     }
     func setHidesOnSwipesFromScrollView(_ scrollView: UIScrollView) {
         // Due to an apparent bug this should not be called when the toolbar / navbar are animating up or down as far as possible as that seems to cause a crash

@@ -8,10 +8,42 @@
 import UIKit
 import WebKit
 
+class WBContainerControllerToConsoleSegue: UIStoryboardSegue {
+    override func perform() {
+        let wcc = self.source as! WBWebViewContainerController
+        let webView = wcc.view!
+        let consoleController = self.destination as! ConsoleViewContainerController
+        let consoleView = consoleController.view!
+        
+        wcc.addChild(consoleController)
+        webView.addSubview(consoleView)
+        
+        // after adding the subview the IB outlets will be joined up,
+        // so we can add the logger direct to the console view controller
+        consoleController.wbLogManager = wcc.webViewController.logManager
+        
+        NSLayoutConstraint.activate([
+            consoleView.bottomAnchor.constraint(equalTo: webView.safeAreaLayoutGuide.bottomAnchor),
+            consoleView.leadingAnchor.constraint(equalTo: webView.leadingAnchor),
+            consoleView.trailingAnchor.constraint(equalTo: webView.trailingAnchor),
+            // ensure we do not enlarge the console above the url bar,
+            // this is something of a hack
+            consoleView.topAnchor.constraint(
+                greaterThanOrEqualTo: webView.topAnchor,
+                constant: 60.0
+            ),
+            // this constraint will override the existing constraint pinning the bottom of the web view to the bottom of the screen
+            consoleView.topAnchor.constraint(equalTo: webView.subviews.first!.bottomAnchor),
+        ])
+        UserDefaults.standard.setValue(true, forKey: WBWebViewContainerController.prefKeys.consoleOpen.rawValue)
+    }
+}
+
 class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUIDelegate, WBPicker {
     
     enum prefKeys: String {
         case lastLocation
+        case consoleOpen
     }
     
     @IBOutlet var loadingProgressContainer: UIView!
@@ -34,21 +66,48 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
             return self.webViewController.webView
         }
     }
+    var consoleContainerController: ConsoleViewContainerController? {
+        get {
+            return self.children.first(where: {$0 as? ConsoleViewContainerController != nil}) as? ConsoleViewContainerController
+        }
+    }
+    var consoleShowing: Bool {
+        get {
+            return self.consoleContainerController != nil
+        }
+    }
     
     // If the pop up picker is showing, then the
     // following two vars are not null.
     @objc var pickerIsShowing = false
     var popUpPickerController: WBPopUpPickerController!
     var popUpPickerBottomConstraint: NSLayoutConstraint!
+
+    // MARK: - IBActions
+    @IBAction public func toggleConsole() {
+        if let ccc = self.consoleContainerController {
+            ccc.removeFromParent()
+            ccc.view.removeFromSuperview()
+            UserDefaults.standard.setValue(false, forKey: WBWebViewContainerController.prefKeys.consoleOpen.rawValue)
+        } else {
+            self.performSegue(withIdentifier: "WBContainerControllerToConsoleSegueID", sender: self)
+            
+        }
+    }
     
     // MARK: - View Event handling
     override func viewDidLoad() {
         super.viewDidLoad()
+        let ud = UserDefaults.standard
+        
         self.webView.addNavigationDelegate(self)
         self.webView.uiDelegate = self
         
         for path in ["estimatedProgress"] {
             self.webView.addObserver(self, forKeyPath: path, options: .new, context: nil)
+        }
+        if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {
+            self.toggleConsole()
         }
     }
     
@@ -97,16 +156,22 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     
     // MARK: - Segue handling
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let puvc = segue.destination as? WBPopUpPickerController {
+        switch segue.destination {
+        case let obj as WBPopUpPickerController:
             self.setValue(true, forKey: "pickerIsShowing")
-            self.popUpPickerController = puvc
-            puvc.wbManager = self.wbManager
-        }
-        if let evc = segue.destination as? ErrorViewController {
+            self.popUpPickerController = obj
+            obj.wbManager = self.wbManager
+        case let obj as ErrorViewController:
             let error = sender as! Error
-            evc.errorMessage = error.localizedDescription
+            obj.errorMessage = error.localizedDescription
+        case is ConsoleViewContainerController:
+            // handled by the segue
+            break
+        default:
+            NSLog("Segue to unknown destination: \(segue.destination.description)")
         }
     }
+    
     @IBAction func unwindToWVContainerController(sender: UIStoryboardSegue) {
         if let puvc = sender.source as? WBPopUpPickerController {
             self.setValue(false, forKey: "pickerIsShowing")

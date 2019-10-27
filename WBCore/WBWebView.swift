@@ -131,3 +131,9 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         )
     }
 }
+
+class SpecialTapRecognizer: UITapGestureRecognizer {
+    override func canBePrevented(by: UIGestureRecognizer) -> Bool {
+        return false
+    }
+}
