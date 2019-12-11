@@ -563,6 +563,7 @@
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = BasicBrowser/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = co.uk.greenparksoftware.webble;
 				PRODUCT_NAME = WebBLE;
 				SWIFT_VERSION = 5.0;
@@ -578,6 +579,7 @@
 				DEVELOPMENT_TEAM = 7RKU9LK986;
 				INFOPLIST_FILE = BasicBrowser/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = co.uk.greenparksoftware.webble;
 				PRODUCT_NAME = WebBLE;
 				SWIFT_VERSION = 5.0;
