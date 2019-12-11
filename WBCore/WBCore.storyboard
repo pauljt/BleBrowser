@@ -21,6 +21,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
+                        <viewLayoutGuide key="safeArea" id="YhO-qe-kul"/>
                     </view>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -164,6 +165,7 @@
                             <constraint firstAttribute="trailing" secondItem="1VQ-cV-QDZ" secondAttribute="trailing" id="tYz-vl-NKN"/>
                             <constraint firstItem="1VQ-cV-QDZ" firstAttribute="top" secondItem="jp5-Jb-GNU" secondAttribute="top" id="wQK-7R-noX"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="qHc-Tw-9mh"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="uUA-wO-GEl" appends="YES" id="j2d-eI-kJp"/>
                         </connections>
