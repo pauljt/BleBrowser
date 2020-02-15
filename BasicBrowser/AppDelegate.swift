@@ -87,7 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         super.touchesBegan(touches, with: event)
 
         // cribbed from https://stackoverflow.com/questions/3753097/how-to-detect-touches-in-status-bar
-        let statusBarRect = UIApplication.shared.statusBarFrame
+        let statusBarRect = self.window!.windowScene!.statusBarManager!.statusBarFrame
         guard let touchPoint = event?.allTouches?.first?.location(in: self.window) else { return }
 
         if statusBarRect.contains(touchPoint) {
