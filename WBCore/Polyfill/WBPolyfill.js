@@ -34,115 +34,6 @@
 
   let native;
 
-  nslog('Create BluetoothRemoteGATTService');
-  function BluetoothRemoteGATTService(device, uuid, isPrimary) {
-    if (device === undefined || uuid === undefined || isPrimary === undefined) {
-      throw new Error('Invalid call to BluetoothRemoteGATTService constructor');
-    }
-    wbutils.defineROProperties(this, {
-      device: device,
-      uuid: uuid,
-      isPrimary: isPrimary
-    });
-  }
-
-  BluetoothRemoteGATTService.prototype = {
-    getCharacteristic: function (uuid) {
-      let canonicalUUID = window.BluetoothUUID.getCharacteristic(uuid);
-      let service = this;
-      return this.sendMessage(
-        'getCharacteristic',
-        {data: {characteristicUUID: canonicalUUID}}
-      ).then(function (CharacteristicJSON) {
-        nslog(`Got characteristic ${uuid}`);
-        return new native.BluetoothRemoteGATTCharacteristic(
-          service,
-          canonicalUUID,
-          CharacteristicJSON.properties
-        );
-      });
-    },
-    getCharacteristics: function () {
-      throw new Error('Not implemented');
-    },
-    getIncludedService: function () {
-      throw new Error('Not implemented');
-    },
-    getIncludedServices: function () {
-      throw new Error('Not implemented');
-    },
-    sendMessage: function (type, messageParms) {
-      messageParms = messageParms || {};
-      messageParms.data = messageParms.data || {};
-      messageParms.data.serviceUUID = this.uuid;
-      return this.device.gatt.sendMessage(type, messageParms);
-    },
-    toString: function () {
-      return `BluetoothRemoteGATTService(${this.uuid})`;
-    }
-  };
-  wb.BluetoothRemoteGATTService = BluetoothRemoteGATTService;
-
-  nslog('Create BluetoothRemoteGATTCharacteristic');
-  function BluetoothRemoteGATTCharacteristic(service, uuid, properties) {
-    nslog(`New BluetoothRemoteGATTCharacteristic ${uuid}`);
-    let roProps = {
-      service: service,
-      properties: properties,
-      uuid: uuid
-    };
-    wbutils.defineROProperties(this, roProps);
-    this.value = null;
-    wbutils.EventTarget.call(this);
-    native.registerCharacteristicForNotifications(this);
-  }
-
-  BluetoothRemoteGATTCharacteristic.prototype = {
-    getDescriptor: function () {
-      throw new Error('Not implemented');
-    },
-    getDescriptors: function () {
-      throw new Error('Not implemented');
-    },
-    readValue: function () {
-      let char = this;
-      return this.sendMessage('readCharacteristicValue').then(function (valueEncoded) {
-        char.value = wbutils.str64todv(valueEncoded);
-        return char.value;
-      });
-    },
-    writeValue: function (value) {
-      let buffer;
-      if (value instanceof ArrayBuffer) {
-        buffer = value;
-      } else {
-        buffer = value.buffer;
-        if (!(buffer instanceof ArrayBuffer)) {
-          throw new Error(`writeValue needs an ArrayBuffer or View, was passed ${value}`);
-        }
-      }
-      // Can't send raw array bytes since we use JSON, so base64 encode.
-      let v64 = wbutils.arrayBufferToBase64(buffer);
-      return this.sendMessage('writeCharacteristicValue', {data: {value: v64}});
-    },
-    startNotifications: function () {
-      return this.sendMessage('startNotifications').then(() => this);
-    },
-    stopNotifications: function () {
-      return this.sendMessage('stopNotifications').then(() => this);
-    },
-    sendMessage: function (type, messageParms) {
-      messageParms = messageParms || {};
-      messageParms.data = messageParms.data || {};
-      messageParms.data.characteristicUUID = this.uuid;
-      return this.service.sendMessage(type, messageParms);
-    },
-    toString: function () {
-      return `BluetoothRemoteGATTCharacteristic(${this.service.toString()}, ${this.uuid})`;
-    }
-  };
-  wbutils.mixin(BluetoothRemoteGATTCharacteristic, wbutils.EventTarget);
-
   nslog('Create BluetoothGATTDescriptor');
   function BluetoothGATTDescriptor(characteristic, uuid) {
     wbutils.defineROProperties(this, {characteristic: characteristic, uuid: uuid});
@@ -358,9 +249,9 @@
       navigator.bluetooth = bluetooth;
     },
     // defeat the linter's "out of scope" warnings for not yet defined functions
-    BluetoothRemoteGATTCharacteristic: BluetoothRemoteGATTCharacteristic,
+    BluetoothRemoteGATTCharacteristic: wb.BluetoothRemoteGATTCharacteristic,
     BluetoothRemoteGATTServer: wb.BluetoothRemoteGATTServer,
-    BluetoothRemoteGATTService: BluetoothRemoteGATTService,
+    BluetoothRemoteGATTService: wb.BluetoothRemoteGATTService,
     BluetoothEvent: BluetoothEvent
   };
   wb.native = native;
@@ -375,6 +266,7 @@
   window.receiveMessageResponse = native.receiveMessageResponse;
   window.receiveCharacteristicValueNotification = native.receiveCharacteristicValueNotification;
 
+  nslog('call enableBluetooth!')
   native.enableBluetooth();
 
   // Patches

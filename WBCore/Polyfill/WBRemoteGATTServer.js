@@ -98,4 +98,5 @@
       return `BluetoothRemoteGATTServer(${this.device.toString()})`;
     }
   };
+  nslog('Created');
 })();

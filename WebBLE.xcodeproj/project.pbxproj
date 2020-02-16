@@ -39,6 +39,8 @@
 		5AC8067D21655B5E00AA5176 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC8067C21655B5E00AA5176 /* DividerView.swift */; };
 		5AD6DACB2323EBFE0005F733 /* WBWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DACA2323EBFE0005F733 /* WBWebViewController.swift */; };
 		5ADE336E23663353007E6AD7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5ADE336D23663353007E6AD7 /* Images.xcassets */; };
+		5AE293EE23F9AAE8006CD0BC /* WBBluetoothRemoteGATTCharacteristic.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AE293EC23F9AAE7006CD0BC /* WBBluetoothRemoteGATTCharacteristic.js */; };
+		5AE293EF23F9AAE8006CD0BC /* WBBluetoothRemoteGATTService.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AE293ED23F9AAE7006CD0BC /* WBBluetoothRemoteGATTService.js */; };
 		5AFC77FE22ECD09E0071E792 /* WBEventTarget.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AFC77FD22ECD09E0071E792 /* WBEventTarget.js */; };
 		5AFC780022ECD99B0071E792 /* WBDevice.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AFC77FF22ECD99B0071E792 /* WBDevice.js */; };
 		5AFC780222ECDCC50071E792 /* WBRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AFC780122ECDCC40071E792 /* WBRemoteGATTServer.js */; };
@@ -99,6 +101,8 @@
 		5AC8067C21655B5E00AA5176 /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		5AD6DACA2323EBFE0005F733 /* WBWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBWebViewController.swift; sourceTree = "<group>"; };
 		5ADE336D23663353007E6AD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		5AE293EC23F9AAE7006CD0BC /* WBBluetoothRemoteGATTCharacteristic.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBBluetoothRemoteGATTCharacteristic.js; sourceTree = "<group>"; };
+		5AE293ED23F9AAE7006CD0BC /* WBBluetoothRemoteGATTService.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBBluetoothRemoteGATTService.js; sourceTree = "<group>"; };
 		5AF110A51DDC6AA3006CB88F /* notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
 		5AFACFEE1F03FB0B00A310D1 /* Info-allowing-http.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-allowing-http.plist"; sourceTree = "<group>"; };
 		5AFC77FD22ECD09E0071E792 /* WBEventTarget.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBEventTarget.js; sourceTree = "<group>"; };
@@ -198,6 +202,8 @@
 				5AFC77FD22ECD09E0071E792 /* WBEventTarget.js */,
 				BB303DF01C41EF2F00FCAF24 /* WBPolyfill.js */,
 				5AFC780122ECDCC40071E792 /* WBRemoteGATTServer.js */,
+				5AE293ED23F9AAE7006CD0BC /* WBBluetoothRemoteGATTService.js */,
+				5AE293EC23F9AAE7006CD0BC /* WBBluetoothRemoteGATTCharacteristic.js */,
 				5A660AFF1F0FB174004EC11D /* WBUtils.js */,
 			);
 			path = Polyfill;
@@ -352,6 +358,7 @@
 				5A31618721CC55ED00C4446B /* Copy@480.png in Resources */,
 				5AC47CA61E2BE57000BCAE82 /* Tick@480.png in Resources */,
 				E44C18611A36203E00734F8B /* Main.storyboard in Resources */,
+				5AE293EF23F9AAE8006CD0BC /* WBBluetoothRemoteGATTService.js in Resources */,
 				5AFC780022ECD99B0071E792 /* WBDevice.js in Resources */,
 				5A660B001F0FB174004EC11D /* WBUtils.js in Resources */,
 				5A4B8E1D2157A66C00C7C858 /* ConsoleLogView.xib in Resources */,
@@ -365,6 +372,7 @@
 				5AFC77FE22ECD09E0071E792 /* WBEventTarget.js in Resources */,
 				E44C18661A36203E00734F8B /* LaunchScreen.xib in Resources */,
 				E44C18631A36203E00734F8B /* Images.xcassets in Resources */,
+				5AE293EE23F9AAE8006CD0BC /* WBBluetoothRemoteGATTCharacteristic.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

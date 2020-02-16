@@ -70,7 +70,17 @@ class WBWebView: WKWebView, WKNavigationDelegate {
             completionHandler:{})
 
         // Load js
-        for jsfilename in ["stringview", "WBUtils", "WBEventTarget", "WBBluetoothUUID", "WBDevice", "WBRemoteGATTServer", "WBPolyfill"] {
+        for jsfilename in [
+            "stringview",
+            "WBUtils",
+            "WBEventTarget",
+            "WBBluetoothUUID",
+            "WBDevice",
+            "WBRemoteGATTServer",
+            "WBBluetoothRemoteGATTService",
+            "WBBluetoothRemoteGATTCharacteristic",
+            "WBPolyfill"
+        ] {
             guard let filePath = Bundle(for: WBWebView.self).path(forResource: jsfilename, ofType:"js") else {
                 NSLog("Failed to find polyfill \(jsfilename)")
                 return
