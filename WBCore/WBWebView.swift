@@ -52,6 +52,7 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         let webCfg = WKWebViewConfiguration()
         let userController = WKUserContentController()
         webCfg.userContentController = userController
+        webCfg.allowsInlineMediaPlayback = true
         self.init(
             frame: CGRect(),
             configuration: webCfg
