@@ -9,6 +9,7 @@ import Foundation
 
 class WBLog: NSObject {
     enum Level: String {
+        case debug
         case log
         case warn
         case error
@@ -21,6 +22,7 @@ class WBLog: NSObject {
 
     static func levelToString(_ level: Level) -> String {
         switch level {
+        case .debug: return "Debug"
         case .log: return "Log"
         case .warn: return "Warning"
         case .error: return "Error"

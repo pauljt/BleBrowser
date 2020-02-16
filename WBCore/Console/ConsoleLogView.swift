@@ -14,6 +14,8 @@ class ConsoleLogView: UIView {
     func configureWithLog(_ log: WBLog) {
         self.messageTextField.text = log.message
         switch log.level {
+        case .debug:
+            self.messageTextField.textColor = UIColor(displayP3Red: 0.0, green: 0.8, blue: 0.8, alpha: 1.0)
         case .log:
             break
         case .warn:
