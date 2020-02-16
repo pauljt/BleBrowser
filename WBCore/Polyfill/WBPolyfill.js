@@ -366,6 +366,9 @@
   wb.native = native;
 
   // Exposed interfaces
+  window.BluetoothRemoteGATTCharacteristic = wb.BluetoothRemoteGATTCharacteristic;
+  window.BluetoothRemoteGATTServer = wb.BluetoothRemoteGATTServer;
+  window.BluetoothRemoteGATTService = wb.BluetoothRemoteGATTService;
   window.BluetoothDevice = wb.BluetoothDevice;
   window.iOSNativeAPI = native;
   window.receiveDeviceDisconnectEvent = native.receiveDeviceDisconnectEvent;
