@@ -97,6 +97,7 @@ uk.co.greenparksoftware.wbutils = {
     levelHandlers[level].call(window.console, message, ...args);
   }
   window.console = {
+    info: (...args) => consoleLog('log', ...args),
     log: (...args) => consoleLog('log', ...args),
     warn: (...args) => consoleLog('warn', ...args),
     error: (...args) => consoleLog('error', ...args),
