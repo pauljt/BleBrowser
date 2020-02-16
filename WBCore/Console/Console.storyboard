@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -52,27 +52,27 @@
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o5q-9o-Nj5">
                                         <rect key="frame" x="183.5" y="0.0" width="8" height="8"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="8" id="KHp-aY-fCP"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sg8-DU-sbL">
                                         <rect key="frame" x="199.5" y="0.0" width="8" height="8"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="8" id="xUe-Wc-6Rs"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XKj-L5-eGS">
                                         <rect key="frame" x="167.5" y="0.0" width="8" height="8"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="8" id="mIe-v4-tfD"/>
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" systemColor="opaqueSeparatorColor" red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="XKj-L5-eGS" secondAttribute="bottom" id="1lC-HN-0uA"/>
@@ -179,9 +179,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ca8-g2-bii" userLabel="Extra Buttons View">
                                 <rect key="frame" x="295" y="84" width="80" height="44"/>
                                 <subviews>
+                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pLC-Oz-vnL">
+                                        <rect key="frame" x="0.0" y="0.0" width="80" height="44"/>
+                                        <items/>
+                                    </toolbar>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qZA-XW-r3G">
                                         <rect key="frame" x="0.0" y="0.0" width="80" height="1"/>
-                                        <color key="backgroundColor" red="0.65482908490000002" green="0.65494394300000003" blue="0.65482187270000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="Wrm-k4-Jcs"/>
                                         </constraints>
@@ -208,29 +212,33 @@
                                         </connections>
                                     </imageView>
                                 </subviews>
-                                <color key="backgroundColor" red="0.97636479139999999" green="0.97653168440000004" blue="0.9763541818" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="L47-MX-UG3" firstAttribute="centerY" secondItem="ca8-g2-bii" secondAttribute="centerY" id="9sF-gf-rRZ"/>
                                     <constraint firstItem="L47-MX-UG3" firstAttribute="leading" secondItem="ca8-g2-bii" secondAttribute="leading" constant="13" id="CSE-j2-T9D"/>
                                     <constraint firstItem="FsR-Gq-mRy" firstAttribute="leading" secondItem="L47-MX-UG3" secondAttribute="trailing" constant="13" id="FHU-Nf-TeY"/>
                                     <constraint firstItem="qZA-XW-r3G" firstAttribute="leading" secondItem="ca8-g2-bii" secondAttribute="leading" id="HAt-tr-lZl"/>
                                     <constraint firstItem="FsR-Gq-mRy" firstAttribute="top" secondItem="ca8-g2-bii" secondAttribute="top" constant="8" id="L73-Fs-fIy"/>
+                                    <constraint firstItem="pLC-Oz-vnL" firstAttribute="leading" secondItem="ca8-g2-bii" secondAttribute="leading" symbolic="YES" id="LqH-iH-1XL"/>
+                                    <constraint firstAttribute="bottom" secondItem="pLC-Oz-vnL" secondAttribute="bottom" symbolic="YES" id="MMh-Rr-dBy"/>
+                                    <constraint firstAttribute="trailing" secondItem="pLC-Oz-vnL" secondAttribute="trailing" symbolic="YES" id="S60-df-ERr"/>
                                     <constraint firstAttribute="bottom" secondItem="FsR-Gq-mRy" secondAttribute="bottom" constant="8" id="THo-w3-8pN"/>
                                     <constraint firstAttribute="trailing" secondItem="FsR-Gq-mRy" secondAttribute="trailing" constant="8" id="Wdc-ee-JmK"/>
+                                    <constraint firstItem="pLC-Oz-vnL" firstAttribute="top" secondItem="ca8-g2-bii" secondAttribute="top" symbolic="YES" id="cxO-Kw-4rZ"/>
                                     <constraint firstAttribute="trailing" secondItem="qZA-XW-r3G" secondAttribute="trailing" id="dFh-hR-gRA"/>
                                     <constraint firstAttribute="height" constant="44" id="ik9-p1-5Nm"/>
                                     <constraint firstItem="qZA-XW-r3G" firstAttribute="top" secondItem="ca8-g2-bii" secondAttribute="top" id="y4N-6J-BVn"/>
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="5bj-QH-Q4o" firstAttribute="leading" secondItem="0fs-Bd-y72" secondAttribute="leading" id="3rs-va-MHs"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="DSl-4f-yGT" secondAttribute="bottom" priority="900" constant="10" id="Axf-aq-NAH"/>
                             <constraint firstAttribute="trailing" secondItem="RSx-eV-DJD" secondAttribute="trailing" id="JGH-mn-8kd"/>
                             <constraint firstAttribute="trailing" secondItem="ca8-g2-bii" secondAttribute="trailing" id="Jkp-gq-3mp"/>
-                            <constraint firstAttribute="bottom" secondItem="rnO-dD-ogt" secondAttribute="bottom" id="LZz-w7-Mtr"/>
                             <constraint firstItem="DSl-4f-yGT" firstAttribute="centerY" secondItem="0fs-Bd-y72" secondAttribute="centerY" priority="980" id="MfY-rI-Y8o"/>
+                            <constraint firstItem="Uy7-Nu-cvp" firstAttribute="bottom" secondItem="rnO-dD-ogt" secondAttribute="bottom" id="Mtj-Ca-Owv"/>
                             <constraint firstItem="ca8-g2-bii" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RSx-eV-DJD" secondAttribute="bottom" id="NK1-7n-0aU"/>
                             <constraint firstItem="RSx-eV-DJD" firstAttribute="top" secondItem="5bj-QH-Q4o" secondAttribute="bottom" id="PaJ-2e-4Pl"/>
                             <constraint firstAttribute="trailing" secondItem="rnO-dD-ogt" secondAttribute="trailing" id="V1D-jN-IZL"/>
@@ -281,7 +289,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1879" y="312"/>
+            <point key="canvasLocation" x="1878.985507246377" y="311.38392857142856"/>
         </scene>
     </scenes>
     <resources>

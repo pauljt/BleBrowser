@@ -38,9 +38,9 @@ class ConsoleLogViewController: UIViewController {
     }
     func _updateView() {
         if !self.log.isSelected {
-            self.view.backgroundColor = UIColor.white
+            self.view.backgroundColor = UIColor.systemBackground
         } else {
-            self.view.backgroundColor = UIColor.groupTableViewBackground
+            self.view.backgroundColor = UIColor.systemGray3
         }
     }
 }
