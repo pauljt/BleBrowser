@@ -54,7 +54,15 @@
       });
     },
     getCharacteristics: function () {
-      throw new Error('Not implemented');
+     return this.sendMessage(
+       'getCharacteristics',
+       {data: {}}
+     ).then(function (characteristicsForServiceJSON) {
+       nslog(`Got characteristics`);
+            return {
+            data: characteristicsForServiceJSON
+            };
+     });
     },
     getIncludedService: function () {
       throw new Error('Not implemented');

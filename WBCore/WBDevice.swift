@@ -27,7 +27,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     // MARK: - Embedded types
     enum DeviceRequests: String {
         case connectGATT, disconnectGATT,  getPrimaryService,
-        getCharacteristic, readCharacteristicValue, startNotifications,
+        getCharacteristic, getCharacteristics, readCharacteristicValue, startNotifications,
         stopNotifications,
         writeCharacteristicValue
     }
