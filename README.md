@@ -34,6 +34,7 @@ WebBLE is licensed under the Apache Version 2.0 License as per the LICENSE file.
 - `.connect()`
 - `.disconnect()`
 - `.getPrimaryService(uuid)`
+- `.getPrimaryServices()`
 
 ### `BluetoothRemoteGATTService`
 
