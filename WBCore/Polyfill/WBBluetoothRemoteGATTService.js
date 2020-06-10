@@ -54,14 +54,26 @@
       });
     },
     getCharacteristics: function () {
+    let service = this;
      return this.sendMessage(
-       'getCharacteristics',
-       {data: {}}
+       'getCharacteristics'
      ).then(function (characteristicsForServiceJSON) {
-       nslog(`Got characteristics`);
-            return {
-            data: characteristicsForServiceJSON
-            };
+            let characteristics = [];
+            
+            if (characteristicsForServiceJSON) {
+                for (let i = 0; i < characteristicsForServiceJSON.length; i++) {
+                    let characeristicUUID = characteristicsForServiceJSON[i];
+                    if (characeristicUUID) {
+                        let canonicalUUID = window.BluetoothUUID.getCharacteristic(characeristicUUID);
+                        characteristics.push(new wb.BluetoothRemoteGATTCharacteristic(
+                          service,
+                          canonicalUUID
+                        ));
+                    }
+                }
+            }
+            
+            return characteristics;
      });
     },
     getIncludedService: function () {

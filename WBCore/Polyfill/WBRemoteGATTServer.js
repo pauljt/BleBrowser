@@ -70,7 +70,8 @@
         'getPrimaryServices', {data: {}}
       ).then(function (serviceUUIDs) {
             let services = [];
-            serviceUUIDs.forEach((canonicalUUID) => {
+            serviceUUIDs.forEach((uuid) => {
+                let canonicalUUID = window.BluetoothUUID.getService(uuid);
                 services.push(new wb.BluetoothRemoteGATTService(device, canonicalUUID, true))
             });
             return services;

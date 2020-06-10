@@ -26,7 +26,7 @@ import WebKit
 open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     // MARK: - Embedded types
     enum DeviceRequests: String {
-        case connectGATT, disconnectGATT,  getPrimaryService, getPrimaryServices,
+        case connectGATT, disconnectGATT, getPrimaryService, getPrimaryServices,
         getCharacteristic, getCharacteristics, readCharacteristicValue, startNotifications,
         stopNotifications,
         writeCharacteristicValue
@@ -94,6 +94,22 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.transaction.resolveAsFailure(withMessage: "Characteristic \(self.characteristicUUID.uuidString) not known for service \(self.serviceUUID.uuidString) on device")
         }
     }
+    
+    class CharacteristicsView: ServiceTransactionView {
+
+        override init?(transaction: WBTransaction) {
+            super.init(transaction: transaction)
+        }
+        
+        /*func matchesCharacteristic(_ characteristic: CBCharacteristic) -> Bool {
+            return self.serviceUUID == characteristic.service.uuid && self.characteristicUUID == characteristic.uuid
+        }
+        
+        func resolveUnknownCharacteristic() {
+            self.transaction.resolveAsFailure(withMessage: "Characteristic \(self.characteristicUUID.uuidString) not known for service \(self.serviceUUID.uuidString) on device")
+        }*/
+    }
+    
     class WriteCharacteristicView: CharacteristicView {
 
         let data: Data
@@ -129,11 +145,9 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     
     struct CharacteristicsTransactionKey: Hashable {
         let serviceUUID: CBUUID
-        let characteristicsUUID: [CBUUID]
 
         func hash(into hasher: inout Hasher) {
             hasher.combine(self.serviceUUID)
-            hasher.combine(self.characteristicsUUID.hashValue)
         }
     }
 
@@ -315,10 +329,9 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
         case .getCharacteristics:
 
-            guard
-                let view = CharacteristicView(transaction: transaction)
+            guard let view = CharacteristicsView(transaction: transaction)
             else {
-                transaction.resolveAsFailure(withMessage: "Invalid message")
+                transaction.resolveAsFailure(withMessage: "Invalid characteristics message")
                 break
             }
 
@@ -330,15 +343,25 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
 
             if let chars = service.characteristics {
                 // Have already discovered characteristics for this device.
-                if chars.contains(where: {$0.uuid == view.characteristicUUID}) {
+                /*if chars.contains(where: {$0.uuid == view.characteristicUUID}) {
                     transaction.resolveAsSuccess()
                 } else {
                     view.resolveUnknownCharacteristic()
-                }
+                }*/
+                
+                self.getCharacteristicsTM.apply({
+                    var characteristicUUIDs: [String] = []
+                    chars.forEach({ (characteristic) in
+                        print(characteristic.uuid.uuidString)
+                        characteristicUUIDs.append(characteristic.uuid.uuidString)
+                    })
+                    $0.resolveAsSuccess(withObject: characteristicUUIDs)
+                })
+                
                 break
             }
 
-            self.getCharacteristicTM.addTransaction(transaction, atPath: CharacteristicTransactionKey(serviceUUID: service.uuid, characteristicUUID: view.characteristicUUID))
+            self.getCharacteristicsTM.addTransaction(transaction, atPath: CharacteristicsTransactionKey(serviceUUID: view.serviceUUID))
             NSLog("Start discovering characteristics for service \(service.uuid)")
             self.peripheral.discoverCharacteristics(nil, for: service)
 
@@ -489,8 +512,18 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             NSLog("Error discovering characteristics: \(error_)")
             return
         }
-
-        self.getCharacteristicTM.apply(
+        
+        self.getCharacteristicsTM.apply({
+            var characteristicUUIDs: [String] = []
+            service.characteristics?.forEach({ (characteristic) in
+                print(characteristic.uuid.uuidString)
+                characteristicUUIDs.append(characteristic.uuid.uuidString)
+            })
+            $0.resolveAsSuccess(withObject: characteristicUUIDs)
+        },
+        iff: { CharacteristicsView(transaction: $0)!.serviceUUID == service.uuid })
+        
+        /*self.getCharacteristicTM.apply(
             {
                 let cview = CharacteristicView(transaction: $0)!
                 guard service.characteristics?.first(where: {$0.uuid == cview.characteristicUUID}) != nil else {
@@ -499,7 +532,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 }
                 $0.resolveAsSuccess()
             },
-            iff: {CharacteristicView(transaction: $0)!.serviceUUID == service.uuid})
+            iff: {CharacteristicView(transaction: $0)!.serviceUUID == service.uuid})*/
     }
 
     open func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
