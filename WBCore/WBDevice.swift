@@ -345,7 +345,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 self.getCharacteristicsTM.apply({
                     var characteristicUUIDs: [String] = []
                     chars.forEach({ (characteristic) in
-                        print(characteristic.uuid.uuidString)
                         characteristicUUIDs.append(characteristic.uuid.uuidString)
                     })
                     $0.resolveAsSuccess(withObject: characteristicUUIDs)
@@ -510,7 +509,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         self.getCharacteristicsTM.apply({
             var characteristicUUIDs: [String] = []
             service.characteristics?.forEach({ (characteristic) in
-                print(characteristic.uuid.uuidString)
                 characteristicUUIDs.append(characteristic.uuid.uuidString)
             })
             $0.resolveAsSuccess(withObject: characteristicUUIDs)
