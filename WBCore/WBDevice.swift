@@ -328,10 +328,10 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.peripheral.discoverCharacteristics(nil, for: service)
 
         case .getCharacteristics:
-
+            
             guard let view = CharacteristicsView(transaction: transaction)
             else {
-                transaction.resolveAsFailure(withMessage: "Invalid characteristics message")
+                transaction.resolveAsFailure(withMessage: "Invalid getCharacteristics message")
                 break
             }
 
@@ -506,25 +506,29 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
         
         // Handle multiple characteristics
-        self.getCharacteristicsTM.apply({
-            var characteristicUUIDs: [String] = []
-            service.characteristics?.forEach({ (characteristic) in
-                characteristicUUIDs.append(characteristic.uuid.uuidString)
-            })
-            $0.resolveAsSuccess(withObject: characteristicUUIDs)
-        },
-        iff: { CharacteristicsView(transaction: $0)?.serviceUUID == service.uuid })
+        if (self.getCharacteristicsTM.transactions.count > 0) {
+            self.getCharacteristicsTM.apply({
+                var characteristicUUIDs: [String] = []
+                service.characteristics?.forEach({ (characteristic) in
+                    characteristicUUIDs.append(characteristic.uuid.uuidString)
+                })
+                $0.resolveAsSuccess(withObject: characteristicUUIDs)
+            },
+            iff: { CharacteristicsView(transaction: $0)?.serviceUUID == service.uuid })
+        }
         
         // Handle single characteristic
-        self.getCharacteristicTM.apply({
-            let cview = CharacteristicView(transaction: $0)!
-            guard service.characteristics?.first(where: {$0.uuid == cview.characteristicUUID}) != nil else {
-                cview.resolveUnknownCharacteristic()
-                return
-            }
-            $0.resolveAsSuccess()
-        },
-        iff: {CharacteristicView(transaction: $0)?.serviceUUID == service.uuid})
+        if (self.getCharacteristicTM.transactions.count > 0) {
+            self.getCharacteristicTM.apply({
+                let cview = CharacteristicView(transaction: $0)!
+                guard service.characteristics?.first(where: {$0.uuid == cview.characteristicUUID}) != nil else {
+                    cview.resolveUnknownCharacteristic()
+                    return
+                }
+                $0.resolveAsSuccess()
+            },
+            iff: {CharacteristicView(transaction: $0)?.serviceUUID == service.uuid})
+        }
     }
 
     open func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
