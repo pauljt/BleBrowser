@@ -38,9 +38,19 @@ class ConsoleLogViewController: UIViewController {
     }
     func _updateView() {
         if !self.log.isSelected {
-            self.view.backgroundColor = UIColor.systemBackground
+            if #available(iOS 13.0, *) {
+                self.view.backgroundColor = UIColor.systemBackground
+            } else {
+                // Fallback on earlier versions
+                self.view.backgroundColor = UIColor.white
+            }
         } else {
-            self.view.backgroundColor = UIColor.systemGray3
+            if #available(iOS 13.0, *) {
+                self.view.backgroundColor = UIColor.systemGray3
+            } else {
+                // Fallback on earlier versions
+                self.view.backgroundColor = UIColor.lightGray
+            }
         }
     }
 }
