@@ -94,7 +94,9 @@ uk.co.greenparksoftware.wbutils = {
   };
   function consoleLog(level, message, ...args) {
     window.webkit.messageHandlers.logger.postMessage({level, message: `${message}`});
-    levelHandlers[level].call(window.console, message, ...args);
+    if (levelHandlers[level]) {
+        levelHandlers[level].call(window.console, message, ...args);
+    }
   }
   window.console = {
     debug: (...args) => consoleLog('debug', ...args),
