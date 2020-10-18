@@ -40,7 +40,7 @@ class WBWebViewController: UIViewController, WKNavigationDelegate {
     }
     let wbLogger = WBLogger()
 
-    var logManager = WBLogManager()
+    let logManager = WBLogManager()
 
     var webView: WBWebView {
         get {

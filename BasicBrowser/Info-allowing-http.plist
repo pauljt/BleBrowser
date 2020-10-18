@@ -46,6 +46,8 @@
 	<string>WebBLE implements the web bluetooth APIs, and therefore needs bluetooth peripheral access</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Bluetooth peripheral access is required to allow webpages to use the Web Bluetooth APIs</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow webpages to use your location</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
