@@ -334,8 +334,8 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         let dev = self.pickerDevices[row]
         let id = dev.internalUUID
         guard let name = dev.name
-            else {
-                return "(\(id))"
+        else {
+            return "(\(id))"
         }
         return "\(name) (\(id))"
     }
