@@ -64,28 +64,17 @@
       ));
     },
 
-    getPrimaryServices: function (UUID) {
-      if (true) {
-        throw new Error('Not implemented');
-      }
+    getPrimaryServices: function () {
       let device = this.device;
-      let canonicalUUID = window.BluetoothUUID.getService(UUID);
       return this.sendMessage(
-        'getPrimaryServices', {data: {serviceUUID: canonicalUUID}}
-      ).then(function (servicesJSON) {
-        let servicesData = JSON.parse(servicesJSON);
-        let services = servicesData;
-        services = device;
-        services = [];
-
-        // this is a problem - all services will have the same information (UUID) so no way for this side of the code to differentiate.
-        // we need to add an identifier GUID to tell them apart
-        // servicesData.forEach(
-        //     (service) => services.push(
-        //         new native.BluetoothRemoteGATTService(device, canonicalUUID, true)
-        //     )
-        // );
-        return services;
+        'getPrimaryServices', {data: {}}
+      ).then(function (serviceUUIDs) {
+            let services = [];
+            serviceUUIDs.forEach((uuid) => {
+                let canonicalUUID = window.BluetoothUUID.getService(uuid);
+                services.push(new wb.BluetoothRemoteGATTService(device, canonicalUUID, true))
+            });
+            return services;
       });
     },
     sendMessage: function (type, messageParms) {
