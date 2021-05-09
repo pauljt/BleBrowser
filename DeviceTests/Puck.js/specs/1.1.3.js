@@ -24,7 +24,7 @@ function str2ab(str) {
 
 describe('2 Pucks', function () {
     "use strict";
-    it('should be independent, connectable, readable, and disconnectable', function (complete) {
+    it('should be independent, connectable, readable, and disconnectable', async function () {
         let next_step_h3 = document.getElementById('next-action');
         if (!next_step_h3) {
             throw 'No #next-action element';
@@ -35,7 +35,6 @@ describe('2 Pucks', function () {
             throw 'No #progress-test button.';
         }
         function userContinuePromise() {
-
             return new Promise(function (resolve) {
                 next_step_h3.innerHTML = 'Hit "Progress test"';
                 progress_tests_button.onclick = function () {
@@ -46,14 +45,14 @@ describe('2 Pucks', function () {
             });
         }
 
-        function getConnectedDevicePromise(options) {
+        function getConnectedDevicePromise(msg, options) {
             return userContinuePromise().then(function () {
 
                 if (!options) {
                     options = {acceptAllDevices: true};
                 }
 
-                next_step_h3.innerHTML = 'Pick a device';
+                next_step_h3.innerHTML = msg;
                 return navigator.bluetooth.requestDevice(options).then(function (device) {
                     next_step_h3.innerHTML = '...';
                     return device.gatt.connect().then(() => device);
@@ -61,8 +60,8 @@ describe('2 Pucks', function () {
             });
         }
 
-        function getConnectedPuckPromise() {
-            return getConnectedDevicePromise({
+        function getConnectedPuckPromise(msg) {
+            return getConnectedDevicePromise(msg, {
                 filters: [{
                     namePrefix: 'Puck.js',
                     services: [NORDIC_SERVICE]
@@ -70,124 +69,91 @@ describe('2 Pucks', function () {
             });
         }
 
-        let dev1;
-        let dev2;
         let charPromiseResolve = {};
+        let deviceBuffers = {};
 
         function charNotification(event) {
+            console.log(`charNotification ${event.target.service.device.name} ${ab2str(event.target.value.buffer)}`);
             let did = event.target.service.device.id;
-            if (!charPromiseResolve[did]) {
-                console.log('Dumping char notification');
-                return;
+            if (deviceBuffers[did] === undefined) {
+                deviceBuffers[did] = '';
             }
-            charPromiseResolve[did](event);
+            deviceBuffers[did] += ab2str(event.target.value.buffer);
+            console.log(`${event.target.service.device.name} buffer now ${deviceBuffers[did]}`);
         }
-        function promiseToTextReceivedFromDevice(dev, lbl) {
-            let promise = new Promise(function (resolve) {
-                let buffer = '';
-                charPromiseResolve[dev.id] = function (event) {
-                    let edev = event.target.service.device;
-                    expect(edev).toBe(dev);
-                    let value = event.target.value.buffer;
-                    buffer += ab2str(value);
-                    if (buffer.includes(lbl)) {
-                        charPromiseResolve[dev.id] = undefined;
+
+        async function deviceBufferMatches(did, match) {
+            const start = Date.now();
+            return new Promise((resolve, reject) => {
+                const tid = setInterval(() => {
+                    if ((deviceBuffers[did] || '').search(match) !== -1) {
+                        console.log(`Matched ${match}`);
+                        deviceBuffers[did] = '';
+                        clearInterval(tid);
                         resolve();
+                        return;
                     }
-                };
+
+                    const now = Date.now();
+                    if (start + 2000 < now) {
+                        console.log(`Timeout waiting for ${match} (buffer ${deviceBuffers[did]})`);
+                        clearInterval(tid);
+                        reject('Timeout');
+                        return;
+                    }
+                }, 1);
             });
-            return promise;
         }
 
-        return Promise.resolve().then(function () {
-            console.log('Get connected puck 1');
-            return getConnectedPuckPromise().then(function (dev) {
-                dev1 = dev;
-                expect(dev1).toBeDefined();
-                console.log('Get connected puck 2');
-            }).then(() => getConnectedPuckPromise().then(function (dev) {
-                dev2 = dev;
-                expect(dev2).toBeDefined();
-            })).then(() => expect(dev1.id).not.toBe(dev2.id));
+        const devs = [
+            await getConnectedPuckPromise('Pick a first puck'),
+            await getConnectedPuckPromise('Pick a second puck'),
+        ];
+        expect(devs.every(d => d !== undefined)).toBeTruthy();
+        expect(devs[0].id).not.toBe(devs[1].id);
 
-        }).then(function () {
-
-            function buttonPressPromise(device) {
-                console.log(`Get primary NORDIC_SERVICE for ${device.name}`);
-                return device.gatt.getPrimaryService(NORDIC_SERVICE).then(function (service) {
-                    console.log(`Get NORDIC characteristics for ${device.name}`);
-                    return Promise.all([
-                        service.getCharacteristic(NORDIC_RX),
-                        service.getCharacteristic(NORDIC_TX)
-                    ]);
-                }).then(function (chars) {
-                    device.rx_char = chars[0];
-                    device.tx_char = chars[1];
-                    chars.forEach((char) => char.addEventListener(
-                        'characteristicvaluechanged',
-                        charNotification
-                    ));
-                    console.log(`Start notifications on ${device.name}`);
-                    return device.rx_char.startNotifications().then(
-                        () => {
-                            console.log(`Send reset on ${device.name}`);
-                            return device.tx_char.writeValue(str2ab('\r\nreset();\r\n'));
-                        }
-                    ).then(function () {
-                        console.log(`Check output from ${device.name}`);
-                        return Promise.all([
-                            promiseToTextReceivedFromDevice(device, 'echo(false)'),
-                            (function () {
-                                return device.tx_char.writeValue(str2ab('echo(false);\r\n'));
-                            }())
-                        ]);
-                    });
-                }).then(() => device);
-            }
-
-            return Promise.all([
-                buttonPressPromise(dev1),
-                buttonPressPromise(dev2)
+        async function resetCheckDevice(device) {
+            const service = await device.gatt.getPrimaryService(NORDIC_SERVICE);
+            const [rxChar, txChar] = await Promise.all([
+                service.getCharacteristic(NORDIC_RX),
+                service.getCharacteristic(NORDIC_TX),
             ]);
+            expect(rxChar).toBeDefined();
+            expect(txChar).toBeDefined();
 
-        }).then(function () {
-            // OK, so now we ask them both to print hello.
-            let devs = [[dev1, 'dev1'], [dev2, 'dev2']];
-            return Promise.all(devs.map(function (tuple) {
-                let dev = tuple[0];
-                let lbl = tuple[1];
-                console.log(`Ask device to say hello ${dev.name}`);
-                return Promise.all([
-                    promiseToTextReceivedFromDevice(dev, lbl),
-                    dev.tx_char.writeValue(str2ab("print('" + lbl + "');\n"))
-                ]);
-            }));
-        }).then(function () {
+            rxChar.addEventListener('characteristicvaluechanged', charNotification);
+            txChar.addEventListener('characteristicvaluechanged', charNotification);
 
-            // we can address and control different devices independently
-            // check we can disconnect both.
-            let devs = [dev1, dev2];
-            return Promise.all(devs.map(function (dev) {
-                next_step_h3.innerHTML = 'Disconnect both pucks (e.g. remove the battery).';
-                return new Promise(function (resolve) {
-                    dev.addEventListener('gattserverdisconnected', function (event) {
-                        expect(event.target).toBe(dev);
-                        resolve();
-                    });
-                });
-            }));
-        }).then(function () {
-            next_step_h3.innerHTML = '';
-        }).then(function () {
-            let devs = [dev1, dev2];
-            devs.map(function (dev) {
-                dev.tx_char.removeEventListener('characteristicvaluechanged', charNotification);
-            });
-            complete();
-        }).catch(function (error) {
-            expect(error).toBeUndefined();
-            complete();
-        });
+            await rxChar.startNotifications();
+            await txChar.writeValue(str2ab("echo(true);\n"));
+            await deviceBufferMatches(device.id, '\n>$');
+            await txChar.writeValue(str2ab("reset();\n"));
+            await deviceBufferMatches(device.id, '\n>$');
+            await txChar.writeValue(str2ab("echo(false);\n"));
+            await txChar.writeValue(str2ab("print('echoing');\n"));
+            await deviceBufferMatches(device.id, 'echoing');
 
+            device.rxChar = rxChar;
+            device.txChar = txChar;
+        }
+
+        console.log(`await resets and initial echoes`);
+        await Promise.all(devs.map(resetCheckDevice));
+
+        // OK, so now we ask them both to print hello.
+        console.log(`await hellos`);
+        await Promise.all(devs.map((dev, ind) => Promise.all([
+            dev.txChar.writeValue(str2ab(`print('${ind}');\n`)),
+            deviceBufferMatches(dev.id, `${ind}`),
+        ])));
+
+        next_step_h3.innerHTML = 'Disconnect both pucks (e.g. remove the battery).';
+        await Promise.all(devs.map(dev => new Promise(resolve => dev.addEventListener(
+            'gattserverdisconnected',
+            (ev) => {
+                expect(ev.target).toBe(dev);
+                resolve();
+            },
+        ))));
     }, 60000);
 });
