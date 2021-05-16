@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,9 +20,9 @@
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tcw-Gz-tvd" customClass="WBWebView" customModule="WebBLE" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="360" height="559"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <gestureRecognizers/>
                         <viewLayoutGuide key="safeArea" id="YhO-qe-kul"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
                     </view>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -44,7 +46,7 @@
                         <subviews>
                             <pickerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DtO-zw-0Ra" customClass="WBPopUpPickerView" customModule="WebBLE" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="360" height="246"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="246" id="HYo-4B-X50"/>
                                 </constraints>
@@ -55,7 +57,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0nP-kJ-O4B" userLabel="Picker Toolbar">
                                 <rect key="frame" x="0.0" y="246" width="360" height="50"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OGF-0F-YDI">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OGF-0F-YDI">
                                         <rect key="frame" x="16" y="8" width="56" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="34" id="VBm-DB-h5m"/>
@@ -66,7 +68,7 @@
                                             <segue destination="mCz-f6-Rgv" kind="unwind" identifier="Cancel" customClass="WBHidePickerSegue" customModule="WebBLE" customModuleProvider="target" unwindAction="unwindToWVContainerControllerWithSender:" id="7LM-9p-Gew"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gJU-nc-xHd">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gJU-nc-xHd">
                                         <rect key="frame" x="301" y="8" width="43" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="34" id="990-gd-MPx"/>
@@ -78,7 +80,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="OGF-0F-YDI" firstAttribute="top" secondItem="0nP-kJ-O4B" secondAttribute="top" constant="8" id="35l-4M-wwp"/>
                                     <constraint firstItem="gJU-nc-xHd" firstAttribute="top" secondItem="0nP-kJ-O4B" secondAttribute="top" constant="8" id="76g-Le-RUR"/>
@@ -89,6 +91,7 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="8rO-lE-kad"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="0nP-kJ-O4B" secondAttribute="bottom" priority="250" id="2Ft-SA-6KE"/>
@@ -99,7 +102,6 @@
                             <constraint firstItem="DtO-zw-0Ra" firstAttribute="leading" secondItem="BQs-xP-4kK" secondAttribute="leading" id="wjn-9r-ZXV"/>
                             <constraint firstItem="0nP-kJ-O4B" firstAttribute="leading" secondItem="BQs-xP-4kK" secondAttribute="leading" id="z5j-dP-LnH"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="8rO-lE-kad"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="translatesAutoresizingMaskIntoConstraints" value="NO"/>
                         </userDefinedRuntimeAttributes>
@@ -154,6 +156,7 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="qHc-Tw-9mh"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="ymH-yY-3z1" firstAttribute="top" secondItem="jp5-Jb-GNU" secondAttribute="topMargin" id="0Yg-yq-035"/>
@@ -164,7 +167,6 @@
                             <constraint firstAttribute="trailing" secondItem="1VQ-cV-QDZ" secondAttribute="trailing" id="tYz-vl-NKN"/>
                             <constraint firstItem="1VQ-cV-QDZ" firstAttribute="top" secondItem="jp5-Jb-GNU" secondAttribute="top" id="wQK-7R-noX"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="qHc-Tw-9mh"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="uUA-wO-GEl" appends="YES" id="j2d-eI-kJp"/>
                         </connections>
@@ -206,16 +208,16 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EI0-vJ-eIg">
-                                            <rect key="frame" x="114.5" y="277" width="131" height="46"/>
+                                            <rect key="frame" x="115" y="277" width="130" height="46"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Navigation Failed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Bb-ge-tKq">
-                                                    <rect key="frame" x="0.0" y="0.0" width="131" height="21"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="130" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error goes here" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="py2-rv-GNV">
-                                                    <rect key="frame" x="15.5" y="29" width="100" height="17"/>
+                                                    <rect key="frame" x="15" y="29" width="100" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -261,13 +263,13 @@
                                 <blurEffect style="systemThinMaterial"/>
                             </visualEffectView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="UwE-8b-agv"/>
                         <constraints>
                             <constraint firstItem="lO5-VU-GdG" firstAttribute="top" secondItem="XhM-QQ-OE5" secondAttribute="top" id="4uR-ZA-Qa6"/>
                             <constraint firstAttribute="bottom" secondItem="lO5-VU-GdG" secondAttribute="bottom" id="MKm-1k-x1b"/>
                             <constraint firstAttribute="trailing" secondItem="lO5-VU-GdG" secondAttribute="trailing" id="q51-PB-6t0"/>
                             <constraint firstItem="lO5-VU-GdG" firstAttribute="leading" secondItem="XhM-QQ-OE5" secondAttribute="leading" id="sNE-Ab-cYA"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="UwE-8b-agv"/>
                     </view>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -304,5 +306,11 @@
     </scenes>
     <resources>
         <image name="Swipe down" width="67" height="76"/>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
