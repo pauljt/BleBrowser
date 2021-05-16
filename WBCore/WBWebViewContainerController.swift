@@ -123,6 +123,9 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     
     // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        if self.pickerIsShowing {
+            self.popUpPickerController.performSegue(withIdentifier: "Cancel", sender: nil)
+        }
         self.loadingProgressContainer.isHidden = false
         self._configureNewManager()
     }

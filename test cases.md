@@ -63,6 +63,6 @@
 4. home bar indicator disappears when bars disappear, reappears when bars reappear
         - ok 1.2.1
 
-# future test cases
+# 1.4 manual test cases
 
-1. requestDevice, see popup come up, then navigate to a different page. popup should go away.
+1. requestDevice, see popup come up, then navigate to a different page or refresh. popup should go away.
