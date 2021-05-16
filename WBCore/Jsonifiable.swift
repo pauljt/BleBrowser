@@ -46,17 +46,7 @@ extension String: Jsonifiable {
 }
 extension Array: Jsonifiable {
     func jsonify() -> String {
-        var json = "["
-        for val in self {
-            // Need this as per comment below.
-            let jval = val as! Jsonifiable
-            if !json.isEmpty {
-                json.append(", ")
-            }
-            json.append(jval.jsonify())
-        }
-        json.append("]")
-        return json
+        return "[\(self.map{($0 as! Jsonifiable).jsonify()}.joined(separator: ", "))]"
     }
 }
 

@@ -641,7 +641,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         self.peripheral.discoverServices(nil)
     }
 
-    // TODO: Services
     private func handleGetPrimaryServices(_ tview: ServicesTransactionView) {
         let transaction = tview.transaction
 

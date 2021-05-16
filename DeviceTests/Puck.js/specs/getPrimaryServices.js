@@ -1,4 +1,4 @@
-fdescribe('getPrimaryServices', function () {
+describe('getPrimaryServices', function () {
   "use strict";
   afterAll(clearNextAction);
 
@@ -10,6 +10,10 @@ fdescribe('getPrimaryServices', function () {
 
     const servs = await puck.gatt.getPrimaryServices();
 
+    // only really expecting one but for future compatibility...
     expect(servs.length).toBeGreaterThan(0);
+    const serv = servs.find(s => s.uuid === NORDIC_SERVICE);
+    expect(serv).toBeDefined();
+
   }, 60000);
 });
