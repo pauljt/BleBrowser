@@ -124,6 +124,7 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         if self.pickerIsShowing {
+            // navigation (refresh, back, link click etc.) attempted while picker visible, so hide it since the navigation implies the user is no longer interested in picking a device
             self.popUpPickerController.performSegue(withIdentifier: "Cancel", sender: nil)
         }
         self.loadingProgressContainer.isHidden = false
