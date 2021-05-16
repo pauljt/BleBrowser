@@ -3,7 +3,7 @@
 Initial partial implementation of the [Web Bluetooth](https://webbluetoothcg.github.io/web-bluetooth/) 
 spec for iOS, originally forked from [Paul Thierault](https://github.com/pauljt)'s [original implementation](https://github.com/pauljt/BleBrowser).
 
-WebBLE is licensed under the Apache Version 2.0 License as per the LICENSE file.
+WebBLE is licensed under the Apache Version 2.0 License as per the [LICENSE](LICENSE) file.
 
 ### Distributions
 
@@ -73,6 +73,8 @@ If you want to build and run locally, you just have to do the following:
 - Set your `DEVELOPMENT_TEAM` ID in Locations -> Custom Paths as per [this stackoverflow](https://stackoverflow.com/questions/39669661/how-to-prevent-xcode-8-from-saving-development-team-in-pbxproj/40424891#40424891) answer, which is to avoid pushing personal / conflicting team IDs to github. 
 
 ### Testing
+
+The [end-to-end "device" tests](DeviceTests/) are run semi-manually before WebBLE versions are released to the App Store.
 
 Currently there are no unit tests... partly because it's time-consuming and difficult to write meaningful unit tests since there are three things to test: the javascript APIs, the native glue layer and the actual behaviour of a bluetooth device at the other end. Instead end-to-end tests which require some real devices to be used are hosted [here](https://www.greenparksoftware.co.uk/projects/webble/pucktest), and these tests are run / fixed before new versions of [WebBLE](https://apps.apple.com/gb/app/webble/id1193531073) are released to the App store.
 
