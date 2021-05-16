@@ -168,11 +168,8 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         case let obj as ErrorViewController:
             let error = sender as! Error
             obj.errorMessage = error.localizedDescription
-        case is ConsoleViewContainerController:
-            // handled by the segue
-            break
         default:
-            NSLog("Segue to unknown destination: \(segue.destination.description)")
+            break
         }
     }
     
@@ -181,13 +178,16 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
             self.setValue(false, forKey: "pickerIsShowing")
             puvc.wbManager = nil
             self.popUpPickerController = nil
-            if sender.identifier == "Cancel" {
+            switch sender.identifier {
+            case "Cancel":
                 self.wbManager?.cancelDeviceSearch()
-            } else if sender.identifier == "Done" {
+                break
+            case "Done":
                 self.wbManager?.selectDeviceAt(
                     puvc.pickerView.selectedRow
                 )
-            } else {
+                break
+            default:
                 NSLog("Unknown unwind segue ignored: \(sender.identifier ?? "<none>")")
             }
         }
