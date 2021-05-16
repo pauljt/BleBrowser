@@ -25,7 +25,6 @@
   const wb = uk.co.greenparksoftware.wb;
   const wbutils = uk.co.greenparksoftware.wbutils;
 
-  nslog('Create BluetoothRemoteGATTService');
   function BluetoothRemoteGATTService(device, uuid, isPrimary) {
     if (device === undefined || uuid === undefined || isPrimary === undefined) {
       throw new Error('Invalid call to BluetoothRemoteGATTService constructor');
@@ -59,7 +58,7 @@
        'getCharacteristics'
      ).then(function (characteristicsForServiceJSON) {
             let characteristics = [];
-            
+
             if (characteristicsForServiceJSON) {
                 for (let i = 0; i < characteristicsForServiceJSON.length; i++) {
                     let characeristicUUID = characteristicsForServiceJSON[i];
@@ -72,7 +71,7 @@
                     }
                 }
             }
-            
+
             return characteristics;
      });
     },
@@ -89,7 +88,7 @@
       return this.device.gatt.sendMessage(type, messageParms);
     },
     toString: function () {
-      return `BluetoothRemoteGATTService(${this.uuid})`;
+      return `BluetoothRemoteGATTService(${this.device}, ${this.uuid}, ${this.isPrimary})`;
     }
   };
   wb.BluetoothRemoteGATTService = BluetoothRemoteGATTService;

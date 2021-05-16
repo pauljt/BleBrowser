@@ -6,14 +6,6 @@
 describe('Filters', function () {
     "use strict";
 
-    function setNextAction(action) {
-        let stepH3 = document.getElementById('next-action');
-        stepH3.innerHTML = action;
-    }
-    function clearNextAction() {
-        setNextAction('');
-    }
-
     beforeEach(() => {
         clearNextAction();
     });
@@ -23,7 +15,7 @@ describe('Filters', function () {
     });
 
     it('should find a puck when filtering by service and name prefix separately', function (complete) {
-        setNextAction('Select a Puck');
+        setNextAction('Select a Puck (filtered by namePrefix: "Puck.js" and NORDIC_SERVICE separately)');
         navigator.bluetooth.requestDevice({ filters: [
             {services: [NORDIC_SERVICE]},
             {namePrefix: 'Puck.js'},
@@ -33,7 +25,7 @@ describe('Filters', function () {
     });
 
     it('should find a puck when filtering by service and name prefix together', function (complete) {
-        setNextAction('Select a Puck');
+        setNextAction('Select a Puck (filtered by namePrefix: "Puck.js" and NORDIC_SERVICE together)');
         navigator.bluetooth.requestDevice({ filters: [
             {
                 services: [NORDIC_SERVICE],

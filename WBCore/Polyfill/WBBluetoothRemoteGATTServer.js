@@ -64,18 +64,13 @@
       ));
     },
 
-    getPrimaryServices: function () {
-      let device = this.device;
-      return this.sendMessage(
-        'getPrimaryServices', {data: {}}
-      ).then(function (serviceUUIDs) {
-            let services = [];
-            serviceUUIDs.forEach((uuid) => {
-                let canonicalUUID = window.BluetoothUUID.getService(uuid);
-                services.push(new wb.BluetoothRemoteGATTService(device, canonicalUUID, true))
-            });
-            return services;
-      });
+    getPrimaryServices: async function () {
+      const serviceUUIDs = await this.sendMessage('getPrimaryServices');
+      return serviceUUIDs.map(uuid => new wb.BluetoothRemoteGATTService(
+        this.device,
+        window.BluetoothUUID.getService(uuid),
+        true,
+      ));
     },
     sendMessage: function (type, messageParms) {
       messageParms = messageParms || {};
