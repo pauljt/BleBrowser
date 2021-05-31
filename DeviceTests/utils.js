@@ -1,3 +1,20 @@
+function ab2str(buf) {
+    "use strict";
+    return String.fromCharCode.apply(null, new Uint8Array(buf));
+}
+
+function str2ab(str) {
+    "use strict";
+    let buf = new ArrayBuffer(str.length);
+    let bufView = new Uint8Array(buf);
+    let i;
+    let strLen = str.length;
+    for (i = 0; i < strLen; i += 1) {
+        bufView[i] = str.charCodeAt(i);
+    }
+    return buf;
+}
+
 function setNextAction(action) {
   let stepH3 = document.getElementById('next-action');
   stepH3.innerHTML = action;

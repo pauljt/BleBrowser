@@ -635,10 +635,10 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
 
     private func writeCharacteristicValue(_ char: CBCharacteristic, _ view: WriteCharacteristicView) {
-        if char.properties.contains(CBCharacteristicProperties.write) {
+        if char.properties.contains(.write) {
             self.peripheral.writeValue(view.data, for: char, type: CBCharacteristicWriteType.withResponse)
             self.writeCharacteristicTM.addTransaction(view.transaction, atPath: CharacteristicTransactionKey(serviceUUID: view.serviceUUID, characteristicUUID: view.characteristicUUID))
-        } else if char.properties.contains(CBCharacteristicProperties.writeWithoutResponse) {
+        } else if char.properties.contains(.writeWithoutResponse) {
             self.peripheral.writeValue(view.data, for: char, type: CBCharacteristicWriteType.withoutResponse)
             view.transaction.resolveAsSuccess()
         } else {

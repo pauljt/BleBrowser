@@ -4,24 +4,6 @@
 /*jslint es6
 */
 
-
-function ab2str(buf) {
-    "use strict";
-    return String.fromCharCode.apply(null, new Uint8Array(buf));
-}
-
-function str2ab(str) {
-    "use strict";
-    let buf = new ArrayBuffer(str.length);
-    let bufView = new Uint8Array(buf);
-    let i;
-    let strLen = str.length;
-    for (i = 0; i < strLen; i += 1) {
-        bufView[i] = str.charCodeAt(i);
-    }
-    return buf;
-}
-
 describe('2 Pucks', function () {
     "use strict";
     it('should be independent, connectable, readable, and disconnectable', async function () {
@@ -29,13 +11,11 @@ describe('2 Pucks', function () {
         let deviceBuffers = {};
 
         function charNotification(event) {
-            console.log(`charNotification ${event.target.service.device.name} ${ab2str(event.target.value.buffer)}`);
             let did = event.target.service.device.id;
             if (deviceBuffers[did] === undefined) {
                 deviceBuffers[did] = '';
             }
             deviceBuffers[did] += ab2str(event.target.value.buffer);
-            console.log(`${event.target.service.device.name} buffer now ${deviceBuffers[did]}`);
         }
 
         async function deviceBufferMatches(did, match) {
@@ -78,7 +58,6 @@ describe('2 Pucks', function () {
             expect(txChar).toBeDefined();
 
             rxChar.addEventListener('characteristicvaluechanged', charNotification);
-            txChar.addEventListener('characteristicvaluechanged', charNotification);
 
             await rxChar.startNotifications();
             await txChar.writeValue(str2ab("echo(true);\n"));
