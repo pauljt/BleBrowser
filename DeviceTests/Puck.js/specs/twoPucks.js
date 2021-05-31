@@ -25,50 +25,6 @@ function str2ab(str) {
 describe('2 Pucks', function () {
     "use strict";
     it('should be independent, connectable, readable, and disconnectable', async function () {
-        let next_step_h3 = document.getElementById('next-action');
-        if (!next_step_h3) {
-            throw 'No #next-action element';
-        }
-
-        let progress_tests_button = document.getElementById('progress-test');
-        if (!progress_tests_button) {
-            throw 'No #progress-test button.';
-        }
-        function userContinuePromise() {
-            return new Promise(function (resolve) {
-                next_step_h3.innerHTML = 'Hit "Progress test"';
-                progress_tests_button.onclick = function () {
-                    console.log('User continuing...');
-                    next_step_h3.innerHTML = '...';
-                    resolve();
-                };
-            });
-        }
-
-        function getConnectedDevicePromise(msg, options) {
-            return userContinuePromise().then(function () {
-
-                if (!options) {
-                    options = {acceptAllDevices: true};
-                }
-
-                next_step_h3.innerHTML = msg;
-                return navigator.bluetooth.requestDevice(options).then(function (device) {
-                    next_step_h3.innerHTML = '...';
-                    return device.gatt.connect().then(() => device);
-                });
-            });
-        }
-
-        function getConnectedPuckPromise(msg) {
-            return getConnectedDevicePromise(msg, {
-                filters: [{
-                    namePrefix: 'Puck.js',
-                    services: [NORDIC_SERVICE]
-                }]
-            });
-        }
-
         let charPromiseResolve = {};
         let deviceBuffers = {};
 
@@ -106,8 +62,8 @@ describe('2 Pucks', function () {
         }
 
         const devs = [
-            await getConnectedPuckPromise('Pick a first puck'),
-            await getConnectedPuckPromise('Pick a second puck'),
+            await getConnectedPuck('Pick a first puck'),
+            await getConnectedPuck('Pick a second puck'),
         ];
         expect(devs.every(d => d !== undefined)).toBeTruthy();
         expect(devs[0].id).not.toBe(devs[1].id);
@@ -147,7 +103,7 @@ describe('2 Pucks', function () {
             deviceBufferMatches(dev.id, `${ind}`),
         ])));
 
-        next_step_h3.innerHTML = 'Disconnect both pucks (e.g. remove the battery).';
+        setNextAction('Disconnect both pucks (e.g. remove the battery).');
         await Promise.all(devs.map(dev => new Promise(resolve => dev.addEventListener(
             'gattserverdisconnected',
             (ev) => {

@@ -8,37 +8,6 @@
 import UIKit
 import WebKit
 
-class WBContainerControllerToConsoleSegue: UIStoryboardSegue {
-    override func perform() {
-        let wcc = self.source as! WBWebViewContainerController
-        let webView = wcc.view!
-        let consoleController = self.destination as! ConsoleViewContainerController
-        let consoleView = consoleController.view!
-        
-        wcc.addChild(consoleController)
-        webView.addSubview(consoleView)
-        
-        // after adding the subview the IB outlets will be joined up,
-        // so we can add the logger direct to the console view controller
-        consoleController.wbLogManager = wcc.webViewController.logManager
-        
-        NSLayoutConstraint.activate([
-            consoleView.bottomAnchor.constraint(equalTo: webView.safeAreaLayoutGuide.bottomAnchor),
-            consoleView.leadingAnchor.constraint(equalTo: webView.leadingAnchor),
-            consoleView.trailingAnchor.constraint(equalTo: webView.trailingAnchor),
-            // ensure we do not enlarge the console above the url bar,
-            // this is something of a hack
-            consoleView.topAnchor.constraint(
-                greaterThanOrEqualTo: webView.topAnchor,
-                constant: 60.0
-            ),
-            // this constraint will override the existing constraint pinning the bottom of the web view to the bottom of the screen
-            consoleView.topAnchor.constraint(equalTo: webView.subviews.first!.bottomAnchor),
-        ])
-        UserDefaults.standard.setValue(true, forKey: WBWebViewContainerController.prefKeys.consoleOpen.rawValue)
-    }
-}
-
 class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUIDelegate, WBPicker {
     
     enum prefKeys: String {
@@ -124,6 +93,7 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     // MARK: - WKNavigationDelegate
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         if self.pickerIsShowing {
+            // navigation (refresh, back, link click etc.) attempted while picker visible, so hide it since the navigation implies the user is no longer interested in picking a device
             self.popUpPickerController.performSegue(withIdentifier: "Cancel", sender: nil)
         }
         self.loadingProgressContainer.isHidden = false
@@ -167,11 +137,8 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         case let obj as ErrorViewController:
             let error = sender as! Error
             obj.errorMessage = error.localizedDescription
-        case is ConsoleViewContainerController:
-            // handled by the segue
-            break
         default:
-            NSLog("Segue to unknown destination: \(segue.destination.description)")
+            break
         }
     }
     
@@ -180,13 +147,16 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
             self.setValue(false, forKey: "pickerIsShowing")
             puvc.wbManager = nil
             self.popUpPickerController = nil
-            if sender.identifier == "Cancel" {
+            switch sender.identifier {
+            case "Cancel":
                 self.wbManager?.cancelDeviceSearch()
-            } else if sender.identifier == "Done" {
+                break
+            case "Done":
                 self.wbManager?.selectDeviceAt(
                     puvc.pickerView.selectedRow
                 )
-            } else {
+                break
+            default:
                 NSLog("Unknown unwind segue ignored: \(sender.identifier ?? "<none>")")
             }
         }

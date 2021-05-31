@@ -77,7 +77,7 @@ class WBWebView: WKWebView, WKNavigationDelegate {
             "WBEventTarget",
             "WBBluetoothUUID",
             "WBDevice",
-            "WBRemoteGATTServer",
+            "WBBluetoothRemoteGATTServer",
             "WBBluetoothRemoteGATTService",
             "WBBluetoothRemoteGATTCharacteristic",
             "WBPolyfill"
