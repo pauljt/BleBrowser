@@ -3,8 +3,6 @@ describe('getPrimaryServices', function () {
   afterAll(clearNextAction);
 
   it('should return some primary services', async () => {
-    setNextAction();
-
     const puck = await getConnectedPuck('Select a puck (so we can get primary services)');
     expect(puck).toBeDefined();
 
@@ -15,5 +13,6 @@ describe('getPrimaryServices', function () {
     const serv = servs.find(s => s.uuid === NORDIC_SERVICE);
     expect(serv).toBeDefined();
 
+    puck.gatt.disconnect();
   }, 60000);
 });

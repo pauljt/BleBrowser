@@ -18,6 +18,7 @@
 //
 
 import Foundation
+import CoreBluetooth
 
 
 protocol Jsonifiable {
@@ -42,6 +43,11 @@ extension String: Jsonifiable {
                 str = str.replacingOccurrences(of: bad, with: replacement)
         }
         return "\"\(str)\""
+    }
+}
+extension CBUUID: Jsonifiable {
+    func jsonify() -> String {
+        return "\"\(self)\""
     }
 }
 extension Array: Jsonifiable {

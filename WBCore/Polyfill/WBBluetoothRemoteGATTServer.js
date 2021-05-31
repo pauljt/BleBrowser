@@ -2,14 +2,12 @@
         atob, Event, nslog, uk, window
 */
 // https://webbluetoothcg.github.io/web-bluetooth/ interface
-
 (function () {
   'use strict';
 
   const wb = uk.co.greenparksoftware.wb;
   const wbutils = uk.co.greenparksoftware.wbutils;
 
-  nslog('Create BluetoothRemoteGATTServer');
   wb.BluetoothRemoteGATTServer = function (webBluetoothDevice) {
     if (webBluetoothDevice === undefined) {
       throw new Error('Attempt to create BluetoothRemoteGATTServer with no device');
@@ -51,36 +49,32 @@
       // but leave it like this till someone complains.
       this.sendMessage('disconnectGATT');
     },
-    getPrimaryService: function (UUID) {
-      let canonicalUUID = window.BluetoothUUID.getService(UUID);
-      let self = this;
-      return this.sendMessage(
-        'getPrimaryService',
-        {data: {serviceUUID: canonicalUUID}}
-      ).then(() => new wb.BluetoothRemoteGATTService(
-        self.device,
-        canonicalUUID,
-        true
-      ));
+    getPrimaryService: async function (uuid) {
+      if (!uuid) {
+        return Promise.reject(new Error('getPrimaryService requires a UUID'));
+      }
+      const services = await this.getPrimaryServices(uuid);
+      return services[0];
     },
-
-    getPrimaryServices: async function () {
-      const serviceUUIDs = await this.sendMessage('getPrimaryServices');
-      return serviceUUIDs.map(uuid => new wb.BluetoothRemoteGATTService(
+    getPrimaryServices: async function (uuid) {
+      const data = {
+      data: uuid ? {serviceUUID: window.BluetoothUUID.getService(uuid)} : {},
+      };
+      const serviceUUIDs = await this.sendMessage('getPrimaryServices', data);
+      return serviceUUIDs.map(uuidInner => new wb.BluetoothRemoteGATTService(
         this.device,
-        window.BluetoothUUID.getService(uuid),
+        window.BluetoothUUID.getService(uuidInner),
         true,
       ));
     },
-    sendMessage: function (type, messageParms) {
+    sendMessage: async function (type, messageParms) {
       messageParms = messageParms || {};
       messageParms.data = messageParms.data || {};
       messageParms.data.deviceId = this.device.id;
-      return wb.native.sendMessage('device:' + type, messageParms);
+      return await wb.native.sendMessage('device:' + type, messageParms);
     },
     toString: function () {
       return `BluetoothRemoteGATTServer(${this.device.toString()})`;
-    }
+    },
   };
-  nslog('Created');
 })();

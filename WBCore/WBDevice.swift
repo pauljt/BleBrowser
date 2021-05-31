@@ -26,7 +26,7 @@ import WebKit
 open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     // MARK: - Embedded types
     enum DeviceRequests: String {
-        case connectGATT, disconnectGATT, getPrimaryService, getPrimaryServices,
+        case connectGATT, disconnectGATT, getPrimaryServices,
         getCharacteristic, getCharacteristics, readCharacteristicValue, startNotifications,
         stopNotifications,
         writeCharacteristicValue
@@ -48,10 +48,28 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     }
     
     class ServicesTransactionView: DeviceTransactionView {
-        var serviceUUIDs: [CBUUID] = []
+        let serviceUUID: CBUUID?
         
         override init?(transaction: WBTransaction) {
+            if let pservStr = transaction.messageData["serviceUUID"] as? String {
+                guard let pservUUID = UUID(uuidString: pservStr) else {
+                    return nil
+                }
+                self.serviceUUID = CBUUID(nsuuid: pservUUID)
+            } else {
+                self.serviceUUID = nil
+            }
             super.init(transaction: transaction)
+        }
+        func resolveFromServices(_ services: [CBService]) {
+            let uuids = services.map{$0.uuid}.filter{
+                self.serviceUUID == nil || self.serviceUUID == $0
+            }
+            if uuids.count > 0 {
+                self.transaction.resolveAsSuccess(withObject: uuids)
+            } else {
+                self.transaction.resolveAsFailure(withMessage: self.serviceUUID != nil ? "Service \(self.serviceUUID!.uuidString) not known on device" : "No services found")
+            }
         }
     }
     
@@ -167,8 +185,7 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
     /*! @abstract The current transactions to connect to this device. There can be multiple outstanding at any one time and they are all resolved together. */
     var connectTransactions = [WBTransaction]()
     var disconnectTM = WBTransactionManager<UUID>()
-    var getPrimaryServiceTM = WBTransactionManager<CBUUID>()
-    var getPrimaryServicesTM = WBTransactionManager<Int>()
+    var getPrimaryServicesTM = WBTransactionManager<CBUUID?>()
     var getCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
     var getCharacteristicsTM = WBTransactionManager<CharacteristicsTransactionKey>()
     var readCharacteristicTM = WBTransactionManager<CharacteristicTransactionKey>()
@@ -198,7 +215,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
         self.disconnectTM.abandonAll()
         self.sendDisconnectEvent()
-        self.getPrimaryServiceTM.abandonAll()
         self.getPrimaryServicesTM.abandonAll()
         self.getCharacteristicTM.abandonAll()
         self.getCharacteristicsTM.abandonAll()
@@ -224,7 +240,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         self.writeCharacteristicTM.apply(failTrans)
         self.readCharacteristicTM.apply(failTrans)
         self.getCharacteristicTM.apply(failTrans)
-        self.getPrimaryServiceTM.apply(failTrans)
         self.getPrimaryServicesTM.apply(failTrans)
         self.connectTransactions.forEach(failTrans)
         if let err = error {
@@ -271,27 +286,15 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.handleDisconnect(tview)
 
         case .getPrimaryServices:
-
             guard let tview = ServicesTransactionView(transaction: transaction)
             else {
-                transaction.resolveAsFailure(withMessage: "Invalid getPrimaryService request")
+                transaction.resolveAsFailure(withMessage: "Invalid request")
                 return
             }
 
             self.handleGetPrimaryServices(tview)
 
-        case .getPrimaryService:
-            guard
-                let tview = ServiceTransactionView(transaction: transaction)
-            else {
-                transaction.resolveAsFailure(withMessage: "Invalid getPrimaryServices request")
-                return
-            }
-
-            self.handleGetPrimaryService(tview)
-
         case .getCharacteristic:
-
             guard
                 let view = CharacteristicView(transaction: transaction)
             else {
@@ -320,7 +323,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.peripheral.discoverCharacteristics(nil, for: service)
 
         case .getCharacteristics:
-            
             guard let view = CharacteristicsView(transaction: transaction)
             else {
                 transaction.resolveAsFailure(withMessage: "Invalid getCharacteristics message")
@@ -350,7 +352,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.peripheral.discoverCharacteristics(nil, for: service)
 
         case .readCharacteristicValue:
-
             guard
                 let view = CharacteristicView(transaction: transaction)
             else {
@@ -374,7 +375,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.peripheral.readValue(for: char)
 
         case .writeCharacteristicValue:
-
             guard
                 let view = WriteCharacteristicView(transaction: transaction)
             else {
@@ -392,7 +392,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             self.writeCharacteristicValue(char, view)
 
         case .startNotifications:
-
             guard let view = CharacteristicView(transaction: transaction) else {
                 transaction.resolveAsFailure(withMessage: "Invalid start notifications message")
                 break
@@ -408,7 +407,6 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             transaction.resolveAsSuccess()
 
         case .stopNotifications:
-
             guard let view = CharacteristicView(transaction: transaction) else {
                 transaction.resolveAsFailure(withMessage: "Invalid start notifications message")
                 break
@@ -455,34 +453,12 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
                 $0.resolveAsFailure(withMessage: "An error occurred discovering services for the device: \(err)")
             }
         } else {
-            let cbServices = self.peripheral.services!
-            let serviceUUIDs = cbServices.map{$0.uuid}
-            let services = Set(serviceUUIDs)
-            NSLog("Did discover services \(services)")
-
             resolve = {
-                if let tview = ServiceTransactionView(transaction: $0) {
-                    if services.contains(tview.serviceUUID) {
-                        $0.resolveAsSuccess()
-                    } else {
-                        tview.resolveUnknownService()
-                    }
-                }
-                if let tview = ServicesTransactionView(transaction: $0) {
-                    var uuidStrings: [String] = []
-                    services.forEach { (uuid) in
-                        tview.serviceUUIDs.append(uuid)
-                        uuidStrings.append(uuid.uuidString)
-                    }
-                    $0.resolveAsSuccess(withObject: uuidStrings)
-                }
+                ServicesTransactionView(transaction: $0)!.resolveFromServices(self.peripheral.services!)
             }
         }
         
         /* All outstanding requests for a primary service can be resolved. */
-        if (self.getPrimaryServiceTM.transactions.count > 0) {
-            self.getPrimaryServiceTM.apply(resolve)
-        }
         if (self.getPrimaryServicesTM.transactions.count > 0) {
             self.getPrimaryServicesTM.apply(resolve)
         }
@@ -621,43 +597,18 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
         }
         return nil
     }
-    
-    private func handleGetPrimaryService(_ tview: ServiceTransactionView) {
-        let transaction = tview.transaction
-
-        // check peripherals.services first to see if we already discovered services
-        if self.peripheral.services != nil {
-            if self.hasService(withUUID: tview.serviceUUID) {
-                transaction.resolveAsSuccess()
-            }
-            else {
-                tview.resolveUnknownService()
-            }
-            return
-        }
-
-        self.getPrimaryServiceTM.addTransaction(transaction, atPath: tview.serviceUUID)
-        NSLog("Starting discovering for service \(tview.serviceUUID) on peripheral \(self.peripheral.name ?? "<unknown name>")")
-        self.peripheral.discoverServices(nil)
-    }
 
     private func handleGetPrimaryServices(_ tview: ServicesTransactionView) {
         let transaction = tview.transaction
-
-        // check peripherals.services first to see if we already discovered services
-        /*if self.peripheral.services != nil {
-            if self.hasService(withUUID: tview.serviceUUID) {
-                transaction.resolveAsSuccess()
-            }
-            else {
-                tview.resolveUnknownService()
-            }
-            return
-        }*/
         
-        self.getPrimaryServicesTM.addTransaction(transaction, atPath: 0)
-        NSLog("Starting discovering for services on peripheral \(self.peripheral.name ?? "<unknown name>")")
-        self.peripheral.discoverServices(nil)
+        // check peripherals.services first to see if we already discovered services
+        guard let services = self.peripheral.services else {
+            self.getPrimaryServicesTM.addTransaction(transaction, atPath: tview.serviceUUID)
+            NSLog("Starting discovering for services on peripheral \(self.peripheral.name ?? "<unknown name>")")
+            self.peripheral.discoverServices(nil)
+            return
+        }
+        tview.resolveFromServices(services)
     }
 
     private func evaluateJavaScript(_ script: String) {
