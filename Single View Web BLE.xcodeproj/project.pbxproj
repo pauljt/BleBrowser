@@ -30,6 +30,9 @@
 		5A4E265E232846C000755BD8 /* WBPopUpPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2647232846BF00755BD8 /* WBPopUpPickerController.swift */; };
 		5A4E265F232846C000755BD8 /* WBPopUpPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2647232846BF00755BD8 /* WBPopUpPickerController.swift */; };
 		5A4E2660232846C000755BD8 /* WBPopUpPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E2647232846BF00755BD8 /* WBPopUpPickerController.swift */; };
+		5A8B1A7226BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5A8B1A7126BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js */; };
+		5A8B1A7326BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5A8B1A7126BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js */; };
+		5A8B1A7426BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5A8B1A7126BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js */; };
 		5AD6DA632323C1CB0005F733 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA622323C1CB0005F733 /* AppDelegate.swift */; };
 		5AD6DA652323C1CB0005F733 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA642323C1CB0005F733 /* ViewController.swift */; };
 		5AD6DA682323C1CB0005F733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA662323C1CB0005F733 /* Main.storyboard */; };
@@ -64,9 +67,6 @@
 		5AD6DAB92323CA080005F733 /* WBEventTarget.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9B2323CA080005F733 /* WBEventTarget.js */; };
 		5AD6DABA2323CA080005F733 /* WBEventTarget.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9B2323CA080005F733 /* WBEventTarget.js */; };
 		5AD6DABB2323CA080005F733 /* WBEventTarget.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9B2323CA080005F733 /* WBEventTarget.js */; };
-		5AD6DABC2323CA080005F733 /* WBRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */; };
-		5AD6DABD2323CA080005F733 /* WBRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */; };
-		5AD6DABE2323CA080005F733 /* WBRemoteGATTServer.js in Resources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */; };
 		5AD6DABF2323CA080005F733 /* WBTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9D2323CA080005F733 /* WBTransaction.swift */; };
 		5AD6DAC02323CA080005F733 /* WBTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9D2323CA080005F733 /* WBTransaction.swift */; };
 		5AD6DAC12323CA080005F733 /* WBTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6DA9D2323CA080005F733 /* WBTransaction.swift */; };
@@ -135,6 +135,7 @@
 		5A4E2644232846BF00755BD8 /* WBWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBWebViewController.swift; sourceTree = "<group>"; };
 		5A4E2646232846BF00755BD8 /* WBLogManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBLogManager.swift; sourceTree = "<group>"; };
 		5A4E2647232846BF00755BD8 /* WBPopUpPickerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBPopUpPickerController.swift; sourceTree = "<group>"; };
+		5A8B1A7126BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBBluetoothRemoteGATTServer.js; sourceTree = "<group>"; };
 		5AD6DA5F2323C1CB0005F733 /* Single View Web BLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Single View Web BLE.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AD6DA622323C1CB0005F733 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5AD6DA642323C1CB0005F733 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -157,7 +158,6 @@
 		5AD6DA992323CA080005F733 /* WBUtils.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBUtils.js; sourceTree = "<group>"; };
 		5AD6DA9A2323CA080005F733 /* stringview.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = stringview.js; sourceTree = "<group>"; };
 		5AD6DA9B2323CA080005F733 /* WBEventTarget.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBEventTarget.js; sourceTree = "<group>"; };
-		5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WBRemoteGATTServer.js; sourceTree = "<group>"; };
 		5AD6DA9D2323CA080005F733 /* WBTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBTransaction.swift; sourceTree = "<group>"; };
 		5AD6DAC32323CEF70005F733 /* WBLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WBLog.swift; sourceTree = "<group>"; };
 		5ADE333F23663104007E6AD7 /* DividerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
@@ -279,13 +279,13 @@
 		5AD6DA952323CA080005F733 /* Polyfill */ = {
 			isa = PBXGroup;
 			children = (
+				5A8B1A7126BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js */,
 				5AD6DA962323CA080005F733 /* WBDevice.js */,
 				5AD6DA972323CA080005F733 /* WBBluetoothUUID.js */,
 				5AD6DA982323CA080005F733 /* WBPolyfill.js */,
 				5AD6DA992323CA080005F733 /* WBUtils.js */,
 				5AD6DA9A2323CA080005F733 /* stringview.js */,
 				5AD6DA9B2323CA080005F733 /* WBEventTarget.js */,
-				5AD6DA9C2323CA080005F733 /* WBRemoteGATTServer.js */,
 			);
 			path = Polyfill;
 			sourceTree = "<group>";
@@ -369,7 +369,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1030;
-				LastUpgradeCheck = 1030;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = "David Park";
 				TargetAttributes = {
 					5AD6DA5E2323C1CB0005F733 = {
@@ -421,7 +421,7 @@
 				5A495416233D4D6A007CA132 /* WBCore.storyboard in Resources */,
 				5ADE336C236631F0007E6AD7 /* Images.xcassets in Resources */,
 				5ADE335723663104007E6AD7 /* Console.storyboard in Resources */,
-				5AD6DABC2323CA080005F733 /* WBRemoteGATTServer.js in Resources */,
+				5A8B1A7226BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js in Resources */,
 				5AD6DAAA2323CA080005F733 /* WBDevice.js in Resources */,
 				5ADE334E23663104007E6AD7 /* ConsoleLogView.xib in Resources */,
 			);
@@ -431,13 +431,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5AD6DABD2323CA080005F733 /* WBRemoteGATTServer.js in Resources */,
 				5AD6DAAB2323CA080005F733 /* WBDevice.js in Resources */,
 				5AD6DAAE2323CA080005F733 /* WBBluetoothUUID.js in Resources */,
 				5ADE334F23663104007E6AD7 /* ConsoleLogView.xib in Resources */,
 				5AD6DAB12323CA080005F733 /* WBPolyfill.js in Resources */,
 				5ADE335823663104007E6AD7 /* Console.storyboard in Resources */,
 				5AD6DABA2323CA080005F733 /* WBEventTarget.js in Resources */,
+				5A8B1A7326BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js in Resources */,
 				5AD6DAB42323CA080005F733 /* WBUtils.js in Resources */,
 				5AD6DAB72323CA080005F733 /* stringview.js in Resources */,
 			);
@@ -447,10 +447,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5AD6DABE2323CA080005F733 /* WBRemoteGATTServer.js in Resources */,
 				5AD6DAAC2323CA080005F733 /* WBDevice.js in Resources */,
 				5A495417233D4D6A007CA132 /* WBCore.storyboard in Resources */,
 				5AD6DAAF2323CA080005F733 /* WBBluetoothUUID.js in Resources */,
+				5A8B1A7426BFF2E6003C0ADB /* WBBluetoothRemoteGATTServer.js in Resources */,
 				5AD6DAB22323CA080005F733 /* WBPolyfill.js in Resources */,
 				5AD6DABB2323CA080005F733 /* WBEventTarget.js in Resources */,
 				5ADE335923663104007E6AD7 /* Console.storyboard in Resources */,
@@ -612,6 +612,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -637,7 +638,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -673,6 +674,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -692,7 +694,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
