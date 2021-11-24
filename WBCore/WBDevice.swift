@@ -106,7 +106,11 @@ open class WBDevice: NSObject, Jsonifiable, CBPeripheralDelegate {
             super.init(transaction: transaction)
         }
         func matchesCharacteristic(_ characteristic: CBCharacteristic) -> Bool {
-            return self.serviceUUID == characteristic.service.uuid && self.characteristicUUID == characteristic.uuid
+            guard
+                let serviceUUID = characteristic.service?.uuid else {
+                    return false;
+                }
+            return self.serviceUUID == serviceUUID && self.characteristicUUID == characteristic.uuid
         }
         func resolveUnknownCharacteristic() {
             self.transaction.resolveAsFailure(withMessage: "Characteristic \(self.characteristicUUID.uuidString) not known for service \(self.serviceUUID.uuidString) on device")
