@@ -38,6 +38,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBOutlet var extraShowBarsView: UIView!
 
     var initialURL: URL?
+    var lastRefresh: Date?
 
     var bookmarksManager = BookmarksManager(
         userDefaults: UserDefaults.standard, key: prefKeys.bookmarks.rawValue)
@@ -100,10 +101,20 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
     @IBAction func reload() {
         if self.webView.url != nil {
-            self.webView.reload()
+            if let lastRefresh = self.lastRefresh,
+                Date() < lastRefresh + 1 {
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                if self.webView.isLoading {
+                    self.webView.stopLoading()
+                }
+                self.webView.reloadFromOrigin()
+            } else {
+                self.webView.reload()
+            }
         } else if let textLocation = self.locationTextField?.text {
             self.loadLocation(textLocation)
         }
+        self.lastRefresh = Date()
     }
     @IBAction func showBars() {
         self.shouldShowBars = true

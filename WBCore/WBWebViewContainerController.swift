@@ -110,11 +110,11 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         self.loadingProgressContainer.isHidden = true
-        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
+        self._maybeShowErrorUI(error)
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
+        self._maybeShowErrorUI(error)
     }
     
     // MARK: - WKUIDelegate
@@ -193,5 +193,16 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
         self.wbManager?.clearState()
         self.wbManager = WBManager(devicePicker: self)
         self.webView.wbManager = self.wbManager
+    }
+
+    private func _maybeShowErrorUI(_ error: Error) {
+        let nserror = error as NSError
+        if (
+            nserror.domain == NSURLErrorDomain
+            && nserror.code == NSURLErrorCancelled
+        ) {
+            return
+        }
+        self.performSegue(withIdentifier: "nav-error-segue", sender: error)
     }
 }
