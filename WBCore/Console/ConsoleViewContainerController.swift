@@ -11,11 +11,7 @@ class ConsoleViewContainerController: UIViewController {
 
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var consoleScrollViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet var clearSelectionImageView: UIImageView! {
-        didSet {
-            self._configureImageView()
-        }
-    }
+    @IBOutlet var clearSelectionImageView: UIImageView!
     @IBOutlet var copySuccessIndication: UIImageView!
 
     private var _wbLogManager: WBLogManager?
@@ -84,6 +80,7 @@ class ConsoleViewContainerController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        self._configureImageView()
         let prevOffset = CGFloat(UserDefaults.standard.float(forKey: "lastYScrollOffset"))
         let contentHeight = self.scrollView.contentSize.height
         if contentHeight > prevOffset {
