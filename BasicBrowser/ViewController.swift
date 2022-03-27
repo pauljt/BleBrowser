@@ -252,6 +252,42 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         self.setHidesOnSwipesFromScrollView(scrollView)
+        if !self.shouldShowBars && scrollView.contentOffset.y == 0.0 {
+            // Hack... this *probably* means we've been scrolled to the top using
+            // a swipe. This on its own shouldn't show the bars, but at this point
+            // it's natural for the user to hit the menu bar to see the menu, but
+            // the only way we can detect that is through a scrollToTop delegate
+            // method, but we won't get that if we're already at the top. So set
+            // a 1 pixel offset so that we can effectively re-enable the
+            // scroll to top notification.
+            //
+            // The only problem with this is that we get *DidEndDecelerating
+            // if the user "catches" the swipe scroll and instigates a new
+            // swipe scroll. In that case this will erroneously set the 1 pixel
+            // offset, leading to a small UI glitch. However that is acceptable
+            // given that it would be very unlikely for them to catch it at
+            // exactly 0.0 offset.
+            scrollView.setContentOffset(
+                CGPoint(x: 0.0, y: 1.0), animated: true
+            )
+        }
+    }
+    func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+        if self.shouldShowBars {
+            // already showing bars, scroll to top
+            return true
+        }
+        if scrollView.contentOffset.y > 1.0 {
+            // big scroll, don't scroll quite to top so that we can detect being
+            // told to again and show the status bar
+            scrollView.setContentOffset(
+                CGPoint(x: 0.0, y: 1.0), animated: true
+            )
+            return false
+        }
+        // We basically already are at the top, so this tap means show the bars
+        self.shouldShowBars = true
+        return true
     }
 
     // MARK: - Observe protocol
