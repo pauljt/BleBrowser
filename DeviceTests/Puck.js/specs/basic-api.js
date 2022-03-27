@@ -30,6 +30,6 @@ describe('Basic API', function () {
     it('should populate userAgent', () => {
         // The part at the end is the extra application name user agent added by the WBWebView
         // generated from the bundle name and short version string.
-        expect(navigator.userAgent).toMatch(/Mozilla.*iPhone.*\w+-\d+(\.\d+(\.\d+)?)?$/);
+        expect(navigator.userAgent).toMatch(/Mozilla.*iPhone.*\w+\/\d+(\.\d+(\.\d+)?)?$/);
     });
 });
