@@ -53,6 +53,13 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         let userController = WKUserContentController()
         webCfg.userContentController = userController
         webCfg.allowsInlineMediaPlayback = true
+
+        // Set up the user agent name to include an app specific append rather
+        // than just the default WKWebView build number
+        let shortVersionString = Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? "<no-version>"
+        let bundleName = Bundle.main.infoDictionary?["CFBundleName"] ?? "<no-app-name>"
+        webCfg.applicationNameForUserAgent = "\(bundleName)/\(shortVersionString)"
+
         self.init(
             frame: CGRect(),
             configuration: webCfg
