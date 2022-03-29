@@ -16,8 +16,6 @@
 import UIKit
 import WebKit
 
-let statusBarTappedNotification = Notification(name: Notification.Name(rawValue: "statusBarTappedNotification"))
-
 class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate {
 
     enum prefKeys: String {
@@ -187,7 +185,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
         let nc = self.navigationController as! NavigationViewController
         nc.addObserver(self, forKeyPath: "navBarIsHidden", options: [.initial, .new], context: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.statusBarTouchAction), name: statusBarTappedNotification.name, object: nil)
         if self.shouldShowBars {
             self.showBars()
         }
@@ -195,7 +192,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     override func viewWillDisappear(_ animated: Bool) {
         let nc = self.navigationController as! NavigationViewController
         nc.removeObserver(self, forKeyPath: "navBarIsHidden")
-        NotificationCenter.default.removeObserver(self, name: statusBarTappedNotification.name, object: nil)
         super.viewWillDisappear(animated)
     }
 
