@@ -23,7 +23,6 @@ class WBLogManager: NSObject {
         self.didChange(.insertion, valuesAt: IndexSet(integer: insertIndex), forKey: "logs")
     }
     func clearLogs() {
-        NSLog("WBLogManager clearLogs()")
         // since logs is not dynamic can't just do self.logs = []
         self.setValue([], forKey: "logs")
     }

@@ -49,33 +49,34 @@ class WBHidePickerSegue: UIStoryboardSegue {
     }
 }
 
-class WBContainerControllerToConsoleSegue: UIStoryboardSegue {
+class ViewControllerToConsoleSegue: UIStoryboardSegue {
     override func perform() {
-        let wcc = self.source as! WBWebViewContainerController
-        let webView = wcc.view!
+        let vc = self.source as! ViewController
+        let view = vc.view!
         let consoleController = self.destination as! ConsoleViewContainerController
         let consoleView = consoleController.view!
 
-        wcc.addChild(consoleController)
-        webView.addSubview(consoleView)
+        vc.addChild(consoleController)
+        view.addSubview(consoleView)
 
-        // after adding the subview the IB outlets will be joined up,
-        // so we can add the logger direct to the console view controller
-        consoleController.wbLogManager = wcc.webViewController.logManager
+        consoleController.wbLogManager = vc.webViewController.logManager
 
         NSLayoutConstraint.activate([
-            consoleView.bottomAnchor.constraint(equalTo: webView.safeAreaLayoutGuide.bottomAnchor),
-            consoleView.leadingAnchor.constraint(equalTo: webView.leadingAnchor),
-            consoleView.trailingAnchor.constraint(equalTo: webView.trailingAnchor),
+            consoleView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            consoleView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            consoleView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             // ensure we do not enlarge the console above the url bar,
             // this is something of a hack
             consoleView.topAnchor.constraint(
-                greaterThanOrEqualTo: webView.topAnchor,
+                greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor,
                 constant: 60.0
             ),
-            // this constraint will override the existing constraint pinning the bottom of the web view to the bottom of the screen
-            consoleView.topAnchor.constraint(equalTo: webView.subviews.first!.bottomAnchor),
+
+            // this constraint will override the existing constraint pinning the bottom of the web view's container to the bottom of the safe area
+            consoleView.topAnchor.constraint(
+                equalTo: vc.webViewContainerController.view.subviews.first!.bottomAnchor
+            ),
         ])
-        UserDefaults.standard.setValue(true, forKey: WBWebViewContainerController.prefKeys.consoleOpen.rawValue)
+        UserDefaults.standard.setValue(true, forKey: ViewController.prefKeys.consoleOpen.rawValue)
     }
 }

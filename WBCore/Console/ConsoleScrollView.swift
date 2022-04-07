@@ -17,7 +17,6 @@ class ConsoleScrollView: UIScrollView {
         }
         let scrollView = self.subviews[0]
         if self.contentSize != scrollView.frame.size {
-            NSLog("Updating content size \(self.contentSize) -> \(scrollView.frame)")
             self.contentSize = scrollView.frame.size
         }
     }

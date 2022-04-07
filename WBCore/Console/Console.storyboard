@@ -44,10 +44,31 @@
                         <viewControllerLayoutGuide type="top" id="yIi-7U-JZx"/>
                         <viewControllerLayoutGuide type="bottom" id="ehj-ex-qU1"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="0fs-Bd-y72">
+                    <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="0fs-Bd-y72">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="128"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <scrollView verifyAmbiguity="off" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rnO-dD-ogt" customClass="ConsoleScrollView" customModule="WebBLE" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="8" width="375" height="120"/>
+                                <subviews>
+                                    <containerView autoresizesSubviews="NO" verifyAmbiguity="ignoreSizes" opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OQr-CY-eZU">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="translatesAutoresizingMaskIntoConstraints" value="NO"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <segue destination="YCd-xn-2IL" kind="embed" id="IFC-oC-zS6"/>
+                                        </connections>
+                                    </containerView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="OQr-CY-eZU" secondAttribute="trailing" id="0rU-AW-ghm"/>
+                                    <constraint firstAttribute="height" priority="999" constant="120" id="Or9-LE-zQX"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="aAm-di-Qvl"/>
+                                    <constraint firstItem="OQr-CY-eZU" firstAttribute="leading" secondItem="rnO-dD-ogt" secondAttribute="leading" id="i3a-c6-9SF"/>
+                                    <constraint firstItem="OQr-CY-eZU" firstAttribute="top" secondItem="rnO-dD-ogt" secondAttribute="top" id="veR-BR-lKr"/>
+                                </constraints>
+                            </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5bj-QH-Q4o" customClass="DividerView" customModule="WebBLE" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="8"/>
                                 <subviews>
@@ -91,27 +112,6 @@
                                     <outletCollection property="gestureRecognizers" destination="DDd-1G-EtQ" appends="YES" id="QqS-bL-JUe"/>
                                 </connections>
                             </view>
-                            <scrollView verifyAmbiguity="off" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rnO-dD-ogt" customClass="ConsoleScrollView" customModule="WebBLE" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="8" width="375" height="120"/>
-                                <subviews>
-                                    <containerView autoresizesSubviews="NO" verifyAmbiguity="ignoreSizes" opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OQr-CY-eZU">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="translatesAutoresizingMaskIntoConstraints" value="NO"/>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <segue destination="YCd-xn-2IL" kind="embed" id="IFC-oC-zS6"/>
-                                        </connections>
-                                    </containerView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="OQr-CY-eZU" secondAttribute="trailing" id="0rU-AW-ghm"/>
-                                    <constraint firstAttribute="height" priority="990" constant="120" id="Dyo-SX-5gx"/>
-                                    <constraint firstAttribute="bottom" secondItem="OQr-CY-eZU" secondAttribute="bottom" id="coA-A6-3Wb"/>
-                                    <constraint firstItem="OQr-CY-eZU" firstAttribute="leading" secondItem="rnO-dD-ogt" secondAttribute="leading" id="i3a-c6-9SF"/>
-                                    <constraint firstItem="OQr-CY-eZU" firstAttribute="top" secondItem="rnO-dD-ogt" secondAttribute="top" id="veR-BR-lKr"/>
-                                </constraints>
-                            </scrollView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" image="Copy@480.png" translatesAutoresizingMaskIntoConstraints="NO" id="DSl-4f-yGT">
                                 <rect key="frame" x="157.5" y="40" width="60" height="60"/>
                                 <constraints>
@@ -240,16 +240,16 @@
                             <constraint firstAttribute="trailing" secondItem="RSx-eV-DJD" secondAttribute="trailing" id="JGH-mn-8kd"/>
                             <constraint firstAttribute="trailing" secondItem="ca8-g2-bii" secondAttribute="trailing" id="Jkp-gq-3mp"/>
                             <constraint firstItem="DSl-4f-yGT" firstAttribute="centerY" secondItem="0fs-Bd-y72" secondAttribute="centerY" priority="980" id="MfY-rI-Y8o"/>
-                            <constraint firstItem="Uy7-Nu-cvp" firstAttribute="bottom" secondItem="rnO-dD-ogt" secondAttribute="bottom" id="Mtj-Ca-Owv"/>
                             <constraint firstItem="ca8-g2-bii" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RSx-eV-DJD" secondAttribute="bottom" id="NK1-7n-0aU"/>
+                            <constraint firstItem="Uy7-Nu-cvp" firstAttribute="bottom" secondItem="rnO-dD-ogt" secondAttribute="bottom" id="Nyy-uE-Guc"/>
                             <constraint firstItem="RSx-eV-DJD" firstAttribute="top" secondItem="5bj-QH-Q4o" secondAttribute="bottom" id="PaJ-2e-4Pl"/>
                             <constraint firstAttribute="trailing" secondItem="rnO-dD-ogt" secondAttribute="trailing" id="V1D-jN-IZL"/>
                             <constraint firstItem="rnO-dD-ogt" firstAttribute="top" secondItem="5bj-QH-Q4o" secondAttribute="bottom" id="VZq-vN-Ahk"/>
-                            <constraint firstAttribute="bottom" secondItem="ca8-g2-bii" secondAttribute="bottom" id="XrF-EF-OW9"/>
                             <constraint firstItem="5bj-QH-Q4o" firstAttribute="top" secondItem="0fs-Bd-y72" secondAttribute="top" id="aat-GX-puN"/>
                             <constraint firstItem="DSl-4f-yGT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="0fs-Bd-y72" secondAttribute="top" constant="40" id="adh-nO-eSY"/>
                             <constraint firstItem="DSl-4f-yGT" firstAttribute="centerX" secondItem="0fs-Bd-y72" secondAttribute="centerX" id="fpu-Tb-l5X"/>
                             <constraint firstItem="rnO-dD-ogt" firstAttribute="leading" secondItem="0fs-Bd-y72" secondAttribute="leading" id="hg3-AE-Nii"/>
+                            <constraint firstItem="Uy7-Nu-cvp" firstAttribute="bottom" secondItem="ca8-g2-bii" secondAttribute="bottom" id="i1S-Ys-dRc"/>
                             <constraint firstAttribute="trailing" secondItem="5bj-QH-Q4o" secondAttribute="trailing" id="md5-T3-hwr"/>
                             <constraint firstItem="RSx-eV-DJD" firstAttribute="width" secondItem="0fs-Bd-y72" secondAttribute="width" multiplier="0.5" id="z6P-JR-xin"/>
                         </constraints>
@@ -263,7 +263,7 @@
                     <size key="freeformSize" width="375" height="128"/>
                     <connections>
                         <outlet property="clearSelectionImageView" destination="L47-MX-UG3" id="FpL-Ea-Hfr"/>
-                        <outlet property="consoleScrollViewHeightConstraint" destination="Dyo-SX-5gx" id="Ebc-1f-uSW"/>
+                        <outlet property="consoleScrollViewHeightConstraint" destination="Or9-LE-zQX" id="AwS-4K-sGp"/>
                         <outlet property="copySuccessIndication" destination="DSl-4f-yGT" id="NAk-vM-s5x"/>
                         <outlet property="scrollView" destination="rnO-dD-ogt" id="dzY-PN-p0U"/>
                     </connections>

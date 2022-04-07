@@ -8,11 +8,14 @@
 import UIKit
 import WebKit
 
+protocol ConsoleToggler {
+    func toggleConsole()
+}
+
 class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUIDelegate, WBPicker {
     
     enum prefKeys: String {
         case lastLocation
-        case consoleOpen
     }
     
     @IBOutlet var loadingProgressContainer: UIView!
@@ -35,16 +38,6 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
             return self.webViewController.webView
         }
     }
-    var consoleContainerController: ConsoleViewContainerController? {
-        get {
-            return self.children.first(where: {$0 as? ConsoleViewContainerController != nil}) as? ConsoleViewContainerController
-        }
-    }
-    var consoleShowing: Bool {
-        get {
-            return self.consoleContainerController != nil
-        }
-    }
     
     // If the pop up picker is showing, then the
     // following two vars are not null.
@@ -54,29 +47,20 @@ class WBWebViewContainerController: UIViewController, WKNavigationDelegate, WKUI
 
     // MARK: - IBActions
     @IBAction public func toggleConsole() {
-        if let ccc = self.consoleContainerController {
-            ccc.removeFromParent()
-            ccc.view.removeFromSuperview()
-            UserDefaults.standard.setValue(false, forKey: WBWebViewContainerController.prefKeys.consoleOpen.rawValue)
-        } else {
-            self.performSegue(withIdentifier: "WBContainerControllerToConsoleSegueID", sender: self)
-            
+        if let consoleToggler = self.parent as? ConsoleToggler {
+            consoleToggler.toggleConsole()
         }
     }
     
     // MARK: - View Event handling
     override func viewDidLoad() {
         super.viewDidLoad()
-        let ud = UserDefaults.standard
         
         self.webView.addNavigationDelegate(self)
         self.webView.uiDelegate = self
         
         for path in ["estimatedProgress"] {
             self.webView.addObserver(self, forKeyPath: path, options: .new, context: nil)
-        }
-        if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {
-            self.toggleConsole()
         }
     }
     

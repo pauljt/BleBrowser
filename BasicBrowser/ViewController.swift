@@ -16,10 +16,11 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate {
+class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, ConsoleToggler {
 
     enum prefKeys: String {
         case bookmarks
+        case consoleOpen
         case version
     }
 
@@ -40,8 +41,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     var bookmarksManager = BookmarksManager(
         userDefaults: UserDefaults.standard, key: prefKeys.bookmarks.rawValue)
-
-    var consoleViewContainerController: ConsoleViewContainerController? = nil
 
     var shouldShowBars = true {
         didSet {
@@ -72,6 +71,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             return self.webViewController.webView
         }
     }
+    var consoleContainerController: ConsoleViewContainerController? {
+        get {
+            return self.children.first(where: {$0 as? ConsoleViewContainerController != nil}) as? ConsoleViewContainerController
+        }
+    }
 
     // MARK: - API
     // MARK: IBActions
@@ -92,24 +96,29 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         FlashAnimation(withView: self.tick).go()
     }
     @IBAction func goForward() {
+        NSLog("goForward")
         self.webView.goForward()
     }
     @IBAction func goBackward() {
+        NSLog("goBack")
         self.webView.goBack()
     }
     @IBAction func reload() {
         if self.webView.url != nil {
             if let lastRefresh = self.lastRefresh,
                 Date() < lastRefresh + 1 {
+                NSLog("Hard reload")
                 UINotificationFeedbackGenerator().notificationOccurred(.success)
                 if self.webView.isLoading {
                     self.webView.stopLoading()
                 }
                 self.webView.reloadFromOrigin()
             } else {
+                NSLog("Reload")
                 self.webView.reload()
             }
         } else if let textLocation = self.locationTextField?.text {
+            NSLog("Reload from location")
             self.loadLocation(textLocation)
         }
         self.lastRefresh = Date()
@@ -118,7 +127,20 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.shouldShowBars = true
     }
     @IBAction func toggleConsole() {
-        self.webViewContainerController.toggleConsole()
+        if let cvc = self.consoleContainerController {
+            NSLog("Hiding console")
+            cvc.removeFromParent()
+            cvc.view.removeFromSuperview()
+            UserDefaults.standard.setValue(
+                false, forKey: prefKeys.consoleOpen.rawValue
+            )
+        } else {
+            NSLog("Showing console")
+            self.performSegue(
+                withIdentifier: "ViewControllerToConsoleSegueID",
+                sender: self
+            )
+        }
     }
 
     // MARK: - Home bar indicator control
@@ -178,6 +200,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             }
             self.loadLocation(lastLocation)
         }
+
+        // Maybe re-open console
+        if ud.bool(forKey: prefKeys.consoleOpen.rawValue) {
+            self.toggleConsole()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -193,12 +220,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         let nc = self.navigationController as! NavigationViewController
         nc.removeObserver(self, forKeyPath: "navBarIsHidden")
         super.viewWillDisappear(animated)
-    }
-
-    @objc func statusBarTouchAction(_ notification: Notification) {
-        if self.webView.scrollView.contentOffset.y == 0.0 {
-            self.shouldShowBars = !self.shouldShowBars
-        }
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

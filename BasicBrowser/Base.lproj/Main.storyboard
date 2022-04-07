@@ -136,6 +136,7 @@
                         <outlet property="refreshButton" destination="LXB-CH-4RT" id="350-AZ-rBZ"/>
                         <outlet property="showConsoleButton" destination="uNi-2X-YpW" id="CTt-pC-CFQ"/>
                         <outlet property="tick" destination="6wE-az-iDp" id="aNh-gM-jXz"/>
+                        <segue destination="key-17-bOS" kind="custom" identifier="ViewControllerToConsoleSegueID" customClass="ViewControllerToConsoleSegue" customModule="WebBLE" customModuleProvider="target" id="Cnc-k6-Alb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -203,6 +204,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qhx-F4-qxC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-34" y="720"/>
+        </scene>
+        <!--ConsoleViewContainer-->
+        <scene sceneID="3MD-3z-B1D">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Console" referencedIdentifier="ConsoleViewContainer" id="key-17-bOS" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="p79-a5-KcK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="396" y="730"/>
         </scene>
     </scenes>
     <resources>

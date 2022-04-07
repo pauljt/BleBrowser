@@ -68,7 +68,7 @@ open class WBManager: NSObject, CBCentralManagerDelegate, WKScriptMessageHandler
         self.deviceWasSelected(device)
     }
     public func cancelDeviceSearch() {
-        NSLog("User cancelled device selection.")
+        NSLog("User cancelled device selection")
         self.requestDeviceTransaction?.resolveAsFailure(withMessage: "User cancelled")
         self.stopScanForPeripherals()
         self._clearPickerView()

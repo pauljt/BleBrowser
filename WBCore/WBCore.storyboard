@@ -65,7 +65,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="Cancel"/>
                                         <connections>
-                                            <segue destination="mCz-f6-Rgv" kind="unwind" identifier="Cancel" customClass="WBHidePickerSegue" customModule="WebBLE" customModuleProvider="target" unwindAction="unwindToWVContainerControllerWithSender:" id="7LM-9p-Gew"/>
+                                            <segue destination="mCz-f6-Rgv" kind="unwind" identifier="Cancel" customClass="WBHidePickerSegue" customModule="WebBLE" customModuleProvider="target" unwindAction="unwindToWVContainerControllerWithSender:" id="N31-ZC-IP0"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gJU-nc-xHd">
@@ -177,7 +177,6 @@
                         <outlet property="loadingProgressView" destination="XxI-Sv-pHo" id="YJj-Dq-EvG"/>
                         <segue destination="KTy-YM-LKE" kind="showDetail" identifier="ShowDevicePicker" customClass="WBShowPickerSegue" customModule="WebBLE" customModuleProvider="target" id="dOv-qy-DBm"/>
                         <segue destination="GEZ-JB-y3I" kind="presentation" identifier="nav-error-segue" id="GoK-zO-nz2"/>
-                        <segue destination="PcF-M0-ge6" kind="custom" identifier="WBContainerControllerToConsoleSegueID" customClass="WBContainerControllerToConsoleSegue" customModule="WebBLE" customModuleProvider="target" id="fM4-Q7-qkF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oir-tl-BMD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -294,14 +293,6 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-693" y="1189"/>
-        </scene>
-        <!--ConsoleViewContainer-->
-        <scene sceneID="LPD-PL-wfN">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Console" referencedIdentifier="ConsoleViewContainer" id="PcF-M0-ge6" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="z6I-Gl-Nt8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1849" y="1359"/>
         </scene>
     </scenes>
     <resources>
