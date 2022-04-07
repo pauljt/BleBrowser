@@ -58,7 +58,19 @@ class WBWebView: WKWebView, WKNavigationDelegate {
         // than just the default WKWebView build number
         let shortVersionString = Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? "<no-version>"
         let bundleName = Bundle.main.infoDictionary?["CFBundleName"] ?? "<no-app-name>"
-        webCfg.applicationNameForUserAgent = "\(bundleName)/\(shortVersionString)"
+        // This declares us as WebBLE but also includes the system
+        // version so that
+        // https://bowser-js.github.io/bowser-online/
+        // will think we're Safari
+        let pretendSafariVersion = (
+            UIDevice.current.systemVersion.replacingOccurrences(
+                of: "(\\d+\\.\\d+)(.\\d+)?$", with: "$1", options: [.regularExpression]
+            )
+        )
+        webCfg.applicationNameForUserAgent = (
+            "Version/\(pretendSafariVersion) "
+            + "\(bundleName)/\(shortVersionString)"
+        )
 
         self.init(
             frame: CGRect(),
