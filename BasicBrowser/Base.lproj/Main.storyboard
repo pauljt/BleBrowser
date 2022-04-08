@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bXw-Ly-snu">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bXw-Ly-snu">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -32,13 +33,8 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="WebBLE" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I1P-4j-XZZ">
                                 <rect key="frame" x="0.0" y="44" width="375" height="574"/>
@@ -57,28 +53,27 @@
                                 </constraints>
                             </imageView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NgV-mf-Lto">
-                                <rect key="frame" x="0.0" y="635" width="375" height="32"/>
+                                <rect key="frame" x="0.0" y="578" width="375" height="89"/>
                                 <gestureRecognizers/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="32" id="csH-dg-HaH"/>
-                                </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="QVE-VE-sVj" appends="YES" id="J2j-S7-lR0"/>
                                 </connections>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="fUp-cf-yrq"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="NgV-mf-Lto" secondAttribute="trailing" id="Gf8-bX-1Mj"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="I1P-4j-XZZ" secondAttribute="bottom" priority="990" id="N1N-kn-YIh"/>
+                            <constraint firstItem="fUp-cf-yrq" firstAttribute="trailing" secondItem="NgV-mf-Lto" secondAttribute="trailing" id="Gf8-bX-1Mj"/>
+                            <constraint firstItem="fUp-cf-yrq" firstAttribute="bottom" secondItem="I1P-4j-XZZ" secondAttribute="bottom" priority="990" id="N1N-kn-YIh"/>
                             <constraint firstItem="6wE-az-iDp" firstAttribute="centerX" secondItem="I1P-4j-XZZ" secondAttribute="centerX" constant="-2" id="Q8c-Vr-441"/>
-                            <constraint firstItem="I1P-4j-XZZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Tmc-iu-YcI"/>
-                            <constraint firstItem="NgV-mf-Lto" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ceZ-8R-SPH"/>
+                            <constraint firstItem="I1P-4j-XZZ" firstAttribute="leading" secondItem="fUp-cf-yrq" secondAttribute="leading" id="Tmc-iu-YcI"/>
+                            <constraint firstItem="NgV-mf-Lto" firstAttribute="leading" secondItem="fUp-cf-yrq" secondAttribute="leading" id="ceZ-8R-SPH"/>
                             <constraint firstItem="6wE-az-iDp" firstAttribute="centerY" secondItem="I1P-4j-XZZ" secondAttribute="centerY" id="ch6-ac-DgS"/>
-                            <constraint firstAttribute="trailing" secondItem="I1P-4j-XZZ" secondAttribute="trailing" id="fWT-8M-CoL"/>
+                            <constraint firstItem="fUp-cf-yrq" firstAttribute="bottom" secondItem="NgV-mf-Lto" secondAttribute="top" constant="40" id="eUB-Gy-XO6"/>
+                            <constraint firstItem="fUp-cf-yrq" firstAttribute="trailing" secondItem="I1P-4j-XZZ" secondAttribute="trailing" id="fWT-8M-CoL"/>
                             <constraint firstAttribute="bottom" secondItem="NgV-mf-Lto" secondAttribute="bottom" id="gC0-D0-aU8"/>
-                            <constraint firstItem="I1P-4j-XZZ" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="lKc-uu-8Vk"/>
+                            <constraint firstItem="I1P-4j-XZZ" firstAttribute="top" secondItem="fUp-cf-yrq" secondAttribute="top" id="lKc-uu-8Vk"/>
                         </constraints>
                     </view>
                     <toolbarItems>

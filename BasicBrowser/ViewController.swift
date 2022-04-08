@@ -124,6 +124,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         self.lastRefresh = Date()
     }
     @IBAction func showBars() {
+        NSLog("Show bars")
         self.shouldShowBars = true
     }
     @IBAction func toggleConsole() {
@@ -165,6 +166,13 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
                 self.webView.load(URLRequest(url: self.bookmarksManager.bookmarks[ip.item].url))
             }
         }
+    }
+
+    // MARK: - UITextFieldDelegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        self.loadLocation(textField.text!)
+        return true
     }
 
     // MARK: - Event handling
@@ -220,12 +228,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         let nc = self.navigationController as! NavigationViewController
         nc.removeObserver(self, forKeyPath: "navBarIsHidden")
         super.viewWillDisappear(animated)
-    }
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        self.loadLocation(textField.text!)
-        return true
     }
     
     func loadLocation(_ location: String) {
