@@ -82,10 +82,10 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBAction func addBookmark() {
         guard
             let title = self.webView.title,
-            !title.isEmpty,
             let url = self.webView.url,
             url.absoluteString != "about:blank"
         else {
+            NSLog("Cannot bookmark \(self.webView.title ?? "<no title>") \(self.webView.url?.absoluteString ?? "<no url>")")
             let uac = UIAlertController(title: "Unable to bookmark", message: "This page cannot be bookmarked as it has an invalid title or URL, or was a failed navigation", preferredStyle: .alert)
             uac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(uac, animated: true, completion: nil)
