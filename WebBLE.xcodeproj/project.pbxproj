@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5A0F91CC1E01546200CB2C64 /* Jsonifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */; };
 		5A10929B2168D599002CC973 /* ConsoleViewContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A10929A2168D599002CC973 /* ConsoleViewContainerController.swift */; };
+		5A1A8E1628009CD200271575 /* URLTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1A8E1528009C3200271575 /* URLTextField.swift */; };
 		5A1D3256216FC96500F3391C /* WBLogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1D3255216FC96500F3391C /* WBLogManager.swift */; };
 		5A2BAC2A1E44C70C00ED9FA8 /* BookmarksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2BAC291E44C70C00ED9FA8 /* BookmarksManager.swift */; };
 		5A31618721CC55ED00C4446B /* Copy@480.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A31618621CC55ED00C4446B /* Copy@480.png */; };
@@ -69,6 +70,7 @@
 /* Begin PBXFileReference section */
 		5A0F91CB1E01546200CB2C64 /* Jsonifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Jsonifiable.swift; sourceTree = "<group>"; };
 		5A10929A2168D599002CC973 /* ConsoleViewContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleViewContainerController.swift; sourceTree = "<group>"; };
+		5A1A8E1528009C3200271575 /* URLTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLTextField.swift; sourceTree = "<group>"; };
 		5A1D3255216FC96500F3391C /* WBLogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WBLogManager.swift; sourceTree = "<group>"; };
 		5A2BAC291E44C70C00ED9FA8 /* BookmarksManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarksManager.swift; sourceTree = "<group>"; };
 		5A31618621CC55ED00C4446B /* Copy@480.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Copy@480.png"; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 				5A5D621521EBA83D00E417DC /* NavigationViewController.swift */,
 				E44C185B1A36203E00734F8B /* AppDelegate.swift */,
 				E44C185D1A36203E00734F8B /* ViewController.swift */,
+				5A1A8E1528009C3200271575 /* URLTextField.swift */,
 				E44C18641A36203E00734F8B /* LaunchScreen.xib */,
 				E44C185F1A36203E00734F8B /* Main.storyboard */,
 				5AC47CA51E2BE57000BCAE82 /* Tick@480.png */,
@@ -406,6 +409,7 @@
 				5A10929B2168D599002CC973 /* ConsoleViewContainerController.swift in Sources */,
 				5A95DDF81E0C080C00DFE26B /* WBWebView.swift in Sources */,
 				5A7579EF21579E0E003F0CEA /* ConsoleView.swift in Sources */,
+				5A1A8E1628009CD200271575 /* URLTextField.swift in Sources */,
 				5AC676FC221CA557007B1562 /* ErrorViewController.swift in Sources */,
 				5A7579ED2157907D003F0CEA /* ConsoleScrollView.swift in Sources */,
 				BB303DF31C42070C00FCAF24 /* WBManager.swift in Sources */,
