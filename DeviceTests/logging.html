@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Strict//EN">
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<script src="jquery-1.12.0.js"></script>
+</head>
+<body>
+    <h1>Logging tests</h1>
+    <p><button id='log-something'>Log something</button></p>
+    <p>User agent: <strong><span id=useragent></span></strong></p>
+
+    <p><button id='log-user-agent'>Log user agent</button></p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<script type="text/javascript">
+$('#log-something').on('click', () => {
+    console.log('Something')
+    console.warn('In the way')
+    console.error('She moves')
+})
+$('#log-user-agent').on('click', () => {
+    console.log(`User agent "${navigator.userAgent}"`)
+})
+$('#useragent').html(navigator.userAgent)
+
+$(() => new Promise (async () => {
+    console.log(`onload`);
+
+    const constraints = { audio: true, video: true };
+
+    let stream;
+    stream = await navigator.mediaDevices.getUserMedia(constraints);
+    // expect(stream).toBeDefined();
+    // expect(stream.active).toBeTruthy();
+
+    const tracks = stream.getTracks();
+    const rtcpc = new RTCPeerConnection();
+
+    for (let ii = 0; ii < tracks.length; ii += 1) {
+        const track = tracks[ii];
+        console.log(`looking at track kind ${track.kind}`);
+        let trackStats;
+        try {
+            trackStats = await rtcpc.getStats(track);
+            console.log(`got trackStats`);
+        } catch (e) {
+            console.error(`exception getting stats ${e}`);
+            throw e;
+        }
+
+        console.log(`got track stats ${trackStats}`);
+        trackStats.forEach(stat => {
+            console.log(`rtcpc stats ${stat.type}:`);
+            Object.keys(stat).forEach(statName => {
+                console.log(`stat "${statName}": ${stat[statName]}`);
+            });
+        });
+    }
+    stream.getTracks().forEach(t => t.stop());
+}));
+
+</script>
+</body>
+</html>
