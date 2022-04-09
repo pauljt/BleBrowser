@@ -105,8 +105,8 @@ uk.co.greenparksoftware.wbutils = {
     error: (...args) => consoleLog('error', ...args),
     dir: (...args) => consoleLog('log', ...args),
   };
-  window.addEventListener('error', function (error) {
-    consoleLog('error', `Uncaught error: ${error.message}`);
+  window.addEventListener('error', function (event) {
+    consoleLog('error', `Uncaught error on ${event.filename || "<no filename>"}:${event.lineno || "<no lineno>"} – "${event.message}" ${event.error}`);
   });
 })();
 
