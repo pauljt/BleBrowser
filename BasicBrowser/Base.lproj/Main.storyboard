@@ -134,7 +134,7 @@
                         <outlet property="refreshButton" destination="LXB-CH-4RT" id="350-AZ-rBZ"/>
                         <outlet property="showConsoleButton" destination="uNi-2X-YpW" id="CTt-pC-CFQ"/>
                         <outlet property="tick" destination="6wE-az-iDp" id="aNh-gM-jXz"/>
-                        <segue destination="key-17-bOS" kind="custom" identifier="ViewControllerToConsoleSegueID" customClass="ViewControllerToConsoleSegue" customModule="WebBLE" customModuleProvider="target" id="Cnc-k6-Alb"/>
+                        <segue destination="key-17-bOS" kind="custom" identifier="ShowConsoleSegueID" customClass="ShowConsoleSegue" customModule="WebBLE" customModuleProvider="target" id="Cnc-k6-Alb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

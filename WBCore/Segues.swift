@@ -49,34 +49,105 @@ class WBHidePickerSegue: UIStoryboardSegue {
     }
 }
 
-class ViewControllerToConsoleSegue: UIStoryboardSegue {
+class ShowConsoleSegue: UIStoryboardSegue {
     override func perform() {
         let vc = self.source as! ViewController
-        let view = vc.view!
-        let consoleController = self.destination as! ConsoleViewContainerController
-        let consoleView = consoleController.view!
+        let vcv = vc.view!
+        let cc = self.destination as! ConsoleViewContainerController
+        let ccv = cc.view!
 
-        vc.addChild(consoleController)
-        view.addSubview(consoleView)
+        vc.addChild(cc)
+        vcv.addSubview(ccv)
 
-        consoleController.wbLogManager = vc.webViewController.logManager
+        cc.wbLogManager = vc.webViewController.logManager
 
+        // Configure the height
+        let prevHeight = CGFloat(UserDefaults.standard.float(forKey: "lastConsoleHeight"))
+        let heightConstraint =
+            cc.consoleScrollViewHeightConstraint!
+        heightConstraint.constant = (
+            prevHeight > 0.0
+            ? prevHeight
+            : 100.0
+        )
+
+        // Configure the intial constraints
+        let topConstraint = ccv.topAnchor.constraint(
+            equalTo: vcv.bottomAnchor
+        )
+        vc.consoleViewBottomConstraint = ccv.bottomAnchor.constraint(
+            equalTo: vcv.bottomAnchor
+        )
         NSLayoutConstraint.activate([
-            consoleView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            consoleView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            consoleView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            // Horizontal
+            ccv.leadingAnchor.constraint(
+                equalTo: vcv.safeAreaLayoutGuide.leadingAnchor
+            ),
+            ccv.trailingAnchor.constraint(
+                equalTo: vcv.safeAreaLayoutGuide.trailingAnchor
+            ),
+            // Vertical
+            //
+            // Start by pinning the console at the bottom of the screen,
+            // then move it into place with an animation
             // ensure we do not enlarge the console above the url bar,
             // this is something of a hack
-            consoleView.topAnchor.constraint(
-                greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor,
+            topConstraint,
+            ccv.topAnchor.constraint(
+                greaterThanOrEqualTo: vcv.safeAreaLayoutGuide.topAnchor,
                 constant: 60.0
             ),
 
             // this constraint will override the existing constraint pinning the bottom of the web view's container to the bottom of the safe area
-            consoleView.topAnchor.constraint(
+            ccv.topAnchor.constraint(
                 equalTo: vc.webViewContainerController.view.subviews.first!.bottomAnchor
             ),
         ])
+        vcv.layoutIfNeeded()
+
+        UIView.animate(
+            withDuration: 0.2,
+            animations: {
+                NSLayoutConstraint.deactivate([topConstraint])
+                NSLayoutConstraint.activate([
+                    vc.consoleViewBottomConstraint!
+                ])
+                vcv.layoutIfNeeded()
+            }
+        )
+
+        UserDefaults.standard.setValue(true, forKey: ViewController.prefKeys.consoleOpen.rawValue)
+    }
+}
+
+class HideConsoleSegue: UIStoryboardSegue {
+    override func perform() {
+        let cc = self.source // as! ConsoleViewContainerController
+        let ccv = cc.view!
+        let vc = self.destination as! ViewController
+        let vcv = vc.view!
+
+        let topConstraint = ccv.topAnchor.constraint(
+            equalTo: vcv.bottomAnchor
+        )
+
+        UIView.animate(
+            withDuration: 0.2,
+            animations: {
+                NSLayoutConstraint.deactivate([
+                    vc.consoleViewBottomConstraint!
+                ])
+                NSLayoutConstraint.activate([topConstraint])
+                vcv.layoutIfNeeded()
+            },
+            completion: {
+                _ in
+                cc.removeFromParent()
+                ccv.removeFromSuperview()
+                vc.consoleViewBottomConstraint = nil
+                vcv.layoutIfNeeded()
+            }
+        )
         UserDefaults.standard.setValue(true, forKey: ViewController.prefKeys.consoleOpen.rawValue)
     }
 }

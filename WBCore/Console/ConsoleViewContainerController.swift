@@ -59,9 +59,15 @@ class ConsoleViewContainerController: UIViewController {
         switch gestureState {
         case .began:
             // this to reset the height if we've had a screen rotation since last height set
-            self.consoleScrollViewHeightConstraint.constant = self.scrollView.frame.height
-            self.consoleScrollViewHeightAtStartOfGesture = self.consoleScrollViewHeightConstraint.constant
-        case .changed: self.consoleScrollViewHeightConstraint.constant = self.consoleScrollViewHeightAtStartOfGesture! - yTranslation
+            self.consoleScrollViewHeightConstraint.constant =
+                self.scrollView.frame.height
+            self.consoleScrollViewHeightAtStartOfGesture =
+                self.consoleScrollViewHeightConstraint.constant
+        case .changed:
+            self.consoleScrollViewHeightConstraint.constant = (
+                self.consoleScrollViewHeightAtStartOfGesture!
+                - yTranslation
+            )
         case .ended:
             self.consoleScrollViewHeightAtStartOfGesture = nil
             self.consoleScrollViewHeightConstraint.constant = self.scrollView.frame.height
@@ -73,11 +79,6 @@ class ConsoleViewContainerController: UIViewController {
     }
 
     // MARK: - View Delegate
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        let prevHeight = CGFloat(UserDefaults.standard.float(forKey: "lastConsoleHeight"))
-        self.consoleScrollViewHeightConstraint.constant = prevHeight > 0.0 ? prevHeight : 100.0
-    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self._configureImageView()

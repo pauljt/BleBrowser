@@ -26,6 +26,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
 
     // MARK: - Properties
     let currentPrefVersion = 1
+    let bottomMarginNotToHideBarsIn: CGFloat = 100.0
 
     // MARK: IBOutlets
     @IBOutlet weak var locationTextField: UITextField!
@@ -42,6 +43,7 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     var bookmarksManager = BookmarksManager(
         userDefaults: UserDefaults.standard, key: prefKeys.bookmarks.rawValue)
 
+    var consoleViewBottomConstraint: NSLayoutConstraint? = nil
     var shouldShowBars = true {
         didSet {
             let nc = self.navigationController!
@@ -54,7 +56,6 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
             )
         }
     }
-    let bottomMarginNotToHideBarsIn: CGFloat = 100.0
 
     var webViewContainerController: WBWebViewContainerController {
         get {
@@ -96,11 +97,11 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
         FlashAnimation(withView: self.tick).go()
     }
     @IBAction func goForward() {
-        NSLog("goForward")
+        NSLog("Go forward")
         self.webView.goForward()
     }
     @IBAction func goBackward() {
-        NSLog("goBack")
+        NSLog("Go backward")
         self.webView.goBack()
     }
     @IBAction func reload() {
@@ -130,15 +131,14 @@ class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegat
     @IBAction func toggleConsole() {
         if let cvc = self.consoleContainerController {
             NSLog("Hiding console")
-            cvc.removeFromParent()
-            cvc.view.removeFromSuperview()
-            UserDefaults.standard.setValue(
-                false, forKey: prefKeys.consoleOpen.rawValue
+            cvc.performSegue(
+                withIdentifier: "HideConsoleSegueID",
+                sender: self
             )
         } else {
             NSLog("Showing console")
             self.performSegue(
-                withIdentifier: "ViewControllerToConsoleSegueID",
+                withIdentifier: "ShowConsoleSegueID",
                 sender: self
             )
         }

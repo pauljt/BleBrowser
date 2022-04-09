@@ -266,9 +266,11 @@
                         <outlet property="consoleScrollViewHeightConstraint" destination="Or9-LE-zQX" id="AwS-4K-sGp"/>
                         <outlet property="copySuccessIndication" destination="DSl-4f-yGT" id="NAk-vM-s5x"/>
                         <outlet property="scrollView" destination="rnO-dD-ogt" id="dzY-PN-p0U"/>
+                        <segue destination="LJz-yU-32Y" kind="unwind" identifier="HideConsoleSegueID" customClass="HideConsoleSegue" customModule="WebBLE" customModuleProvider="target" unwindAction="unwindToWBControllerWithSender:" id="dXz-eK-6b7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Fn-69-caL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="LJz-yU-32Y" userLabel="Exit" sceneMemberID="exit"/>
                 <panGestureRecognizer minimumNumberOfTouches="1" id="DDd-1G-EtQ">
                     <connections>
                         <action selector="dividerDrag:" destination="gfn-yI-dsN" id="ymq-US-Tjq"/>
