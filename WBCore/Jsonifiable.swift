@@ -47,7 +47,7 @@ extension String: Jsonifiable {
 }
 extension CBUUID: Jsonifiable {
     func jsonify() -> String {
-        return "\"\(self)\""
+        return "\"\(self.uuidString)\""
     }
 }
 extension Array: Jsonifiable {
